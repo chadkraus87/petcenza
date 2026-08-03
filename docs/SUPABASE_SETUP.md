@@ -2,6 +2,9 @@
 
 **Project:** `pawchart` · ref `ccvjqnljijlyxxecwryd` · org Kraus Haus Technologies · region us-east-2
 **API URL:** https://ccvjqnljijlyxxecwryd.supabase.co
+**Live app:** https://pawchart-zeta.vercel.app
+**Repo:** https://github.com/chadkraus87/pawchart (private, git-connected to Vercel — pushes to
+`main` auto-deploy to production)
 
 ## Done (applied to the live project)
 - ✅ Migrations `0001`–`0006` applied (schema, RLS, storage, reminder recurrence, function-grant hardening, RLS perf).
@@ -21,11 +24,12 @@ Completed in the dashboard (2026-08-02):
    **require current password when updating** ON.
 2. ✅ **Auth → Multi-Factor**: **TOTP already Enabled** (default) — the in-app 2FA enroll/challenge flow
    works as-is. "Limit duration of AAL1 sessions" is ON (recommended).
-3. ✅ **Auth → URL Configuration**: Site URL corrected `http://localhost:3000` → **`http://localhost:5178`**
-   (the old value pointed at a dead port). Redirect URLs added (were **empty**, which would have broken
-   password reset + OAuth return entirely):
-   - `http://localhost:5178/auth/callback` · `http://localhost:5178/auth/reset`
-   - `http://localhost:5173/auth/callback` · `http://localhost:5173/auth/reset` (vite's default port)
+3. ✅ **Auth → URL Configuration**: Site URL is now **`https://pawchart-zeta.vercel.app`** (production).
+   It originally pointed at `http://localhost:3000` — a dead port. Redirect URLs (the list was
+   **empty**, which would have broken password reset + OAuth return entirely) — 6 entries:
+   - `https://pawchart-zeta.vercel.app/auth/callback` · `.../auth/reset` (production)
+   - `http://localhost:5178/auth/callback` · `.../auth/reset` (dev, matches .claude/launch.json)
+   - `http://localhost:5173/auth/callback` · `.../auth/reset` (dev, vite default port)
 4. ✅ **Auth → Attack Protection**: **leaked-password protection ENABLED** (HaveIBeenPwned).
 5. ✅ **Database → Backups**: **daily backups already active** and included with Pro (no action needed).
 
