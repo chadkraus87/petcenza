@@ -1,5 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "//": "SPA fallback: this is a client-routed React Router app, so any path that isn't a real file must serve index.html and let the router resolve it. Without this, deep links 404 — including /auth/reset (password-reset emails), /auth/callback (OAuth + email verification) and every in-app route on refresh. Vercel matches the filesystem before rewrites, so hashed assets in /assets still serve normally.",
+  "rewrites": [
+    { "source": "/((?!assets/).*)", "destination": "/index.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",
