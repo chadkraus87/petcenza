@@ -1,9 +1,9 @@
 # Supabase Backend — Live Setup
 
-**Project:** `pawchart` · ref `ccvjqnljijlyxxecwryd` · org Kraus Haus Technologies · region us-east-2
+**Project:** `petcenza` · ref `ccvjqnljijlyxxecwryd` · org Kraus Haus Technologies · region us-east-2
 **API URL:** https://ccvjqnljijlyxxecwryd.supabase.co
 **Live app:** https://pawchart-zeta.vercel.app
-**Repo:** https://github.com/chadkraus87/pawchart (private, git-connected to Vercel — pushes to
+**Repo:** https://github.com/chadkraus87/petcenza (private, git-connected to Vercel — pushes to
 `main` auto-deploy to production)
 
 ## Done (applied to the live project)
@@ -85,7 +85,7 @@ npm run backup:storage            # writes ./backups/storage/<bucket>/<user>/<pe
 - The **service-role key bypasses RLS by design** (it has to read every user's files). Treat it
   like a root password: keep it in your shell or a secret manager, never in the repo.
 - To automate, add a cron/launchd entry, e.g. daily at 02:00:
-  `0 2 * * * cd /path/to/pawchart && SUPABASE_URL=… SUPABASE_SERVICE_ROLE_KEY=… npm run backup:storage`
+  `0 2 * * * cd /path/to/petcenza && SUPABASE_URL=… SUPABASE_SERVICE_ROLE_KEY=… npm run backup:storage`
 - For off-machine durability, point `--out` at a synced folder (iCloud/Dropbox) or an external disk.
 - ⏳ **Optional — `scan-upload` as a Storage webhook**: the client already calls it after each upload.
   For defense in depth, add a webhook on `objects insert` for `pet-photos`/`pet-documents` that POSTs

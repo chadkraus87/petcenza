@@ -47,7 +47,7 @@ export default function AppShell() {
   return (
     <div className="min-h-screen md:grid md:grid-cols-[220px_1fr]">
       <aside className="hidden md:flex flex-col bg-ink text-paper p-4 gap-1">
-        <div className="font-display text-xl px-2 py-3 flex items-center gap-2"><PawPrint size={20} aria-hidden /> PawChart</div>
+        <div className="font-display text-xl px-2 py-3 flex items-center gap-2"><PawPrint size={20} aria-hidden /> PetCenza</div>
         {nav.map(({ to, label, icon: Icon }) => (
           <NavLink key={to} to={to} end={to === '/'}
             className={({ isActive }) => `flex items-center gap-2 rounded-md px-3 py-2 text-sm ${isActive ? 'bg-paper/15' : 'hover:bg-paper/10'}`}>

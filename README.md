@@ -1,4 +1,4 @@
-# PawChart — Pet Health & Management Platform
+# PetCenza — Pet Health & Management Platform
 
 A single-owner (SaaS-ready) pet health record system: profiles, medical history, medications, allergies, vaccinations, weight trends, vet visits, reminders, calendar, emergency card — offline-capable PWA with cross-device sync, built on React + TypeScript + Vite + Supabase.
 

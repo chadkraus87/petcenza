@@ -9,7 +9,7 @@ if (!url || !anonKey) throw new Error('Missing VITE_SUPABASE_URL / VITE_SUPABASE
 // sessionStorage (this tab only) when the user opted out of being remembered, and to
 // localStorage (persists across restarts) when they opted in. Set the preference via
 // setRememberPreference() BEFORE calling signInWithPassword.
-const REMEMBER_KEY = 'pawchart-remember'
+const REMEMBER_KEY = 'petcenza-remember'
 
 export function setRememberPreference(remember: boolean) {
   try { window.localStorage.setItem(REMEMBER_KEY, remember ? '1' : '0') } catch { /* storage disabled */ }

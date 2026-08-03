@@ -1,7 +1,7 @@
 # Roadmap
 
 ## Done in the review/QA passes ✅
-- **Live Supabase backend** (project `pawchart`): migrations 0001–0006 applied, RLS suite passed live,
+- **Live Supabase backend** (project `petcenza`): migrations 0001–0006 applied, RLS suite passed live,
   storage buckets, advisors clean (0 security / 0 perf warnings) — see docs/SUPABASE_SETUP.md
 - **Reminder recurrence** trigger (completing a recurring reminder auto-creates the next) — migration 0004
 - **Upload magic-byte scanning** edge function `scan-upload`, wired into photo + document uploads

@@ -1,6 +1,6 @@
 import type { Config } from 'tailwindcss'
 
-// PawChart tokens — "field clinic" direction: spruce ink, paper surfaces, amber signal.
+// PetCenza tokens — "field clinic" direction: spruce ink, paper surfaces, amber signal.
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {

@@ -33,7 +33,7 @@ export default function SignIn() {
   return (
     <main className="min-h-screen grid place-items-center p-6">
       <div className="w-full max-w-sm bg-card rounded-card border border-line p-8">
-        <h1 className="text-2xl mb-1">PawChart</h1>
+        <h1 className="text-2xl mb-1">PetCenza</h1>
         <p className="text-sm text-ink/60 mb-6">Sign in to your pets' records.</p>
         {error && <p role="alert" className="text-sm text-alert mb-4">{error}</p>}
         <label className="block text-sm mb-1" htmlFor="email">Email</label>

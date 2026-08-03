@@ -18,7 +18,7 @@ Single-owner personal health data for pets; primary risks are cross-tenant data 
 
 ## Local-cache hygiene
 - On sign-out (single device or global) the in-memory React Query cache is cleared **and** the
-  localStorage-persisted query cache (`pawchart-query-cache`) is removed, so pet records don't
+  localStorage-persisted query cache (`petcenza-query-cache`) is removed, so pet records don't
   linger on a shared device after logout (`AuthProvider.clearLocalCaches`).
 - "Remember me" is enforced by a real storage adapter (`lib/supabase.ts`): opting out routes the
   session to `sessionStorage` (this tab only); opting in uses `localStorage`.

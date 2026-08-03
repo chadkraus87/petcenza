@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Storage backup for PawChart.
+ * Storage backup for PetCenza.
  *
  * WHY THIS EXISTS: Supabase's daily database backups explicitly EXCLUDE Storage objects — the
  * database only holds metadata rows pointing at files. Without this script, a deleted or lost

@@ -26,7 +26,12 @@ export default defineConfig({
     timeout: 60_000,
     env: {
       VITE_SUPABASE_URL: 'https://demo.supabase.co',
-      VITE_SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2e-placeholder.signature'
+      VITE_SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2e-placeholder.signature',
+      // Disable the captcha for E2E. Vite gives real process env vars priority over .env files,
+      // so this overrides the sitekey in .env.local/.env.production. Without it the submit
+      // buttons stay disabled until Turnstile solves, and the suite would depend on Cloudflare
+      // being reachable — slow, flaky, and not what these tests are checking.
+      VITE_TURNSTILE_SITEKEY: ''
     }
   }
 })

@@ -14,7 +14,7 @@ export function useReminderNotifications(reminders: Reminder[] | undefined) {
         if (r.completed_at || fired.has(r.id)) continue
         const mins = differenceInMinutes(parseISO(r.due_at), new Date())
         if (mins <= 0 && mins > -60) {
-          new Notification('PawChart reminder', { body: r.title, tag: r.id })
+          new Notification('PetCenza reminder', { body: r.title, tag: r.id })
           fired.add(r.id)
         }
       }

@@ -10,8 +10,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'PawChart — Pet Health & Care',
-        short_name: 'PawChart',
+        name: 'PetCenza — Pet Health & Care',
+        short_name: 'PetCenza',
         description: 'Every record, reminder, and vet visit for your pets in one place.',
         theme_color: '#22382F',
         background_color: '#F6F7F4',

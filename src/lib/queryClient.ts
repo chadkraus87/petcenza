@@ -17,5 +17,5 @@ export const queryClient = new QueryClient({
 
 export const persister = createSyncStoragePersister({
   storage: window.localStorage,
-  key: 'pawchart-query-cache'
+  key: 'petcenza-query-cache'
 })

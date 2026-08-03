@@ -18,7 +18,7 @@ export type OutboxItem = {
   queuedAt: string
 }
 
-const KEY = 'pawchart-outbox'
+const KEY = 'petcenza-outbox'
 
 export async function enqueue(item: Omit<OutboxItem, 'id' | 'queuedAt'>) {
   const items = ((await get(KEY)) as OutboxItem[] | undefined) ?? []
