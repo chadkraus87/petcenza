@@ -83,6 +83,14 @@ export const noteSchema = z.object({
   pinned: z.boolean().default(false)
 })
 
+export const reminderSchema = z.object({
+  title: z.string().trim().min(1, 'What is this reminder for?').max(160),
+  due_at: z.string().min(1, 'Date & time required'),
+  kind: z.enum(['feeding','medication','grooming','vaccination','birthday','vet_appointment','custom']),
+  recurrence: z.enum(['none','daily','weekly','biweekly','monthly','quarterly','yearly']),
+  pet_id: z.string().uuid().optional().or(z.literal(''))
+})
+
 export const vetSchema = z.object({
   name: z.string().trim().min(1, 'Name is required').max(160),
   clinic: z.string().trim().max(160).optional().or(z.literal('')),

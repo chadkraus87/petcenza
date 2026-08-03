@@ -34,9 +34,14 @@ pet-scoped row is decided by **membership**, not authorship.
   `auth.uid()` so authorship cannot be forged; UPDATE/DELETE are governed by membership so an
   editor can correct the owner's records.
 - Shares support `expires_at` — ideal for a pet sitter. Expiry revokes read *and* write instantly.
-- **Not shared:** veterinarians, emergency contacts, tags, notes/documents/reminders with no
-  `pet_id`, and activity logs. These stay personal to each account. A collaborator therefore sees
-  their own care team, not the owner's — a deliberate limitation, revisit if it proves annoying.
+- **Care team is readable by collaborators** (migration 0013). If you hold a live share on any of
+  my pets you can *read* my veterinarians and emergency contacts — otherwise a sitter opens the
+  Emergency screen mid-crisis and finds it empty, which defeats the point of that screen. Writes
+  stay owner-only, so a collaborator can never edit or delete them. Scope is "the owner's care
+  team", not "vets linked to this pet", because poison control and the ER clinic matter whether
+  or not they happen to be referenced by a record on that particular animal.
+- **Not shared:** tags, notes/documents/reminders with no `pet_id`, and activity logs. These stay
+  personal to each account.
 
 ### Why the helpers are SECURITY DEFINER
 `can_access_pet()` / `is_pet_owner()` must bypass RLS: policies on `pets` consult `pet_shares` and
@@ -48,9 +53,11 @@ role, so revoking it breaks every pet-scoped policy. EXECUTE is revoked from `PU
 (note: `revoke ... from anon` alone is a no-op, because Postgres grants new functions to PUBLIC).
 
 Accepted advisor lint: `0029_authenticated_security_definer_function_executable` on
-`can_access_pet`, `is_pet_owner`, `accept_pet_invitation` and `pet_members`. All four are
-required by design and self-guarding — `accept_pet_invitation` validates token/email/expiry, and
-`pet_members` gates on `can_access_pet`. There are **no** `anon` findings.
+`can_access_pet`, `is_pet_owner`, `shares_pet_with`, `accept_pet_invitation` and `pet_members`.
+All five are required by design and self-guarding — `accept_pet_invitation` validates
+token/email/expiry, `pet_members` gates on `can_access_pet`, and the three predicates return only
+a boolean about an id the caller already holds. There are **no** `anon` findings; verified by
+active probe (every one of those RPCs 404s for `anon`, and every table returns `[]`).
 
 ### Vet-share links (no account required)
 `pet_share_links` grants a read-only clinical snapshot to someone without an account. This does

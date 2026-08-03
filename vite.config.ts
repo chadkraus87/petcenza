@@ -7,7 +7,11 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      // 'prompt' rather than 'autoUpdate': with autoUpdate an open tab keeps serving the old
+      // precache until it happens to reload, so a deploy looks like it silently didn't ship.
+      // Prompting also avoids swapping content out from under someone mid-edit — this app holds
+      // medical records, so a surprise refresh is worse than a visible "Update" button.
+      registerType: 'prompt',
       includeAssets: ['favicon.svg'],
       manifest: {
         name: 'PetCenza — Pet Health & Care',

@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, Check } from 'lucide-react'
 import { useDashboard } from '@/hooks/useDashboard'
+import { useCompleteReminder } from '@/hooks/useReminders'
 import { useReminderNotifications } from '@/hooks/useNotifications'
 import { fmtDate, fmtDateTime } from '@/lib/format'
 
 export default function Dashboard() {
   const { data, isLoading, error } = useDashboard()
+  const complete = useCompleteReminder()
   useReminderNotifications(data?.remindersToday)
 
   if (isLoading) return <p className="p-6 text-ink/50">Loading your pack…</p>
@@ -39,9 +41,18 @@ export default function Dashboard() {
           {data.remindersToday.length === 0 && <p className="text-sm text-ink/50">Nothing due. Enjoy the quiet.</p>}
           <ul className="space-y-2">
             {data.remindersToday.map(r => (
-              <li key={r.id} className="flex justify-between text-sm">
-                <span>{r.title} <span className="text-ink/50">· {petName(r.pet_id)}</span></span>
-                <time className="text-signal">{fmtDateTime(r.due_at).split('·')[1]}</time>
+              <li key={r.id} className="flex items-center justify-between gap-2 text-sm">
+                <span className="min-w-0 truncate">
+                  {r.title} <span className="text-ink/50">· {petName(r.pet_id)}</span>
+                </span>
+                <span className="flex items-center gap-2 shrink-0">
+                  <time className="text-signal">{fmtDateTime(r.due_at).split('·')[1]}</time>
+                  <button onClick={() => complete.mutate(r.id)} title="Mark done"
+                    aria-label={`Mark "${r.title}" done`}
+                    className="rounded-md border border-line p-1 hover:border-moss hover:text-moss">
+                    <Check size={14} />
+                  </button>
+                </span>
               </li>
             ))}
           </ul>

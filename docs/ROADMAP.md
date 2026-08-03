@@ -14,8 +14,10 @@
 - Playwright E2E for the public surface
 
 ## Near-term (personal-use polish)
-1. A "mark complete" / snooze control on reminders in the calendar (the recurrence trigger already
-   regenerates the next occurrence when `completed_at` is set)
+1. ~~Reminder create / complete / snooze~~ — **done**. Reminders previously had no creation UI at
+   all; there is now a panel on the Calendar page plus a one-click Done on the Dashboard.
+   Completing a recurring reminder regenerates the next occurrence via the 0004 trigger; snoozing
+   moves `due_at` forward and deliberately does *not* regenerate.
 2. Weekly/day calendar views, drag-to-reschedule (dnd-kit)
 3. Notification settings screen wired to `notification_settings` table
 4. Tags UI (pet_tags many-to-many) + filter pets by tag
@@ -33,8 +35,8 @@
 11. Billing (Stripe), plan gating on pet count/storage
 
 ## Sharing follow-ups (deliberately deferred)
-- Collaborators see their **own** vets/emergency contacts, not the owner's. Consider sharing the
-  care team alongside the pet, or attaching vets to pets rather than users.
+- ~~Collaborators see their own vets/emergency contacts~~ — **done** (migration 0013): a live
+  share now grants read access to the owner's care team.
 - Ownership **transfer** (owner → editor promotion to owner). Invitations intentionally cannot
   grant `owner` today (`invitation_role_not_owner` check).
 - Email delivery for invitations — currently copy-a-link, which needs no mail provider.

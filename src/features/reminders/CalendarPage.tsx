@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { addMonths, eachDayOfInterval, endOfMonth, endOfWeek, format, isSameDay, isSameMonth, isToday, parseISO, startOfMonth, startOfWeek } from 'date-fns'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import RemindersPanel from './RemindersPanel'
 import type { Reminder, VetVisit } from '@/types/db'
 
 type CalItem = { id: string; date: Date; label: string; kind: string }
@@ -77,6 +78,8 @@ export default function CalendarPage() {
           )
         })}
       </div>
+
+      <RemindersPanel />
     </main>
   )
 }

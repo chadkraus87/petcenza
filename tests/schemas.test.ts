@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { petSchema, toRow } from '@/schemas/pet'
-import { medicationSchema, allergySchema, weightSchema, validateUpload, vetSchema, emergencyContactSchema, feedingSchema, groomingSchema, behaviorSchema, noteSchema } from '@/schemas/records'
+import { medicationSchema, allergySchema, weightSchema, validateUpload, vetSchema, emergencyContactSchema, feedingSchema, groomingSchema, behaviorSchema, noteSchema, reminderSchema } from '@/schemas/records'
 
 describe('petSchema', () => {
   it('accepts a minimal valid pet', () => {
@@ -87,6 +87,26 @@ describe('feeding/grooming/behavior/note schemas', () => {
   it('note requires a body', () => {
     expect(noteSchema.safeParse({ body: 'Remember to refill meds' }).success).toBe(true)
     expect(noteSchema.safeParse({ body: '' }).success).toBe(false)
+  })
+})
+
+describe('reminderSchema', () => {
+  const base = { title: 'Evening dose', due_at: '2026-08-04T18:00', kind: 'medication', recurrence: 'daily' }
+  it('accepts a valid reminder', () => {
+    expect(reminderSchema.safeParse(base).success).toBe(true)
+  })
+  it('requires a title and a time', () => {
+    expect(reminderSchema.safeParse({ ...base, title: '' }).success).toBe(false)
+    expect(reminderSchema.safeParse({ ...base, due_at: '' }).success).toBe(false)
+  })
+  it('rejects unknown kind or recurrence values', () => {
+    expect(reminderSchema.safeParse({ ...base, kind: 'nonsense' }).success).toBe(false)
+    expect(reminderSchema.safeParse({ ...base, recurrence: 'fortnightly' }).success).toBe(false)
+  })
+  it('treats pet_id as optional but validates it when present', () => {
+    expect(reminderSchema.safeParse({ ...base, pet_id: '' }).success).toBe(true)
+    expect(reminderSchema.safeParse({ ...base, pet_id: 'not-a-uuid' }).success).toBe(false)
+    expect(reminderSchema.safeParse({ ...base, pet_id: '11111111-1111-4111-8111-111111111111' }).success).toBe(true)
   })
 })
 
