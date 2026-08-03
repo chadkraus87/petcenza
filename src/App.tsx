@@ -18,6 +18,8 @@ const AuthCallback = lazy(() => import('@/features/auth/AuthCallback'))
 const MfaChallenge = lazy(() => import('@/features/auth/MfaChallenge'))
 const CareTeam = lazy(() => import('@/features/careteam/CareTeamPage'))
 const SecuritySettings = lazy(() => import('@/features/account/SecuritySettings'))
+const AcceptInvite = lazy(() => import('@/features/sharing/AcceptInvite'))
+const VetShareView = lazy(() => import('@/features/sharing/VetShareView'))
 
 export default function App() {
   return (
@@ -31,6 +33,10 @@ export default function App() {
             <Route path="/auth/reset" element={<ResetPassword />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/auth/mfa" element={<MfaChallenge />} />
+            {/* Outside Protected: a signed-out invitee needs a real page, not a silent bounce. */}
+            <Route path="/invite/:token" element={<AcceptInvite />} />
+            {/* Fully public — vets have no account; the token is the capability. */}
+            <Route path="/share/:token" element={<VetShareView />} />
             <Route element={<Protected />}>
               <Route element={<AppShell />}>
                 <Route path="/" element={<Dashboard />} />

@@ -83,6 +83,56 @@ export interface Note {
   created_at: string; updated_at: string
 }
 
+export type ShareRole = 'viewer' | 'editor' | 'owner'
+
+/** A row from the pet_members() RPC — owner plus every collaborator. */
+export interface PetMember {
+  user_id: string
+  display_name: string | null
+  email: string | null
+  role: ShareRole
+  expires_at: string | null
+  is_owner: boolean
+}
+
+export interface PetInvitation {
+  id: string
+  pet_id: string
+  token: string
+  role: Exclude<ShareRole, 'owner'>
+  invited_email: string | null
+  expires_at: string
+  accepted_at: string | null
+  revoked_at: string | null
+  created_at: string
+}
+
+export interface VetShareLink {
+  id: string
+  pet_id: string
+  token: string
+  label: string | null
+  expires_at: string
+  revoked_at: string | null
+  last_viewed_at: string | null
+  view_count: number
+  created_at: string
+}
+
+/** Read-only clinical snapshot served by the public vet-share edge function. */
+export interface VetShareSnapshot {
+  pet: {
+    name: string; species: string; breed: string | null; sex: string
+    birth_date: string | null; color: string | null; microchip_no: string | null
+  }
+  allergies: { allergen: string; type: string; severity: AllergySeverity; symptoms: string | null; emergency_treatment: string | null }[]
+  medications: { name: string; dosage: string; frequency: string; starts_on: string; ends_on: string | null; instructions: string | null }[]
+  vaccinations: { vaccine: string; administered_on: string | null; next_due_on: string | null }[]
+  weights: { measured_on: string; weight_kg: number; body_condition: number | null }[]
+  visits: { visit_at: string; reason: string | null; diagnosis: string | null; treatment: string | null; followup: string | null }[]
+  expires_at: string
+}
+
 export interface PetDocument {
   id: string; pet_id: string | null; medical_record_id: string | null; storage_path: string
   file_name: string; mime_type: string; size_bytes: number; kind: string; created_at: string

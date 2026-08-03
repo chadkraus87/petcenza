@@ -27,6 +27,17 @@
 8. Device/session list (revoke individual sessions) — **needs Supabase admin**
 
 ## Commercial track
-9. Households (shared pets): add `household_id` + membership table; RLS switches from user_id to membership check
-10. Vet-share links (read-only signed access)
+9. ~~Households (shared pets)~~ — **done**, as per-pet shares rather than households (finer grained:
+   share one pet with a sitter without exposing the rest). Migrations 0007–0012.
+10. ~~Vet-share links (read-only signed access)~~ — **done**, migration 0011 + `vet-share` edge function.
 11. Billing (Stripe), plan gating on pet count/storage
+
+## Sharing follow-ups (deliberately deferred)
+- Collaborators see their **own** vets/emergency contacts, not the owner's. Consider sharing the
+  care team alongside the pet, or attaching vets to pets rather than users.
+- Ownership **transfer** (owner → editor promotion to owner). Invitations intentionally cannot
+  grant `owner` today (`invitation_role_not_owner` check).
+- Email delivery for invitations — currently copy-a-link, which needs no mail provider.
+- A "shared with me" filter/badge on the pet list.
+- Realtime is now unfiltered and leans on RLS for delivery; if row volume grows, move to
+  per-pet channels.

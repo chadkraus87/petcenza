@@ -30,7 +30,8 @@ export default function PhotosPanel({ petId }: { petId: string }) {
     for (const file of Array.from(files)) {
       const invalid = validateUpload(file)
       if (invalid) { setError(`${file.name}: ${invalid}`); continue }
-      const path = `${user.id}/${petId}/${crypto.randomUUID()}.${file.name.split('.').pop()?.toLowerCase()}`
+      // Pet-scoped path: access is decided by pet membership, not by who uploaded.
+      const path = `${petId}/${crypto.randomUUID()}.${file.name.split('.').pop()?.toLowerCase()}`
       const { error: upErr } = await supabase.storage.from('pet-photos').upload(path, file, { contentType: file.type })
       if (upErr) { setError(upErr.message); continue }
       await supabase.from('pet_photos').insert({ user_id: user.id, pet_id: petId, storage_path: path })

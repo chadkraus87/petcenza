@@ -7,8 +7,8 @@
  * pet photo / medical document is unrecoverable even after a full database restore.
  *
  * What it does: walks both private buckets and mirrors every object to a local directory,
- * preserving the {user_id}/{pet_id}/{file} layout. Idempotent — files already present with a
- * matching byte size are skipped, so re-runs are cheap and it can be scheduled.
+ * preserving the {pet_id}/{file} layout. Idempotent — files already present with a matching
+ * byte size are skipped, so re-runs are cheap and it can be scheduled.
  *
  * Usage:
  *   export SUPABASE_URL="https://<ref>.supabase.co"

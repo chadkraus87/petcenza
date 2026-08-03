@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthProvider'
 import { assuranceState } from './mfa'
 import Captcha, { captchaEnabled } from '@/components/ui/Captcha'
+import { takePendingInvite } from '@/features/sharing/AcceptInvite'
 
 export default function SignIn() {
   const { signIn, signInWithGoogle, signInWithApple } = useAuth()
@@ -27,7 +28,10 @@ export default function SignIn() {
     // If the account has a verified second factor, complete the challenge before entering the app.
     const aal = await assuranceState()
     setBusy(false)
-    nav(aal === 'needs_mfa' ? '/auth/mfa' : '/')
+    if (aal === 'needs_mfa') { nav('/auth/mfa'); return }
+    // Resume an invite link that was opened while signed out.
+    const pending = takePendingInvite()
+    nav(pending ? `/invite/${pending}` : '/')
   }
 
   return (

@@ -32,7 +32,8 @@ export default function DocumentsPanel({ petId }: { petId: string }) {
         const invalid = validateUpload(file)
         if (invalid) { setError(`${file.name}: ${invalid}`); continue }
         const ext = file.name.split('.').pop()?.toLowerCase()
-        const path = `${user.id}/${petId}/${crypto.randomUUID()}.${ext}`
+        // Pet-scoped path: access is decided by pet membership, not by who uploaded.
+        const path = `${petId}/${crypto.randomUUID()}.${ext}`
         const { error: upErr } = await supabase.storage.from(BUCKET).upload(path, file, { contentType: file.type })
         if (upErr) { setError(upErr.message); continue }
         await supabase.from('documents').insert({

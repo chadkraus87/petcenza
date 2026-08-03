@@ -51,8 +51,15 @@ Deno.serve(async (req) => {
   const { bucket, path } = body
   if (!bucket || !path || !ALLOWED_BUCKETS.has(bucket)) return json({ error: 'Bad request' }, 400)
 
-  // A user may only scan files under their own folder.
-  if (path.split('/')[0] !== user.id) return json({ error: 'Forbidden' }, 403)
+  // Paths are pet-scoped ({pet_id}/{uuid}.{ext}). Authorise by pet membership rather than by
+  // owner id, so collaborators can scan their own uploads — and nobody can scan another pet's.
+  const petId = path.split('/')[0]
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(petId)) {
+    return json({ error: 'Bad request' }, 400)
+  }
+  const { data: allowed, error: accessErr } = await asUser
+    .rpc('can_access_pet', { p_pet_id: petId, p_min_role: 'editor' })
+  if (accessErr || allowed !== true) return json({ error: 'Forbidden' }, 403)
 
   const admin = createClient(url, serviceKey)
   const { data: blob, error: dlErr } = await admin.storage.from(bucket).download(path)
@@ -66,7 +73,9 @@ Deno.serve(async (req) => {
     // Quarantine: remove the object and its DB row, then log a security event.
     await admin.storage.from(bucket).remove([path])
     const table = bucket === 'pet-photos' ? 'pet_photos' : 'documents'
-    await admin.from(table).delete().eq('storage_path', path).eq('user_id', user.id)
+    // Scoped by storage_path alone — editor access to this pet was already verified above,
+    // and the row may legitimately have been authored by a different member.
+    await admin.from(table).delete().eq('storage_path', path)
     await admin.from('activity_logs').insert({
       user_id: user.id, action: 'security.upload_rejected', entity: table,
       metadata: { bucket, path, detected: detected ?? 'unknown' }

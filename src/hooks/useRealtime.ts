@@ -9,7 +9,14 @@ const SYNCED_TABLES = [
   'veterinarians','emergency_contacts'
 ]
 
-/** Cross-device sync: any change to this user's rows invalidates the matching query cache. */
+/**
+ * Cross-device sync: any change to a row this user can see invalidates the matching cache.
+ *
+ * Deliberately unfiltered. The previous `user_id=eq.<uid>` filter matched on *authorship*, so a
+ * collaborator's edits to a shared pet never arrived — the whole point of sharing. Supabase
+ * applies RLS to postgres_changes, so the server only delivers rows this user is allowed to
+ * read; membership is therefore enforced server-side rather than by a client-supplied filter.
+ */
 export function useRealtimeSync() {
   const qc = useQueryClient()
   const { user } = useAuth()
@@ -18,7 +25,7 @@ export function useRealtimeSync() {
     const channel = supabase.channel('user-sync')
     for (const table of SYNCED_TABLES) {
       channel.on('postgres_changes',
-        { event: '*', schema: 'public', table, filter: `user_id=eq.${user.id}` },
+        { event: '*', schema: 'public', table },
         () => {
           qc.invalidateQueries({ queryKey: [table] })
           qc.invalidateQueries({ queryKey: ['dashboard'] })

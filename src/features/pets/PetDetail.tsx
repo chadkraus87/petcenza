@@ -16,9 +16,10 @@ import GroomingPanel from '@/features/grooming/GroomingPanel'
 import BehaviorPanel from '@/features/behavior/BehaviorPanel'
 import NotesPanel from '@/features/notes/NotesPanel'
 import DocumentsPanel from '@/features/documents/DocumentsPanel'
+import SharingPanel from '@/features/sharing/SharingPanel'
 import PhotosPanel from './PhotosPanel'
 
-const TABS = ['Overview','Medications','Allergies','Vaccinations','Weight','Vet visits','Nutrition','Feeding','Grooming','Behavior','Notes','Documents','Photos'] as const
+const TABS = ['Overview','Medications','Allergies','Vaccinations','Weight','Vet visits','Nutrition','Feeding','Grooming','Behavior','Notes','Documents','Photos','Sharing'] as const
 type Tab = typeof TABS[number]
 
 export default function PetDetail() {
@@ -74,6 +75,7 @@ export default function PetDetail() {
       {tab === 'Notes' && <NotesPanel petId={id} />}
       {tab === 'Documents' && <DocumentsPanel petId={id} />}
       {tab === 'Photos' && <PhotosPanel petId={id} />}
+      {tab === 'Sharing' && <SharingPanel petId={id} petName={pet.name} />}
     </main>
   )
 }

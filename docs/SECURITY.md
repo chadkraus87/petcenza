@@ -16,6 +16,51 @@ Single-owner personal health data for pets; primary risks are cross-tenant data 
 | Audit | `activity_logs` append-only (update/delete policies dropped) for auth + sensitive events |
 | Headers | CSP in index.html **and** committed host config (`vercel.json` + `public/_headers`) setting full CSP, HSTS, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`, and `frame-ancestors 'none'` — see docs/DEPLOYMENT.md (incl. nginx snippet) |
 
+## Sharing model (per-pet)
+
+A pet has one true owner (`pets.user_id`) plus members in `pet_shares`. Access to every
+pet-scoped row is decided by **membership**, not authorship.
+
+| Capability | viewer | editor | owner |
+|---|:--:|:--:|:--:|
+| Read pet + all records | ✅ | ✅ | ✅ |
+| Add / edit / delete records | — | ✅ | ✅ |
+| Edit the pet profile | — | ✅ | ✅ |
+| Delete the pet | — | — | ✅ |
+| Invite, change roles, revoke | — | — | ✅ |
+| Leave the pet themselves | ✅ | ✅ | n/a |
+
+- `user_id` on child tables means **author**, not owner. INSERT policies still pin it to
+  `auth.uid()` so authorship cannot be forged; UPDATE/DELETE are governed by membership so an
+  editor can correct the owner's records.
+- Shares support `expires_at` — ideal for a pet sitter. Expiry revokes read *and* write instantly.
+- **Not shared:** veterinarians, emergency contacts, tags, notes/documents/reminders with no
+  `pet_id`, and activity logs. These stay personal to each account. A collaborator therefore sees
+  their own care team, not the owner's — a deliberate limitation, revisit if it proves annoying.
+
+### Why the helpers are SECURITY DEFINER
+`can_access_pet()` / `is_pet_owner()` must bypass RLS: policies on `pets` consult `pet_shares` and
+vice versa, so an RLS-respecting lookup would recurse infinitely. Both are read-only, take a pet
+id the caller already holds, and return only a boolean.
+
+`authenticated` **must** retain EXECUTE on them — RLS policy expressions evaluate as the calling
+role, so revoking it breaks every pet-scoped policy. EXECUTE is revoked from `PUBLIC` and `anon`
+(note: `revoke ... from anon` alone is a no-op, because Postgres grants new functions to PUBLIC).
+
+Accepted advisor lint: `0029_authenticated_security_definer_function_executable` on
+`can_access_pet`, `is_pet_owner`, `accept_pet_invitation` and `pet_members`. All four are
+required by design and self-guarding — `accept_pet_invitation` validates token/email/expiry, and
+`pet_members` gates on `can_access_pet`. There are **no** `anon` findings.
+
+### Vet-share links (no account required)
+`pet_share_links` grants a read-only clinical snapshot to someone without an account. This does
+**not** open RLS to `anon`: the table has no anon policy, and `vet_share_snapshot()` has EXECUTE
+revoked from every role including `authenticated`. The only path in is the `vet-share` edge
+function, which uses the service role and returns a fixed JSON shape for a validated token.
+Tokens are unguessable v4 UUIDs, expire, are revocable, and record view count / last view.
+Responses are `Cache-Control: no-store, private`. Failure modes all return 404 so a probe cannot
+distinguish "revoked" from "never existed".
+
 ## Local-cache hygiene
 - On sign-out (single device or global) the in-memory React Query cache is cleared **and** the
   localStorage-persisted query cache (`petcenza-query-cache`) is removed, so pet records don't
