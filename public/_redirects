@@ -1,0 +1,6 @@
+# SPA fallback for hosts that read a _redirects file (Netlify, Cloudflare Pages).
+# Client-routed React Router app: any path that isn't a real file must serve index.html,
+# otherwise deep links 404 — including /auth/reset and /auth/callback. Real files are matched
+# first, so /assets/*, /sw.js and the icons are unaffected.
+# (Vercel ignores this file; its equivalent is the "rewrites" block in vercel.json.)
+/*    /index.html   200
