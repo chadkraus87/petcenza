@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(npm test *)",
+      "Bash(npm audit *)",
+      "Bash(node -e ' *)",
+      "Bash(npm ls *)",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('deps:',Object.keys\\(p.dependencies\\)\\)\")",
+      "Bash(python3 -)",
+      "Bash(npx playwright *)",
+      "Bash(npm --version)",
+      "Read(//Users/chadkraus/Development/Projects/**)",
+      "Bash(echo \"started pid $!\")",
+      "Bash(pkill -f \"server/index.js\")",
+      "Bash(pkill -f \"concurrently\")",
+      "Bash(echo \"pid $!\")",
+      "Read(//Users/chadkraus/Library/LaunchAgents/**)",
+      "Bash(launchctl unload *)",
+      "Bash(launchctl load *)",
+      "Bash(launchctl list *)",
+      "Bash(pkill -f \"vite\")",
+      "Bash(grep -nE '\\\\$\\\\{\\(r|e\\)\\\\.[a-zA-Z]' src/lib/export.ts)",
+      "Bash(node -e \"import\\('nodemailer'\\).then\\(m=>{const t=m.default.createTransport\\({host:'smtp.example.com',port:587}\\);console.log\\('nodemailer', m.default.version || 'ok', '- createTransport OK'\\);}\\).catch\\(e=>console.log\\('ERR',e.message\\)\\)\")",
+      "Bash(cd /Users/chadkraus/Development/Projects/careerhub *)"
+    ]
+  }
+}

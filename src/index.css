@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; }
+body { @apply bg-paper text-ink font-body antialiased; }
+h1,h2,h3 { @apply font-display; }
+
+/* Quality floor */
+:focus-visible { outline: 2px solid theme('colors.moss'); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (prefers-contrast: more) {
+  .border-line { border-color: #22382F; }
+}

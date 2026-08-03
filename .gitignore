@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dev-dist/
+*.tsbuildinfo
+
+# Environment — never commit real keys.
+# .env.local holds the Supabase URL + anon key; a service-role key must NEVER be committed.
+.env
+.env.local
+.env.*.local
+
+# Local backups (may contain pet photos / medical documents)
+backups/
+
+# Test artifacts
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+coverage/
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Vercel
+.vercel
