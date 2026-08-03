@@ -39,8 +39,27 @@ Completed in the dashboard (2026-08-02):
 - ⏳ **Apple OAuth**: same flow, but needs a paid Apple Developer account ($99/yr). Optional.
 - ⏳ **When you deploy**: add `https://<your-domain>/auth/callback` and `/auth/reset` to Redirect URLs,
   and change Site URL to the production domain.
-- ⏳ **Optional — Captcha** (Auth → Attack Protection): needs an hCaptcha/Turnstile secret key plus
-  client-side integration. Worth it only once the app is publicly reachable.
+## Captcha (Cloudflare Turnstile) — ORDER MATTERS
+
+The client side is **already built** (`src/components/ui/Captcha.tsx`; the token is passed to
+`signUp`, `signInWithPassword`, and `resetPasswordForEmail`). It stays completely inert until
+`VITE_TURNSTILE_SITEKEY` is set, so dev, CI and E2E are unaffected.
+
+⚠️ **Supabase enforces captcha server-side.** The instant you enable it, every auth request
+without a valid token is rejected. Enabling it before the sitekey is deployed will lock you out
+of your own app. Follow this order:
+
+1. **Cloudflare dashboard → Turnstile → Add site.** Add hostnames: your Vercel domain **and**
+   `localhost` (Turnstile allows localhost for testing). Widget mode: *Managed*.
+2. Copy the **Site Key** (public) and **Secret Key** (private).
+3. Set `VITE_TURNSTILE_SITEKEY=<site key>` in **Vercel → Settings → Environment Variables**, and
+   in your local `.env.local`. **Redeploy** so it's baked into the bundle.
+4. Load the deployed sign-in page and confirm the Turnstile widget renders and the Sign in
+   button enables once it solves.
+5. **Only then**: Supabase → Auth → Attack Protection → enable Captcha, provider **Turnstile**,
+   paste the **Secret Key**, Save. *(Paste it yourself — Claude does not enter secrets.)*
+6. Verify sign-in still works. If anything breaks, disable the toggle in Supabase to restore
+   access immediately — that's the rollback.
 - ⏳ **Optional — PITR** (Database → Backups → Point in time): a **paid add-on** on top of Pro. Daily
   backups already cover you; add PITR only if you want sub-day recovery granularity.
 ## Storage backups (the gap DB backups don't cover)
