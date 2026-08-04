@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate, useParams } from 'react-router-dom'
-import { petSchema, toRow, type PetForm as PetFormValues } from '@/schemas/pet'
+import { petSchema, toRow, yearsToMonths, monthsToYears, type PetForm as PetFormValues } from '@/schemas/pet'
 import { usePet, useSavePet } from '@/hooks/usePets'
 import { SelectField, TextField } from '@/components/ui/Field'
 
@@ -17,14 +17,17 @@ export default function PetForm() {
     values: isEdit && pet ? {
       name: pet.name, nickname: pet.nickname ?? '', species: pet.species, breed: pet.breed ?? '',
       is_mixed_breed: pet.is_mixed_breed, sex: pet.sex, birth_date: pet.birth_date ?? '',
-      estimated_age_months: pet.estimated_age_months ?? '', adoption_date: pet.adoption_date ?? '',
+      estimated_age_years: monthsToYears(pet.estimated_age_months), adoption_date: pet.adoption_date ?? '',
       rescue_org: pet.rescue_org ?? '', color: pet.color ?? '', goal_weight_kg: pet.goal_weight_kg ?? '',
       microchip_no: pet.microchip_no ?? '', activity_level: pet.activity_level ?? 'moderate'
     } : undefined
   })
 
   const onSubmit = handleSubmit(async values => {
-    await save.mutateAsync({ id: isEdit ? id : undefined, values: toRow(values) })
+    // The form collects years; the column is estimated_age_months.
+    const { estimated_age_years, ...rest } = values
+    const row = { ...toRow(rest), estimated_age_months: yearsToMonths(estimated_age_years) }
+    await save.mutateAsync({ id: isEdit ? id : undefined, values: row })
     nav(isEdit ? `/pets/${id}` : '/pets')
   })
 
@@ -47,7 +50,8 @@ export default function PetForm() {
           <input type="checkbox" {...register('is_mixed_breed')} /> Mixed breed
         </label>
         <TextField label="Birth date" type="date" error={errors.birth_date} {...register('birth_date')} />
-        <TextField label="Estimated age (months, if birth date unknown)" type="number" error={errors.estimated_age_months as never} {...register('estimated_age_months')} />
+        <TextField label="Estimated age (years, if birth date unknown)" type="number" step="0.5" min="0"
+          error={errors.estimated_age_years as never} {...register('estimated_age_years')} />
         <TextField label="Adoption date" type="date" error={errors.adoption_date} {...register('adoption_date')} />
         <TextField label="Rescue organization" error={errors.rescue_org} {...register('rescue_org')} />
         <TextField label="Color / markings" error={errors.color} {...register('color')} />

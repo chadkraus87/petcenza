@@ -21,7 +21,10 @@ export function usePet(id: string) {
       const { data, error } = await supabase.from('pets').select('*').eq('id', id).single()
       if (error) throw error
       return data
-    }
+    },
+    // Without this the "Add a pet" screen (no :id in the route) fired `id=eq.` with an empty
+    // value, which PostgREST rejects — three 400s per mount once retries are counted.
+    enabled: !!id
   })
 }
 

@@ -4,6 +4,7 @@ import { useDashboard } from '@/hooks/useDashboard'
 import { useCompleteReminder } from '@/hooks/useReminders'
 import { useReminderNotifications } from '@/hooks/useNotifications'
 import { fmtDate, fmtDateTime } from '@/lib/format'
+import InsightsPanel from './InsightsPanel'
 
 export default function Dashboard() {
   const { data, isLoading, error } = useDashboard()
@@ -20,6 +21,8 @@ export default function Dashboard() {
     <main className="p-6 max-w-5xl mx-auto">
       <h1 className="text-3xl mb-1">Today</h1>
       <p className="text-ink/60 mb-6">{data.pets.length} pet{data.pets.length !== 1 && 's'} in your care</p>
+
+      <InsightsPanel />
 
       {data.severeAllergyPets.length > 0 && (
         <div role="alert" className="mb-6 rounded-card border border-alert bg-alert/5 p-4 flex gap-3">

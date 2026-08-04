@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob: https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; script-src 'self' https://challenges.cloudflare.com; worker-src 'self'; font-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" />
+    <!-- Dev-time CSP. frame-ancestors is deliberately omitted: browsers ignore it in a <meta>
+         tag and log a console warning. It IS enforced in production as a real response header
+         (vercel.json / public/_headers), which is the only place it works. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob: https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; script-src 'self' https://challenges.cloudflare.com; worker-src 'self'; font-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="theme-color" content="#154A5C" />
     <link rel="icon" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

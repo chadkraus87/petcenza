@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { petSchema, toRow } from '@/schemas/pet'
+import { petSchema, toRow, yearsToMonths, monthsToYears } from '@/schemas/pet'
 import { medicationSchema, allergySchema, weightSchema, validateUpload, vetSchema, emergencyContactSchema, feedingSchema, groomingSchema, behaviorSchema, noteSchema, reminderSchema } from '@/schemas/records'
 
 describe('petSchema', () => {
@@ -10,6 +10,36 @@ describe('petSchema', () => {
   it('rejects an empty name', () => {
     const r = petSchema.safeParse({ name: '  ', species: 'dog', sex: 'unknown' })
     expect(r.success).toBe(false)
+  })
+})
+
+describe('estimated age years <-> months', () => {
+  it('converts whole years to months', () => {
+    expect(yearsToMonths(3)).toBe(36)
+    expect(yearsToMonths(0)).toBe(0)
+  })
+  it('rounds fractional years to whole months', () => {
+    expect(yearsToMonths(2.5)).toBe(30)
+    expect(yearsToMonths(1.2)).toBe(14)   // 14.4 -> 14
+  })
+  it('treats blank/null as no value rather than zero', () => {
+    expect(yearsToMonths('')).toBeNull()
+    expect(yearsToMonths(null)).toBeNull()
+    expect(yearsToMonths(undefined)).toBeNull()
+  })
+  it('converts stored months back to years for the form', () => {
+    expect(monthsToYears(36)).toBe(3)
+    expect(monthsToYears(30)).toBe(2.5)
+    expect(monthsToYears(14)).toBe(1.2)
+    expect(monthsToYears(null)).toBe('')
+  })
+  it('round-trips a whole number of years without drift', () => {
+    for (const y of [1, 2, 5, 12, 20]) expect(monthsToYears(yearsToMonths(y))).toBe(y)
+  })
+  it('rejects an age beyond the column check (600 months = 50 years)', () => {
+    const base = { name: 'X', species: 'dog', sex: 'unknown' }
+    expect(petSchema.safeParse({ ...base, estimated_age_years: 50 }).success).toBe(true)
+    expect(petSchema.safeParse({ ...base, estimated_age_years: 51 }).success).toBe(false)
   })
 })
 
