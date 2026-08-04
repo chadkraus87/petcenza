@@ -48,7 +48,7 @@ function VetsSection() {
         </button>
       </div>
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
           <TextField label="Vet name" error={errors.name} {...register('name')} />
           <TextField label="Clinic" error={errors.clinic} {...register('clinic')} />
           <TextField label="Phone" type="tel" error={errors.phone} {...register('phone')} />
@@ -62,7 +62,7 @@ function VetsSection() {
       )}
       <ul className="space-y-3">
         {vets?.map(v => (
-          <li key={v.id} className="bg-card rounded-card border border-line p-4 flex justify-between gap-3">
+          <li key={v.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex justify-between gap-3">
             <div>
               <p className="font-medium flex items-center gap-2">
                 {v.name}
@@ -105,7 +105,7 @@ function ContactsSection() {
         </button>
       </div>
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
           <TextField label="Label (e.g. Pet sitter)" error={errors.label} {...register('label')} />
           <TextField label="Name" error={errors.name} {...register('name')} />
           <TextField label="Phone" type="tel" error={errors.phone} {...register('phone')} />
@@ -115,7 +115,7 @@ function ContactsSection() {
       )}
       <ul className="space-y-3">
         {contacts?.map(c => (
-          <li key={c.id} className="bg-card rounded-card border border-line p-4 flex justify-between gap-3">
+          <li key={c.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex justify-between gap-3">
             <div>
               <p className="font-medium">{c.label} <span className="font-normal text-ink/70">— {c.name}</span></p>
               <p className="text-sm text-ink/60">{c.phone}</p>

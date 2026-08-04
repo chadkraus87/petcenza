@@ -46,7 +46,8 @@ export default function AppShell() {
 
   return (
     <div className="min-h-screen md:grid md:grid-cols-[220px_1fr]">
-      <aside className="hidden md:flex flex-col bg-ink text-paper p-4 gap-1">
+      {/* Translucent so the artwork reads through the chrome; content cards stay solid. */}
+      <aside className="hidden md:flex flex-col bg-ink/95 backdrop-blur-md text-paper p-4 gap-1 md:sticky md:top-0 md:h-screen md:overflow-y-auto">
         <div className="font-display text-xl px-2 py-3 flex items-center gap-2"><PawPrint size={20} aria-hidden /> PetCenza</div>
         {nav.map(({ to, label, icon: Icon }) => (
           <NavLink key={to} to={to} end={to === '/'}
@@ -71,7 +72,7 @@ export default function AppShell() {
       </div>
 
       {/* Mobile tab bar */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 bg-ink text-paper flex justify-around py-2" aria-label="Primary">
+      <nav className="md:hidden fixed bottom-0 inset-x-0 bg-ink/95 backdrop-blur-md text-paper flex justify-around py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]" aria-label="Primary">
         {nav.map(({ to, label, icon: Icon }) => (
           <NavLink key={to} to={to} end={to === '/'} aria-label={label}
             className={({ isActive }) => `p-2 rounded-md ${isActive ? 'bg-paper/15' : ''}`}>

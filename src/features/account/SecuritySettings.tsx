@@ -52,7 +52,7 @@ export default function SecuritySettings() {
       <h1 className="text-3xl mb-1">Account & security</h1>
       <p className="text-ink/60 mb-6">{user?.email}</p>
 
-      <section className="bg-card rounded-card border border-line p-6 mb-6">
+      <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-6 mb-6">
         <div className="flex items-center gap-2 mb-1">
           {mfaOn ? <ShieldCheck className="text-moss" aria-hidden /> : <ShieldAlert className="text-signal" aria-hidden />}
           <h2 className="text-xl">Two-factor authentication</h2>
@@ -111,7 +111,7 @@ export default function SecuritySettings() {
         )}
       </section>
 
-      <section className="bg-card rounded-card border border-line p-6">
+      <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-6">
         <h2 className="text-xl mb-1">Sessions</h2>
         <p className="text-sm text-ink/60 mb-4">Signed in on another device you no longer trust? Sign out everywhere to revoke all sessions.</p>
         <div className="flex flex-wrap gap-3">

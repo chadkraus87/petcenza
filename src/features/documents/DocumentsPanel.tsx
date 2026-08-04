@@ -73,7 +73,7 @@ export default function DocumentsPanel({ petId }: { petId: string }) {
       {error && <p role="alert" className="text-sm text-alert mb-4">{error}</p>}
       <ul className="space-y-2">
         {docs?.map(d => (
-          <li key={d.id} className="bg-card rounded-card border border-line p-3 flex items-center gap-3">
+          <li key={d.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-3 flex items-center gap-3">
             <FileText size={18} className="text-ink/50 shrink-0" aria-hidden />
             <div className="min-w-0 flex-1">
               <p className="font-medium truncate">{d.file_name}</p>

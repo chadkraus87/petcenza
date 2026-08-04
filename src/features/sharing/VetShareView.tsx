@@ -158,7 +158,7 @@ function Section({ title, empty, rows, children }: {
   title: string; empty: string; rows: number; children: React.ReactNode
 }) {
   return (
-    <section className="bg-card rounded-card border border-line p-4 mb-4">
+    <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 mb-4">
       <h2 className="text-lg mb-2">{title}</h2>
       {rows === 0 ? <p className="text-sm text-ink/50">{empty}</p> : children}
     </section>

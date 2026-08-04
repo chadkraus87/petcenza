@@ -67,7 +67,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
         {members?.map(m => {
           const isMe = m.user_id === user?.id
           return (
-            <li key={m.user_id} className="bg-card rounded-card border border-line p-4 flex items-center justify-between gap-3">
+            <li key={m.user_id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex items-center justify-between gap-3">
               <div className="min-w-0">
                 <p className="font-medium flex items-center gap-2 truncate">
                   {m.display_name || m.email || 'Member'}
@@ -119,7 +119,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
       {/* ------------------------------------------------ owner-only controls */}
       {isOwner && (
         <>
-          <div className="bg-card rounded-card border border-line p-5 mb-6">
+          <div className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6">
             <h3 className="font-medium mb-3">Invite someone</h3>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
@@ -155,7 +155,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
               <h3 className="font-medium mb-2">Pending invites</h3>
               <ul className="space-y-2">
                 {invitations.map(inv => (
-                  <li key={inv.id} className="bg-card rounded-card border border-line p-3 flex items-center justify-between gap-3">
+                  <li key={inv.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-3 flex items-center justify-between gap-3">
                     <div className="min-w-0">
                       <p className="text-sm flex items-center gap-2">
                         <Link2 size={14} className="text-ink/40 shrink-0" aria-hidden />
@@ -182,7 +182,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
             </>
           )}
           {/* ------------------------------------------------- vet-share links */}
-          <div className="bg-card rounded-card border border-line p-5 mt-6">
+          <div className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mt-6">
             <h3 className="font-medium flex items-center gap-2 mb-1">
               <Stethoscope size={16} className="text-moss" aria-hidden /> Vet links
             </h3>

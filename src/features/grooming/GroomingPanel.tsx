@@ -30,7 +30,7 @@ export default function GroomingPanel({ petId }: { petId: string }) {
         <button onClick={() => setAdding(a => !a)} className="rounded-md bg-ink text-paper px-4 py-2 text-sm">{adding ? 'Close' : 'Log grooming'}</button>
       </div>
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
           <TextField label="Task" error={errors.task} {...register('task')} placeholder="Bath, nail trim, teeth…" />
           <TextField label="Date" type="date" error={errors.done_on} {...register('done_on')} />
           <div className="sm:col-span-2"><TextArea label="Notes" error={errors.notes} {...register('notes')} /></div>
@@ -39,7 +39,7 @@ export default function GroomingPanel({ petId }: { petId: string }) {
       )}
       <ul className="space-y-3">
         {logs?.map(l => (
-          <li key={l.id} className="bg-card rounded-card border border-line p-4 flex justify-between gap-3">
+          <li key={l.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex justify-between gap-3">
             <div>
               <p className="font-medium">{l.task} <span className="font-normal text-ink/60">· {fmtDate(l.done_on)}</span></p>
               {l.notes && <p className="text-sm text-ink/60 mt-1">{l.notes}</p>}

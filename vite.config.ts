@@ -17,8 +17,8 @@ export default defineConfig({
         name: 'PetCenza — Pet Health & Care',
         short_name: 'PetCenza',
         description: 'Every record, reminder, and vet visit for your pets in one place.',
-        theme_color: '#22382F',
-        background_color: '#F6F7F4',
+        theme_color: '#154A5C',
+        background_color: '#EFF6F9',
         display: 'standalone',
         icons: [
           { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
@@ -44,6 +44,18 @@ export default defineConfig({
             urlPattern: ({ url }) => url.pathname.includes('/storage/v1/object/'),
             handler: 'StaleWhileRevalidate',
             options: { cacheName: 'supabase-storage', expiration: { maxEntries: 200 } }
+          },
+          {
+            // Local artwork/icons. Deliberately NOT in globPatterns (which omits .webp) so the
+            // ~95 KB of background art never inflates the precached app shell — it's cached on
+            // first view instead, then served instantly and offline thereafter.
+            urlPattern: ({ url, request }) =>
+              url.origin === self.location.origin && request.destination === 'image',
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'app-images',
+              expiration: { maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 30 }
+            }
           }
         ]
       }

@@ -31,7 +31,7 @@ export default function PetForm() {
   return (
     <main className="p-6 max-w-2xl mx-auto">
       <h1 className="text-3xl mb-6">{isEdit ? `Edit ${pet?.name ?? 'pet'}` : 'Add a pet'}</h1>
-      <form onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-2 bg-card rounded-card border border-line p-6" noValidate>
+      <form onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-6" noValidate>
         <TextField label="Name" error={errors.name} {...register('name')} />
         <TextField label="Nickname" error={errors.nickname} {...register('nickname')} />
         <SelectField label="Species" error={errors.species} {...register('species')}>

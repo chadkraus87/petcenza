@@ -35,7 +35,7 @@ export default function ForgotPassword() {
 
   return (
     <main className="min-h-screen grid place-items-center p-6">
-      <div className="w-full max-w-sm bg-card rounded-card border border-line p-8">
+      <div className="w-full max-w-sm bg-card/85 backdrop-blur-md shadow-lg shadow-ink/5 rounded-card border border-line p-8">
         <h1 className="text-2xl mb-1">Reset your password</h1>
         <p className="text-sm text-ink/60 mb-6">Enter your email and we'll send you a reset link.</p>
         {error && <p role="alert" className="text-sm text-alert mb-4">{error}</p>}

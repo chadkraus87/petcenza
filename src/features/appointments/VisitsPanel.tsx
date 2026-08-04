@@ -31,7 +31,7 @@ export default function VisitsPanel({ petId }: { petId: string }) {
         <button onClick={() => setAdding(a => !a)} className="rounded-md bg-ink text-paper px-4 py-2 text-sm">{adding ? 'Close' : 'Add visit'}</button>
       </div>
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 bg-card rounded-card border border-line p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
           <TextField label="Date & time" type="datetime-local" error={errors.visit_at} {...register('visit_at')} />
           <TextField label="Reason" error={errors.reason} {...register('reason')} />
           <VetSelect label="Veterinarian" registration={register('veterinarian_id')} />
@@ -43,7 +43,7 @@ export default function VisitsPanel({ petId }: { petId: string }) {
       )}
       <ul className="space-y-3">
         {visits?.map(v => (
-          <li key={v.id} className="bg-card rounded-card border border-line p-4 flex justify-between gap-3">
+          <li key={v.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex justify-between gap-3">
             <div>
               <p className="font-medium">{v.reason ?? 'Vet visit'}</p>
               <time className="text-sm text-moss">{fmtDateTime(v.visit_at)}</time>

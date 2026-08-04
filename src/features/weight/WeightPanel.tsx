@@ -9,6 +9,7 @@ import { usePetCollection, useSaveRow } from '@/hooks/usePetRecords'
 import { AlertTriangle } from 'lucide-react'
 import { TextField } from '@/components/ui/Field'
 import { fmtDate, kgToLb, weightChangePct, WEIGHT_ALERT_PCT } from '@/lib/format'
+import { theme } from '@/lib/theme'
 import type { WeightEntry } from '@/types/db'
 
 type Form = z.infer<typeof weightSchema>
@@ -54,7 +55,7 @@ export default function WeightPanel({ petId, goalKg }: { petId: string; goalKg: 
       )}
 
       {adding && (
-        <form onSubmit={onSubmit} className="flex flex-wrap gap-3 items-end bg-card rounded-card border border-line p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="flex flex-wrap gap-3 items-end bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
           <TextField label="Date" type="date" error={errors.measured_on} {...register('measured_on')} />
           <TextField label="Weight (kg)" type="number" step="0.1" error={errors.weight_kg} {...register('weight_kg')} />
           <TextField label="Body condition (1–9)" type="number" error={errors.body_condition as never} {...register('body_condition')} />
@@ -63,15 +64,15 @@ export default function WeightPanel({ petId, goalKg }: { petId: string; goalKg: 
       )}
 
       {chartData.length >= 2 ? (
-        <div className="bg-card rounded-card border border-line p-4 h-72" role="img" aria-label={`Weight trend chart with ${chartData.length} measurements`}>
+        <div className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 h-72" role="img" aria-label={`Weight trend chart with ${chartData.length} measurements`}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
-              <CartesianGrid stroke="#DDE3DD" strokeDasharray="3 3" />
+              <CartesianGrid stroke={theme.line} strokeDasharray="3 3" />
               <XAxis dataKey="date" tick={{ fontSize: 11 }} minTickGap={40} />
               <YAxis domain={['auto', 'auto']} tick={{ fontSize: 11 }} unit=" kg" />
               <Tooltip />
-              {goalKg && <ReferenceLine y={goalKg} stroke="#D89A2B" strokeDasharray="4 4" label={{ value: 'Goal', fontSize: 11, fill: '#D89A2B' }} />}
-              <Line type="monotone" dataKey="kg" stroke="#4A6B5D" strokeWidth={2} dot={{ r: 3 }} />
+              {goalKg && <ReferenceLine y={goalKg} stroke={theme.signal} strokeDasharray="4 4" label={{ value: 'Goal', fontSize: 11, fill: theme.signal }} />}
+              <Line type="monotone" dataKey="kg" stroke={theme.moss} strokeWidth={2} dot={{ r: 3 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>

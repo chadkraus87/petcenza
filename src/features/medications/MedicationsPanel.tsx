@@ -34,7 +34,7 @@ export default function MedicationsPanel({ petId }: { petId: string }) {
       </div>
 
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
           <TextField label="Medication" error={errors.name} {...register('name')} />
           <TextField label="Dosage" error={errors.dosage} {...register('dosage')} placeholder="75 mg" />
           <TextField label="Frequency" error={errors.frequency} {...register('frequency')} placeholder="Twice daily with food" />

@@ -95,7 +95,7 @@ function Overview({ pet }: { pet: NonNullable<ReturnType<typeof usePet>['data']>
     ['Favorite activities', pet.favorite_activities?.join(', ')]
   ]
   return (
-    <dl className="bg-card rounded-card border border-line p-6 grid gap-x-8 gap-y-3 sm:grid-cols-2">
+    <dl className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-6 grid gap-x-8 gap-y-3 sm:grid-cols-2">
       {rows.filter(([, v]) => v).map(([k, v]) => (
         <div key={k}><dt className="text-xs uppercase tracking-wide text-ink/50">{k}</dt><dd>{v}</dd></div>
       ))}

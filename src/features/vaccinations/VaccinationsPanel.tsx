@@ -37,7 +37,7 @@ export default function VaccinationsPanel({ petId }: { petId: string }) {
         <button onClick={() => setAdding(a => !a)} className="rounded-md bg-ink text-paper px-4 py-2 text-sm">{adding ? 'Close' : 'Add vaccination'}</button>
       </div>
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
           <TextField label="Vaccine" error={errors.vaccine} {...register('vaccine')} placeholder="Rabies (3-yr)" />
           <TextField label="Lot number" error={errors.lot_no} {...register('lot_no')} />
           <TextField label="Administered on" type="date" error={errors.administered_on} {...register('administered_on')} />
@@ -50,7 +50,7 @@ export default function VaccinationsPanel({ petId }: { petId: string }) {
         {vax?.map(v => {
           const status = dueStatus(v.next_due_on)
           return (
-            <li key={v.id} className="bg-card rounded-card border border-line p-4 flex justify-between gap-3">
+            <li key={v.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex justify-between gap-3">
               <div>
                 <p className="font-medium">{v.vaccine}</p>
                 <p className="text-sm text-ink/60">

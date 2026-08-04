@@ -29,7 +29,7 @@ export default function AllergiesPanel({ petId }: { petId: string }) {
         <button onClick={() => setAdding(a => !a)} className="rounded-md bg-ink text-paper px-4 py-2 text-sm">{adding ? 'Close' : 'Add allergy'}</button>
       </div>
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
           <SelectField label="Type" error={errors.allergy_type} {...register('allergy_type')}>
             <option value="food">Food</option><option value="medication">Medication</option>
             <option value="environmental">Environmental</option><option value="other">Other</option>
@@ -46,7 +46,7 @@ export default function AllergiesPanel({ petId }: { petId: string }) {
       )}
       <ul className="space-y-3">
         {sorted.map(a => (
-          <li key={a.id} className="bg-card rounded-card border border-line p-4">
+          <li key={a.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4">
             <div className="flex justify-between gap-3">
               <div>
                 <p className="font-medium">{a.allergen} <SeverityBadge severity={a.severity} /></p>

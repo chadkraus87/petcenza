@@ -36,7 +36,7 @@ export default function Dashboard() {
       )}
 
       <div className="grid gap-4 md:grid-cols-2">
-        <section className="bg-card rounded-card border border-line p-4">
+        <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4">
           <h2 className="text-lg mb-3">Due today</h2>
           {data.remindersToday.length === 0 && <p className="text-sm text-ink/50">Nothing due. Enjoy the quiet.</p>}
           <ul className="space-y-2">
@@ -58,7 +58,7 @@ export default function Dashboard() {
           </ul>
         </section>
 
-        <section className="bg-card rounded-card border border-line p-4">
+        <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4">
           <h2 className="text-lg mb-3">Vaccinations due soon</h2>
           {data.vaxDue.length === 0 && <p className="text-sm text-ink/50">All boosters current for the next 30 days.</p>}
           <ul className="space-y-2">
@@ -71,7 +71,7 @@ export default function Dashboard() {
           </ul>
         </section>
 
-        <section className="bg-card rounded-card border border-line p-4">
+        <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4">
           <h2 className="text-lg mb-3">Active medications</h2>
           {data.medsActive.length === 0 && <p className="text-sm text-ink/50">No active prescriptions.</p>}
           <ul className="space-y-2">
@@ -85,7 +85,7 @@ export default function Dashboard() {
           </ul>
         </section>
 
-        <section className="bg-card rounded-card border border-line p-4">
+        <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4">
           <h2 className="text-lg mb-3">Upcoming vet visits</h2>
           {data.visitsUpcoming.length === 0 && <p className="text-sm text-ink/50">No appointments scheduled.</p>}
           <ul className="space-y-2">

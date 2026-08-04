@@ -6,11 +6,58 @@
 body { @apply bg-paper text-ink font-body antialiased; }
 h1,h2,h3 { @apply font-display; }
 
+/* ---------------------------------------------------------------- background
+   The illustrated artwork sits on a fixed pseudo-element behind everything, so
+   it never scrolls or repaints with content. Two crops: the portrait art on
+   narrow screens, the landscape art from md up.
+
+   A paper-tinted gradient is layered ON TOP of the image (first background-image
+   wins in CSS) as a legibility scrim — the artwork is busy at the edges and text
+   would otherwise sit directly on the dog/cat photo. The scrim is stronger at the
+   bottom, where the photographic corner lives.                                */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(180deg, rgba(239,246,249,0.10) 0%, rgba(239,246,249,0.28) 55%, rgba(239,246,249,0.45) 100%),
+    url('/bg-app.webp');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+@media (min-width: 768px) {
+  body::before {
+    background-image:
+      linear-gradient(180deg, rgba(239,246,249,0.08) 0%, rgba(239,246,249,0.22) 55%, rgba(239,246,249,0.40) 100%),
+      url('/bg-wide.webp');
+    background-position: center;
+  }
+}
+
+/* Surfaces float over the artwork rather than hiding it. Cards keep a solid-ish
+   white so record text stays crisp, with a hint of the background bleeding in. */
+@supports (backdrop-filter: blur(8px)) {
+  .bg-card\/frosted, .frosted {
+    background-color: rgba(255,255,255,0.82);
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* Nothing decorative should print — the vet-share summary is meant for paper. */
+@media print {
+  body::before { display: none; }
+  body { background: #fff; }
+}
+
 /* Quality floor */
 :focus-visible { outline: 2px solid theme('colors.moss'); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 @media (prefers-contrast: more) {
-  .border-line { border-color: #22382F; }
+  .border-line { border-color: theme('colors.ink'); }
+  /* Drop the artwork entirely — maximum contrast beats decoration. */
+  body::before { background-image: none; background-color: theme('colors.paper'); }
 }

@@ -22,7 +22,11 @@ export default defineConfig({
   webServer: {
     command: 'npm run dev -- --port 5178',
     url: 'http://localhost:5178',
-    reuseExistingServer: !process.env.CI,
+    // Never reuse a dev server. A running `npm run dev` picks up .env.local — which has a real
+    // Turnstile sitekey — so the captcha gates the submit buttons and the suite fails with a
+    // confusing "element not enabled" instead of the assertion it meant to make. Always boot a
+    // fresh server with the env block below.
+    reuseExistingServer: false,
     timeout: 60_000,
     env: {
       VITE_SUPABASE_URL: 'https://demo.supabase.co',

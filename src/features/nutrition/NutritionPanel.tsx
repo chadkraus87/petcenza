@@ -50,7 +50,7 @@ export default function NutritionPanel({ petId }: { petId: string }) {
   return (
     <section>
       <h2 className="text-xl mb-4">Nutrition plan</h2>
-      <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line p-5" noValidate>
+      <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5" noValidate>
         <TextField label="Food brand" error={errors.food_brand} {...register('food_brand')} />
         <TextField label="Formula" error={errors.formula} {...register('formula')} placeholder="Adult, grain-free…" />
         <TextField label="Portion" error={errors.portion} {...register('portion')} placeholder="1 cup, twice daily" />

@@ -54,7 +54,7 @@ export default function RemindersPanel() {
       </div>
 
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
           <div className="sm:col-span-2">
             <TextField label="What's the reminder?" error={errors.title} {...register('title')}
               placeholder="Give Ranger his evening dose" />
@@ -86,7 +86,7 @@ export default function RemindersPanel() {
         {reminders?.map(r => {
           const overdue = isBefore(parseISO(r.due_at), new Date())
           return (
-            <li key={r.id} className="bg-card rounded-card border border-line p-4 flex items-center justify-between gap-3">
+            <li key={r.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex items-center justify-between gap-3">
               <div className="min-w-0">
                 <p className="font-medium truncate">
                   {r.title}
