@@ -44,6 +44,23 @@ export function useIsPetOwner(petId: string) {
   })
 }
 
+/**
+ * True only for the PRIMARY owner (pets.user_id) — distinct from useIsPetOwner, which also
+ * returns true for co-owners. Deleting the pet, transferring it, and granting co-ownership are
+ * restricted to the primary owner.
+ */
+export function useIsPrimaryPetOwner(petId: string) {
+  return useQuery({
+    queryKey: ['is_primary_pet_owner', petId],
+    queryFn: async (): Promise<boolean> => {
+      const { data, error } = await supabase.rpc('is_primary_pet_owner', { p_pet_id: petId })
+      if (error) throw error
+      return data === true
+    },
+    enabled: !!petId
+  })
+}
+
 /** True when the signed-in user may modify this pet's records (owner or editor). */
 export function useCanEditPet(petId: string) {
   return useQuery({
@@ -112,7 +129,8 @@ export function useRevokeInvitation(petId: string) {
 export function useUpdateMemberRole(petId: string) {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: async ({ userId, role }: { userId: string; role: Exclude<ShareRole, 'owner'> }) => {
+    // 'owner' here means CO-owner. A DB trigger restricts granting it to the primary owner.
+    mutationFn: async ({ userId, role }: { userId: string; role: ShareRole }) => {
       const { error } = await supabase.from('pet_shares')
         .update({ role }).eq('pet_id', petId).eq('user_id', userId)
       if (error) throw error

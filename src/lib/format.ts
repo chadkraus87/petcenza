@@ -29,3 +29,16 @@ export function weightChangePct(sortedAscKg: number[]): number | null {
 
 /** A change of 10%+ between consecutive weigh-ins is worth surfacing to the owner/vet. */
 export const WEIGHT_ALERT_PCT = 10
+
+/**
+ * Move a timestamp onto a different day, preserving its time of day.
+ *
+ * Used by calendar drag-to-reschedule: dropping "morning meds" on Thursday should mean Thursday
+ * morning, not Thursday at whatever hour the target cell nominally starts at.
+ */
+export function moveToDay(original: Date | string, targetDay: Date): Date {
+  const from = typeof original === 'string' ? parseISO(original) : original
+  const out = new Date(targetDay)
+  out.setHours(from.getHours(), from.getMinutes(), from.getSeconds(), 0)
+  return out
+}

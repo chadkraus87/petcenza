@@ -3,7 +3,7 @@ import { Crown, Copy, Check, Trash2, Link2, LogOut, Stethoscope, Eye } from 'luc
 import { useAuth } from '@/features/auth/AuthProvider'
 import { fmtDate } from '@/lib/format'
 import {
-  usePetMembers, usePetInvitations, useIsPetOwner,
+  usePetMembers, usePetInvitations, useIsPetOwner, useIsPrimaryPetOwner,
   useCreateInvitation, useRevokeInvitation, useUpdateMemberRole, useRemoveMember,
   useVetShareLinks, useCreateVetShareLink, useRevokeVetShareLink, useTransferOwnership
 } from '@/hooks/useSharing'
@@ -14,9 +14,14 @@ const ROLE_HELP: Record<string, string> = {
   editor: 'Can add and edit records — meds, weights, visits, photos.'
 }
 
+const ROLE_LABEL: Record<string, string> = {
+  viewer: 'Viewer', editor: 'Editor', owner: 'Co-owner'
+}
+
 export default function SharingPanel({ petId, petName }: { petId: string; petName: string }) {
   const { user } = useAuth()
   const { data: isOwner } = useIsPetOwner(petId)
+  const { data: isPrimaryOwner } = useIsPrimaryPetOwner(petId)
   const { data: members } = usePetMembers(petId)
   const { data: invitations } = usePetInvitations(petId)
   const createInvite = useCreateInvitation(petId)
@@ -113,17 +118,22 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                       <select
                         aria-label={`Role for ${m.display_name || m.email}`}
                         value={m.role}
-                        onChange={e => updateRole.mutate({ userId: m.user_id, role: e.target.value as 'viewer' | 'editor' })}
+                        onChange={e => updateRole.mutate({ userId: m.user_id, role: e.target.value as 'viewer' | 'editor' | 'owner' })}
                         className="rounded-md border border-line px-2 py-1 text-sm bg-card">
                         <option value="viewer">Viewer</option>
                         <option value="editor">Editor</option>
+                        {/* Only the primary owner may grant co-ownership — enforced by a DB trigger. */}
+                        {isPrimaryOwner && <option value="owner">Co-owner</option>}
                       </select>
-                      <button onClick={() => setConfirmTransfer(m.user_id)}
-                        title="Make this person the owner"
-                        aria-label={`Transfer ownership to ${m.display_name || m.email}`}
-                        className="text-ink/50 hover:text-moss">
-                        <Crown size={16} />
-                      </button>
+                      {/* Handing the pet over entirely is the primary owner's call alone. */}
+                      {isPrimaryOwner && (
+                        <button onClick={() => setConfirmTransfer(m.user_id)}
+                          title="Make this person the owner"
+                          aria-label={`Transfer ownership to ${m.display_name || m.email}`}
+                          className="text-ink/50 hover:text-moss">
+                          <Crown size={16} />
+                        </button>
+                      )}
                       <button onClick={() => removeMember.mutate(m.user_id)} className="text-alert"
                         aria-label={`Remove ${m.display_name || m.email}`}>
                         <Trash2 size={16} />
@@ -135,7 +145,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                       <LogOut size={14} aria-hidden /> Leave
                     </button>
                   ) : (
-                    <span className="text-sm text-ink/50 capitalize">{m.role}</span>
+                    <span className="text-sm text-ink/50">{ROLE_LABEL[m.role] ?? m.role}</span>
                   )}
                 </div>
               )}

@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { moveToDay } from '@/lib/format'
 import type { Reminder } from '@/types/db'
 
 /**
@@ -67,6 +68,24 @@ export function useSnoozeReminder() {
       const until = new Date(Date.now() + hours * 3_600_000).toISOString()
       const { error } = await supabase.from('reminders')
         .update({ due_at: until, snoozed_until: until }).eq('id', id)
+      if (error) throw error
+    },
+    onSettled: () => invalidate(qc)
+  })
+}
+
+/**
+ * Move a reminder to a different day, keeping its time of day.
+ *
+ * Dragging changes the DATE only — someone dropping a "morning meds" reminder on Thursday means
+ * Thursday morning, not Thursday at whatever o'clock the cell happens to represent.
+ */
+export function useRescheduleReminder() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ id, from, to }: { id: string; from: string; to: Date }) => {
+      const { error } = await supabase.from('reminders')
+        .update({ due_at: moveToDay(from, to).toISOString() }).eq('id', id)
       if (error) throw error
     },
     onSettled: () => invalidate(qc)

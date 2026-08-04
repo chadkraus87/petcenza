@@ -6,9 +6,10 @@ import {
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import RemindersPanel from './RemindersPanel'
+import { useRescheduleReminder } from '@/hooks/useReminders'
 import type { Reminder, VetVisit } from '@/types/db'
 
-type CalItem = { id: string; date: Date; label: string; kind: string }
+type CalItem = { id: string; date: Date; label: string; kind: string; draggable: boolean }
 type View = 'month' | 'week' | 'day'
 
 const kindColor: Record<string, string> = {
@@ -26,6 +27,9 @@ function rangeFor(view: View, anchor: Date): { start: Date; end: Date } {
 export default function CalendarPage() {
   const [anchor, setAnchor] = useState(new Date())
   const [view, setView] = useState<View>('month')
+  const reschedule = useRescheduleReminder()
+  const [dragging, setDragging] = useState<CalItem | null>(null)
+  const [dropTarget, setDropTarget] = useState<string | null>(null)
 
   const { start, end } = useMemo(() => rangeFor(view, anchor), [view, anchor])
 
@@ -39,8 +43,10 @@ export default function CalendarPage() {
         supabase.from('pets').select('id, name, birth_date').eq('archived', false)
       ])
       const items: CalItem[] = []
-      for (const r of (reminders.data ?? []) as Reminder[]) items.push({ id: r.id, date: parseISO(r.due_at), label: r.title, kind: r.kind })
-      for (const v of (visits.data ?? []) as VetVisit[]) items.push({ id: v.id, date: parseISO(v.visit_at), label: v.reason ?? 'Vet visit', kind: 'vet_appointment' })
+      // Only reminders can be dragged — a vet visit is an appointment with a clinic, and a
+      // birthday is a fact. Moving either from a calendar cell would be a lie.
+      for (const r of (reminders.data ?? []) as Reminder[]) items.push({ id: r.id, date: parseISO(r.due_at), label: r.title, kind: r.kind, draggable: true })
+      for (const v of (visits.data ?? []) as VetVisit[]) items.push({ id: v.id, date: parseISO(v.visit_at), label: v.reason ?? 'Vet visit', kind: 'vet_appointment', draggable: false })
       // The visible span can straddle two calendar years, so place each birthday in every year it
       // touches; the per-day filter keeps only the ones actually in range.
       const years = new Set([start.getFullYear(), end.getFullYear()])
@@ -48,7 +54,7 @@ export default function CalendarPage() {
         if (!p.birth_date) continue
         const bd = parseISO(p.birth_date)
         for (const year of years) {
-          items.push({ id: `bday-${p.id}-${year}`, date: new Date(year, bd.getMonth(), bd.getDate()), label: `${p.name}'s birthday`, kind: 'birthday' })
+          items.push({ id: `bday-${p.id}-${year}`, date: new Date(year, bd.getMonth(), bd.getDate()), label: `${p.name}'s birthday`, kind: 'birthday', draggable: false })
         }
       }
       return items
@@ -99,14 +105,35 @@ export default function CalendarPage() {
               const cap = view === 'week' ? 8 : 3
               return (
                 <div key={day.toISOString()}
-                  className={`bg-card p-1.5 ${view === 'week' ? 'min-h-56' : 'min-h-24'} ${
-                    view === 'month' && !isSameMonth(day, anchor) ? 'opacity-40' : ''}`}>
+                  onDragOver={e => {
+                    if (!dragging) return
+                    e.preventDefault()                       // required to allow a drop
+                    setDropTarget(day.toDateString())
+                  }}
+                  onDragLeave={() => setDropTarget(t => t === day.toDateString() ? null : t)}
+                  onDrop={e => {
+                    e.preventDefault()
+                    setDropTarget(null)
+                    if (!dragging || isSameDay(dragging.date, day)) return
+                    reschedule.mutate({ id: dragging.id, from: dragging.date.toISOString(), to: day })
+                    setDragging(null)
+                  }}
+                  className={`bg-card p-1.5 transition-colors ${view === 'week' ? 'min-h-56' : 'min-h-24'} ${
+                    view === 'month' && !isSameMonth(day, anchor) ? 'opacity-40' : ''} ${
+                    dropTarget === day.toDateString() ? 'ring-2 ring-inset ring-moss bg-wave' : ''}`}>
                   <span className={`text-xs ${isToday(day) ? 'inline-grid place-items-center w-5 h-5 rounded-full bg-moss text-paper' : 'text-ink/60'}`}>
                     {format(day, 'd')}
                   </span>
                   <ul className="mt-1 space-y-0.5">
                     {items.slice(0, cap).map(i => (
-                      <li key={i.id} className="flex items-start gap-1 text-[11px] leading-tight">
+                      <li key={i.id}
+                        draggable={i.draggable}
+                        onDragStart={() => setDragging(i)}
+                        onDragEnd={() => { setDragging(null); setDropTarget(null) }}
+                        title={i.draggable ? 'Drag to another day to reschedule' : undefined}
+                        className={`flex items-start gap-1 text-[11px] leading-tight rounded px-0.5 ${
+                          i.draggable ? 'cursor-grab active:cursor-grabbing hover:bg-wave' : ''} ${
+                          dragging?.id === i.id ? 'opacity-40' : ''}`}>
                         <span className={`w-1.5 h-1.5 mt-1 rounded-full shrink-0 ${kindColor[i.kind] ?? 'bg-ink/60'}`} aria-hidden />
                         <span className={view === 'week' ? '' : 'truncate'}>
                           {view === 'week' && <time className="text-ink/40 mr-1">{format(i.date, 'HH:mm')}</time>}
@@ -121,6 +148,13 @@ export default function CalendarPage() {
             })}
           </div>
         </>
+      )}
+
+      {view !== 'day' && (
+        <p className="text-xs text-ink/50 mt-2">
+          Drag a reminder to another day to reschedule it. Vet visits and birthdays stay put.
+          Prefer the keyboard? Use <strong>Snooze</strong> in the list below.
+        </p>
       )}
 
       <RemindersPanel />

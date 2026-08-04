@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Users, X } from 'lucide-react'
-import { usePets } from '@/hooks/usePets'
+import { Users, X, Heart } from 'lucide-react'
+import { usePets, useRememberedPets } from '@/hooks/usePets'
 import { useTags, useAllPetTags } from '@/hooks/useTags'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { petAge } from '@/lib/format'
@@ -10,6 +10,7 @@ export default function PetList() {
   const { data: pets, isLoading } = usePets()
   const { data: tags } = useTags()
   const { data: petTags } = useAllPetTags()
+  const { data: remembered } = useRememberedPets()
   const { user } = useAuth()
   const [activeTag, setActiveTag] = useState<string | null>(null)
 
@@ -67,6 +68,29 @@ export default function PetList() {
             <Users size={18} className="text-moss" aria-hidden /> Shared with you
           </h2>
           <PetGrid pets={shared} shared />
+        </>
+      )}
+
+      {/* Kept visible but set apart — the records stay, the care reminders don't. */}
+      {remembered && remembered.length > 0 && !activeTag && (
+        <>
+          <h2 className="text-xl mt-10 mb-3 flex items-center gap-2">
+            <Heart size={18} className="text-coral" aria-hidden /> Remembered
+          </h2>
+          <ul className="grid gap-4 sm:grid-cols-2">
+            {remembered.map(p => (
+              <li key={p.id}>
+                <Link to={`/pets/${p.id}`}
+                  className="block bg-card/70 rounded-card border border-line shadow-sm shadow-ink/5 p-5 hover:border-coral">
+                  <h3 className="text-lg">{p.name}</h3>
+                  <p className="text-sm text-ink/50">
+                    {p.breed ?? p.species}
+                    {p.deceased_on && <> · {new Date(p.deceased_on).getFullYear()}</>}
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </>
       )}
     </main>

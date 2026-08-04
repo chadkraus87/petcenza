@@ -50,6 +50,29 @@ if [[ "$PERMS" != "600" ]]; then
   chmod 600 "$SECRET_FILE"
 fi
 
+# A scheduled job that fails silently every night is worse than no job at all.
+# shellcheck disable=SC1090
+source "$SECRET_FILE"
+if [[ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" || -z "${SUPABASE_URL:-}" ]]; then
+  echo "SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY are not both set in $SECRET_FILE." >&2
+  echo "Fill them in, then re-run this script." >&2
+  exit 1
+fi
+
+# Prove the credentials actually work before scheduling anything.
+echo "Verifying credentials…"
+CODE=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
+  "$SUPABASE_URL/storage/v1/object/list/pet-photos" \
+  -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+  -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"prefix":"","limit":1}')
+if [[ "$CODE" != "200" ]]; then
+  echo "Storage returned HTTP $CODE — the key looks wrong or lacks access. Not scheduling." >&2
+  exit 1
+fi
+echo "  credentials OK"
+
 mkdir -p "$LOG_DIR" "$(dirname "$PLIST")"
 
 cat > "$PLIST" <<EOF

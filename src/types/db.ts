@@ -16,7 +16,10 @@ export interface Pet {
   insurance_provider: string | null; insurance_policy_no: string | null
   registration_no: string | null; microchip_no: string | null
   favorite_foods: string[] | null; favorite_toys: string[] | null; favorite_activities: string[] | null
-  archived: boolean; created_at: string; updated_at: string
+  archived: boolean
+  /** Set when a pet has passed away. Records are kept; reminders stop. */
+  deceased_on: string | null
+  created_at: string; updated_at: string
 }
 
 export interface PetPhoto { id: string; pet_id: string; storage_path: string; caption: string | null; is_primary: boolean }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, Heart } from 'lucide-react'
 import { usePet } from '@/hooks/usePets'
 import { usePetCollection } from '@/hooks/usePetRecords'
 import { petAge, fmtDate } from '@/lib/format'
@@ -17,11 +17,12 @@ import BehaviorPanel from '@/features/behavior/BehaviorPanel'
 import NotesPanel from '@/features/notes/NotesPanel'
 import DocumentsPanel from '@/features/documents/DocumentsPanel'
 import SharingPanel from '@/features/sharing/SharingPanel'
+import PetDangerZone from './PetDangerZone'
 import TagEditor from '@/features/tags/TagEditor'
 import { useCanEditPet } from '@/hooks/useSharing'
 import PhotosPanel from './PhotosPanel'
 
-const TABS = ['Overview','Medications','Allergies','Vaccinations','Weight','Vet visits','Nutrition','Feeding','Grooming','Behavior','Notes','Documents','Photos','Sharing'] as const
+const TABS = ['Overview','Medications','Allergies','Vaccinations','Weight','Vet visits','Nutrition','Feeding','Grooming','Behavior','Notes','Documents','Photos','Sharing','Manage'] as const
 type Tab = typeof TABS[number]
 
 export default function PetDetail() {
@@ -49,6 +50,12 @@ export default function PetDetail() {
           <Link to={`/pets/${id}/edit`} className="rounded-md border border-line px-4 py-2 text-sm shrink-0">Edit profile</Link>
         </div>
         <div className="mt-3"><TagEditor petId={id} canEdit={canEdit === true} /></div>
+        {pet.deceased_on && (
+          <p className="mt-3 flex items-center gap-2 rounded-md bg-wave text-ink px-3 py-2 text-sm">
+            <Heart size={16} className="text-coral shrink-0" aria-hidden />
+            In memory of {pet.name} · {fmtDate(pet.deceased_on)}
+          </p>
+        )}
         {severe.length > 0 && (
           <p role="alert" className="mt-3 flex items-center gap-2 rounded-md bg-alert text-paper px-3 py-2 text-sm">
             <AlertTriangle size={16} aria-hidden />
@@ -80,6 +87,7 @@ export default function PetDetail() {
       {tab === 'Documents' && <DocumentsPanel petId={id} />}
       {tab === 'Photos' && <PhotosPanel petId={id} />}
       {tab === 'Sharing' && <SharingPanel petId={id} petName={pet.name} />}
+      {tab === 'Manage' && <PetDangerZone pet={pet} />}
     </main>
   )
 }
