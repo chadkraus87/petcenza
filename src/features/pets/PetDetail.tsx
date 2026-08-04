@@ -17,6 +17,8 @@ import BehaviorPanel from '@/features/behavior/BehaviorPanel'
 import NotesPanel from '@/features/notes/NotesPanel'
 import DocumentsPanel from '@/features/documents/DocumentsPanel'
 import SharingPanel from '@/features/sharing/SharingPanel'
+import TagEditor from '@/features/tags/TagEditor'
+import { useCanEditPet } from '@/hooks/useSharing'
 import PhotosPanel from './PhotosPanel'
 
 const TABS = ['Overview','Medications','Allergies','Vaccinations','Weight','Vet visits','Nutrition','Feeding','Grooming','Behavior','Notes','Documents','Photos','Sharing'] as const
@@ -27,6 +29,7 @@ export default function PetDetail() {
   const { data: pet, isLoading } = usePet(id)
   const { data: allergies } = usePetCollection<Allergy>('allergies', id, { column: 'severity' })
   const [tab, setTab] = useState<Tab>('Overview')
+  const { data: canEdit } = useCanEditPet(id)
 
   if (isLoading) return <p className="p-6 text-ink/50">Loading…</p>
   if (!pet) return <p className="p-6 text-alert">Pet not found.</p>
@@ -45,6 +48,7 @@ export default function PetDetail() {
           </div>
           <Link to={`/pets/${id}/edit`} className="rounded-md border border-line px-4 py-2 text-sm shrink-0">Edit profile</Link>
         </div>
+        <div className="mt-3"><TagEditor petId={id} canEdit={canEdit === true} /></div>
         {severe.length > 0 && (
           <p role="alert" className="mt-3 flex items-center gap-2 rounded-md bg-alert text-paper px-3 py-2 text-sm">
             <AlertTriangle size={16} aria-hidden />

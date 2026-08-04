@@ -64,6 +64,22 @@ export interface Reminder {
 
 export interface SearchHit { entity: string; id: string; pet_id: string | null; title: string; snippet: string }
 
+export interface Tag { id: string; user_id: string; name: string; color: string }
+
+export interface NotificationSettings {
+  user_id: string
+  browser_push: boolean
+  feeding: boolean
+  medication: boolean
+  grooming: boolean
+  vaccination: boolean
+  birthdays: boolean          // note: plural, unlike the 'birthday' reminder kind
+  vet_appointments: boolean   // note: plural, unlike the 'vet_appointment' reminder kind
+  custom: boolean
+  quiet_hours_start: string | null
+  quiet_hours_end: string | null
+}
+
 export interface NutritionPlan {
   id: string; pet_id: string; food_brand: string | null; formula: string | null; portion: string | null
   calories_per_day: number | null; supplements: string | null; treats: string | null

@@ -44,6 +44,38 @@ export function useIsPetOwner(petId: string) {
   })
 }
 
+/** True when the signed-in user may modify this pet's records (owner or editor). */
+export function useCanEditPet(petId: string) {
+  return useQuery({
+    queryKey: ['can_edit_pet', petId],
+    queryFn: async (): Promise<boolean> => {
+      const { data, error } = await supabase.rpc('can_access_pet', { p_pet_id: petId, p_min_role: 'editor' })
+      if (error) throw error
+      return data === true
+    },
+    enabled: !!petId
+  })
+}
+
+/** Hand a pet to an existing member. Returns the RPC's status code. */
+export function useTransferOwnership(petId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (toUserId: string): Promise<string> => {
+      const { data, error } = await supabase.rpc('transfer_pet_ownership', {
+        p_pet_id: petId, p_to_user: toUserId
+      })
+      if (error) throw error
+      return data as string
+    },
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: ['pet_members', petId] })
+      qc.invalidateQueries({ queryKey: ['is_pet_owner', petId] })
+      qc.invalidateQueries({ queryKey: ['pets'] })
+    }
+  })
+}
+
 export function useCreateInvitation(petId: string) {
   const qc = useQueryClient()
   return useMutation({

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { ShieldCheck, ShieldAlert, Trash2 } from 'lucide-react'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { listTotpFactors, enrollTotp, verifyEnrollment, unenrollTotp, type TotpFactor, type EnrollResult } from '@/features/auth/mfa'
+import NotificationSettings from './NotificationSettings'
 
 export default function SecuritySettings() {
   const { user, signOut, signOutEverywhere } = useAuth()
@@ -49,8 +50,10 @@ export default function SecuritySettings() {
 
   return (
     <main className="p-6 max-w-2xl mx-auto">
-      <h1 className="text-3xl mb-1">Account & security</h1>
+      <h1 className="text-3xl mb-1">Settings</h1>
       <p className="text-ink/60 mb-6">{user?.email}</p>
+
+      <div className="mb-6"><NotificationSettings /></div>
 
       <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-6 mb-6">
         <div className="flex items-center gap-2 mb-1">

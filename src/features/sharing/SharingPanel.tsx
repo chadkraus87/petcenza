@@ -5,7 +5,7 @@ import { fmtDate } from '@/lib/format'
 import {
   usePetMembers, usePetInvitations, useIsPetOwner,
   useCreateInvitation, useRevokeInvitation, useUpdateMemberRole, useRemoveMember,
-  useVetShareLinks, useCreateVetShareLink, useRevokeVetShareLink
+  useVetShareLinks, useCreateVetShareLink, useRevokeVetShareLink, useTransferOwnership
 } from '@/hooks/useSharing'
 import type { ShareRole } from '@/types/db'
 
@@ -35,8 +35,30 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
   const [vetLabel, setVetLabel] = useState('')
   const [vetDays, setVetDays] = useState(7)
 
+  const transfer = useTransferOwnership(petId)
+  const [confirmTransfer, setConfirmTransfer] = useState<string | null>(null)
+
   const inviteUrl = (token: string) => `${location.origin}/invite/${token}`
   const vetUrl = (token: string) => `${location.origin}/share/${token}`
+
+  const TRANSFER_ERRORS: Record<string, string> = {
+    not_owner: 'Only the current owner can transfer this pet.',
+    not_a_member: 'That person needs access to this pet before you can hand it over.',
+    already_owner: 'They already own this pet.',
+    not_authenticated: 'Please sign in again.'
+  }
+
+  async function doTransfer(userId: string) {
+    setError(null)
+    try {
+      const result = await transfer.mutateAsync(userId)
+      if (result !== 'ok') setError(TRANSFER_ERRORS[result] ?? 'Could not transfer ownership.')
+    } catch {
+      setError('Could not transfer ownership.')
+    } finally {
+      setConfirmTransfer(null)
+    }
+  }
 
   async function copy(token: string, url: string) {
     try {
@@ -96,6 +118,12 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                         <option value="viewer">Viewer</option>
                         <option value="editor">Editor</option>
                       </select>
+                      <button onClick={() => setConfirmTransfer(m.user_id)}
+                        title="Make this person the owner"
+                        aria-label={`Transfer ownership to ${m.display_name || m.email}`}
+                        className="text-ink/50 hover:text-moss">
+                        <Crown size={16} />
+                      </button>
                       <button onClick={() => removeMember.mutate(m.user_id)} className="text-alert"
                         aria-label={`Remove ${m.display_name || m.email}`}>
                         <Trash2 size={16} />
@@ -115,6 +143,30 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
           )
         })}
       </ul>
+
+      {/* Ownership transfer is one-way from the giver's side — make them confirm by name. */}
+      {confirmTransfer && (
+        <div role="alertdialog" aria-label="Confirm ownership transfer"
+          className="mb-6 rounded-card border-2 border-signal bg-signal/5 p-4">
+          <p className="font-medium mb-1">
+            Hand {petName} over to {members?.find(m => m.user_id === confirmTransfer)?.display_name
+              || members?.find(m => m.user_id === confirmTransfer)?.email}?
+          </p>
+          <p className="text-sm text-ink/70 mb-3">
+            They become the owner and can invite, remove people, and delete {petName}. You stay on
+            as an <strong>editor</strong>, so you keep adding and editing records — but you can't
+            take ownership back yourself. Only they can hand it to you again.
+          </p>
+          <div className="flex gap-2">
+            <button onClick={() => doTransfer(confirmTransfer)} disabled={transfer.isPending}
+              className="rounded-md bg-ink text-paper px-4 py-2 text-sm disabled:opacity-50">
+              {transfer.isPending ? 'Transferring…' : 'Yes, transfer ownership'}
+            </button>
+            <button onClick={() => setConfirmTransfer(null)}
+              className="rounded-md border border-line px-4 py-2 text-sm">Cancel</button>
+          </div>
+        </div>
+      )}
 
       {/* ------------------------------------------------ owner-only controls */}
       {isOwner && (
