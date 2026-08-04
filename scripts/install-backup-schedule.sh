@@ -73,6 +73,18 @@ if [[ "$CODE" != "200" ]]; then
 fi
 echo "  credentials OK"
 
+# launchd does NOT inherit your interactive shell's PATH, and `bash -lc` reads bash's login
+# files — not ~/.zshrc, where a nvm/Homebrew node usually lives. Going through `npm` therefore
+# failed with "npm: command not found" (exit 127). Resolve node to an absolute path now and
+# invoke the backup script directly, cutting npm out of the loop entirely.
+NODE_BIN="$(command -v node || true)"
+if [[ -z "$NODE_BIN" ]]; then
+  echo "Could not find node on PATH. Install Node, or edit NODE_BIN in this script." >&2
+  exit 1
+fi
+echo "  using node: $NODE_BIN"
+# nvm paths embed the version, so a node upgrade invalidates this. Re-run the installer after
+# switching versions — the job logs a clear error rather than failing silently.
 mkdir -p "$LOG_DIR" "$(dirname "$PLIST")"
 
 cat > "$PLIST" <<EOF
@@ -84,8 +96,8 @@ cat > "$PLIST" <<EOF
   <key>ProgramArguments</key>
   <array>
     <string>/bin/bash</string>
-    <string>-lc</string>
-    <string>source "$SECRET_FILE" &amp;&amp; cd "$PROJECT_DIR" &amp;&amp; npm run backup:storage</string>
+    <string>-c</string>
+    <string>set -e; source "$SECRET_FILE"; cd "$PROJECT_DIR"; exec "$NODE_BIN" scripts/backup-storage.mjs</string>
   </array>
   <key>StartCalendarInterval</key>
   <dict><key>Hour</key><integer>2</integer><key>Minute</key><integer>0</integer></dict>
