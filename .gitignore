@@ -30,3 +30,6 @@ coverage/
 
 # Vercel
 .vercel
+
+# Supabase CLI scratch (project ref cache, not source)
+supabase/.temp

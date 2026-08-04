@@ -123,6 +123,9 @@ export interface PetInvitation {
   expires_at: string
   accepted_at: string | null
   revoked_at: string | null
+  /** Set by the send-invite function; null means the link was only ever copied by hand. */
+  email_sent_at: string | null
+  email_send_count: number
   created_at: string
 }
 

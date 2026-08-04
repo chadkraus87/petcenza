@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Users, X, Heart } from 'lucide-react'
 import { usePets, useRememberedPets } from '@/hooks/usePets'
+import { usePrimaryPhotos } from '@/hooks/usePetPhotos'
+import { PetAvatar } from '@/components/PetAvatar'
 import { useTags, useAllPetTags } from '@/hooks/useTags'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { petAge } from '@/lib/format'
@@ -11,6 +13,7 @@ export default function PetList() {
   const { data: tags } = useTags()
   const { data: petTags } = useAllPetTags()
   const { data: remembered } = useRememberedPets()
+  const { data: photos } = usePrimaryPhotos()
   const { user } = useAuth()
   const [activeTag, setActiveTag] = useState<string | null>(null)
 
@@ -60,14 +63,14 @@ export default function PetList() {
         <p className="text-ink/60">No pets carry that tag.</p>
       )}
 
-      <PetGrid pets={owned} />
+      <PetGrid pets={owned} photos={photos} />
 
       {shared.length > 0 && (
         <>
           <h2 className="text-xl mt-8 mb-3 flex items-center gap-2">
             <Users size={18} className="text-moss" aria-hidden /> Shared with you
           </h2>
-          <PetGrid pets={shared} shared />
+          <PetGrid pets={shared} photos={photos} shared />
         </>
       )}
 
@@ -81,12 +84,15 @@ export default function PetList() {
             {remembered.map(p => (
               <li key={p.id}>
                 <Link to={`/pets/${p.id}`}
-                  className="block bg-card/70 rounded-card border border-line shadow-sm shadow-ink/5 p-5 hover:border-coral">
-                  <h3 className="text-lg">{p.name}</h3>
-                  <p className="text-sm text-ink/50">
-                    {p.breed ?? p.species}
-                    {p.deceased_on && <> · {new Date(p.deceased_on).getFullYear()}</>}
-                  </p>
+                  className="flex items-center gap-4 bg-card/70 rounded-card border border-line shadow-sm shadow-ink/5 p-4 hover:border-coral">
+                  <PetAvatar name={p.name} url={photos?.[p.id]} size="sm" />
+                  <div className="min-w-0">
+                    <h3 className="text-lg truncate">{p.name}</h3>
+                    <p className="text-sm text-ink/50 truncate">
+                      {p.breed ?? p.species}
+                      {p.deceased_on && <> · {new Date(p.deceased_on).getFullYear()}</>}
+                    </p>
+                  </div>
                 </Link>
               </li>
             ))}
@@ -97,27 +103,39 @@ export default function PetList() {
   )
 }
 
-function PetGrid({ pets, shared = false }: { pets: NonNullable<ReturnType<typeof usePets>['data']>; shared?: boolean }) {
+function PetGrid({ pets, photos, shared = false }: {
+  pets: NonNullable<ReturnType<typeof usePets>['data']>
+  photos?: Record<string, string>
+  shared?: boolean
+}) {
   if (pets.length === 0) return null
   return (
     <ul className="grid gap-4 sm:grid-cols-2">
-      {pets.map(p => (
-        <li key={p.id}>
-          <Link to={`/pets/${p.id}`}
-            className="block bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 hover:border-moss">
-            <h2 className="text-xl flex items-center gap-2">
-              {p.name}
-              {p.nickname && <span className="text-ink/50 text-base">“{p.nickname}”</span>}
-              {shared && (
-                <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-wave text-ink/70 px-2 py-0.5 text-xs font-normal">
-                  <Users size={11} aria-hidden /> Shared
-                </span>
-              )}
-            </h2>
-            <p className="text-sm text-ink/60">{p.breed ?? p.species} · {petAge(p.birth_date, p.estimated_age_months)}</p>
-          </Link>
-        </li>
-      ))}
+      {pets.map(p => {
+        const photo = photos?.[p.id]
+        return (
+          <li key={p.id}>
+            <Link to={`/pets/${p.id}`}
+              className="flex items-center gap-4 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 hover:border-moss">
+              <PetAvatar name={p.name} url={photo} />
+              <div className="min-w-0 flex-1">
+                <h2 className="text-xl flex items-center gap-2">
+                  <span className="truncate">{p.name}</span>
+                  {p.nickname && <span className="text-ink/50 text-base truncate">“{p.nickname}”</span>}
+                  {shared && (
+                    <span className="ml-auto shrink-0 inline-flex items-center gap-1 rounded-full bg-wave text-ink/70 px-2 py-0.5 text-xs font-normal">
+                      <Users size={11} aria-hidden /> Shared
+                    </span>
+                  )}
+                </h2>
+                <p className="text-sm text-ink/60 truncate">
+                  {p.breed ?? p.species} · {petAge(p.birth_date, p.estimated_age_months)}
+                </p>
+              </div>
+            </Link>
+          </li>
+        )
+      })}
     </ul>
   )
 }

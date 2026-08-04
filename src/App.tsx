@@ -9,6 +9,7 @@ const PetList = lazy(() => import('@/features/pets/PetList'))
 const PetDetail = lazy(() => import('@/features/pets/PetDetail'))
 const PetForm = lazy(() => import('@/features/pets/PetForm'))
 const CalendarPage = lazy(() => import('@/features/reminders/CalendarPage'))
+const MedSchedulePage = lazy(() => import('@/features/medications/MedSchedulePage'))
 const EmergencyPage = lazy(() => import('@/features/emergency/EmergencyPage'))
 const SignIn = lazy(() => import('@/features/auth/SignIn'))
 const SignUp = lazy(() => import('@/features/auth/SignUp'))
@@ -45,6 +46,7 @@ export default function App() {
                 <Route path="/pets/:id" element={<PetDetail />} />
                 <Route path="/pets/:id/edit" element={<PetForm />} />
                 <Route path="/calendar" element={<CalendarPage />} />
+                <Route path="/meds" element={<MedSchedulePage />} />
                 <Route path="/care-team" element={<CareTeam />} />
                 <Route path="/settings" element={<SecuritySettings />} />
                 <Route path="/emergency" element={<EmergencyPage />} />

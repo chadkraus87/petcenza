@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { PawPrint, LayoutDashboard, CalendarDays, Siren, Search, LogOut, WifiOff, Stethoscope, Settings } from 'lucide-react'
+import { PawPrint, LayoutDashboard, CalendarDays, Siren, Search, LogOut, WifiOff, Stethoscope, Settings, Pill } from 'lucide-react'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { useRealtimeSync } from '@/hooks/useRealtime'
 import { replay, watchConnectivity, pending } from '@/lib/outbox'
@@ -10,6 +10,7 @@ const nav = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/pets', label: 'Pets', icon: PawPrint },
   { to: '/calendar', label: 'Calendar', icon: CalendarDays },
+  { to: '/meds', label: 'Meds', icon: Pill },
   { to: '/care-team', label: 'Care team', icon: Stethoscope },
   { to: '/emergency', label: 'Emergency', icon: Siren },
   { to: '/settings', label: 'Settings', icon: Settings }

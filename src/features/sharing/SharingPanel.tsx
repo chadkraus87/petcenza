@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { Crown, Copy, Check, Trash2, Link2, LogOut, Stethoscope, Eye } from 'lucide-react'
+import { Crown, Copy, Check, Trash2, Link2, LogOut, Stethoscope, Eye, Mail } from 'lucide-react'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { fmtDate } from '@/lib/format'
 import {
   usePetMembers, usePetInvitations, useIsPetOwner, useIsPrimaryPetOwner,
-  useCreateInvitation, useRevokeInvitation, useUpdateMemberRole, useRemoveMember,
+  useCreateInvitation, useRevokeInvitation, useUpdateMemberRole, useRemoveMember, useSendInviteEmail,
   useVetShareLinks, useCreateVetShareLink, useRevokeVetShareLink, useTransferOwnership
 } from '@/hooks/useSharing'
 import type { ShareRole } from '@/types/db'
@@ -26,6 +26,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
   const { data: invitations } = usePetInvitations(petId)
   const createInvite = useCreateInvitation(petId)
   const revokeInvite = useRevokeInvitation(petId)
+  const sendInvite = useSendInviteEmail(petId)
   const updateRole = useUpdateMemberRole(petId)
   const removeMember = useRemoveMember(petId)
 
@@ -33,6 +34,10 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
   const [email, setEmail] = useState('')
   const [copied, setCopied] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [sent, setSent] = useState<string | null>(null)
+  // Assume mail works until the backend tells us it isn't set up, then drop the button for the
+  // rest of the session. Optimistic on purpose: probing on mount would cost a request per view.
+  const [emailAvailable, setEmailAvailable] = useState(true)
 
   const vetLinks = useVetShareLinks(petId)
   const createVetLink = useCreateVetShareLink(petId)
@@ -79,6 +84,34 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
     setError(null)
     try { await createInvite.mutateAsync({ role, email }); setEmail('') }
     catch (e) { setError(e instanceof Error ? e.message : 'Could not create the invitation') }
+  }
+
+  const SEND_ERRORS: Record<string, string> = {
+    no_email: 'That invite isn\'t locked to an address, so there\'s nobody to send it to. Copy the link instead.',
+    revoked: 'That invitation has been revoked.',
+    already_used: 'That invitation has already been accepted.',
+    expired: 'That invitation has expired. Create a new one.',
+    rate_limited: 'You\'ve sent a lot of invitations recently. Try again in an hour, or copy the link.',
+    send_failed: 'The email couldn\'t be delivered. Copy the link and send it yourself.'
+  }
+
+  async function sendEmail(invitationId: string) {
+    setError(null)
+    try {
+      const result = await sendInvite.mutateAsync(invitationId)
+      if (result.ok) {
+        setSent(invitationId)
+        setTimeout(() => setSent(null), 3000)
+      } else if (result.reason === 'not_configured') {
+        // No mail provider on this deployment. Hide the button rather than nag — copy-link is
+        // a complete path on its own.
+        setEmailAvailable(false)
+      } else {
+        setError(SEND_ERRORS[result.reason] ?? 'Could not send the email. Copy the link instead.')
+      }
+    } catch {
+      setError('Could not send the email. Copy the link and send it yourself.')
+    }
   }
 
   return (
@@ -224,9 +257,22 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                         <span className="capitalize">{inv.role}</span>
                         {inv.invited_email && <span className="text-ink/60 truncate">· {inv.invited_email}</span>}
                       </p>
-                      <p className="text-xs text-ink/50">Expires {fmtDate(inv.expires_at)}</p>
+                      <p className="text-xs text-ink/50">
+                        Expires {fmtDate(inv.expires_at)}
+                        {inv.email_sent_at && <> · emailed {fmtDate(inv.email_sent_at)}</>}
+                      </p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
+                      {/* Only offered when the invite is pinned to an address — that address is
+                          the recipient, and it's the owner who chose it. */}
+                      {inv.invited_email && emailAvailable && (
+                        <button onClick={() => sendEmail(inv.id)} disabled={sendInvite.isPending}
+                          className="inline-flex items-center gap-1 rounded-md border border-line px-3 py-1.5 text-sm disabled:opacity-50">
+                          {sent === inv.id
+                            ? <><Check size={14} className="text-moss" aria-hidden /> Sent</>
+                            : <><Mail size={14} aria-hidden /> {inv.email_sent_at ? 'Resend' : 'Email it'}</>}
+                        </button>
+                      )}
                       <button onClick={() => copy(inv.token, inviteUrl(inv.token))}
                         className="inline-flex items-center gap-1 rounded-md border border-line px-3 py-1.5 text-sm">
                         {copied === inv.token

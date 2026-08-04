@@ -6,6 +6,7 @@
 // security event. Call it right after an upload with { bucket, path }. A caller can only scan a
 // file inside their own {user_id}/... folder (enforced from the JWT).
 import { createClient } from 'jsr:@supabase/supabase-js@2'
+import { checkRateLimit } from '../_shared/rate-limit.ts'
 
 const ALLOWED_BUCKETS = new Set(['pet-photos', 'pet-documents'])
 
@@ -46,6 +47,19 @@ Deno.serve(async (req) => {
   const { data: { user }, error: userErr } = await asUser.auth.getUser()
   if (userErr || !user) return json({ error: 'Unauthorized' }, 401)
 
+  const admin = createClient(url, serviceKey)
+
+  // Keyed to the account, not the IP: this route requires a JWT, so the account is the real
+  // identity, and a household behind one address shouldn't share an allowance. Sized for a bulk
+  // upload of an album (each file triggers one scan) while capping runaway automation.
+  const limit = await checkRateLimit(admin, 'scan-upload', user.id, 120, 300)
+  if (!limit.ok) {
+    return new Response(JSON.stringify({ error: 'Too many requests' }), {
+      status: 429,
+      headers: { ...cors, 'Content-Type': 'application/json', 'Retry-After': String(limit.retryAfter) }
+    })
+  }
+
   let body: { bucket?: string; path?: string }
   try { body = await req.json() } catch { return json({ error: 'Invalid JSON' }, 400) }
   const { bucket, path } = body
@@ -61,7 +75,6 @@ Deno.serve(async (req) => {
     .rpc('can_access_pet', { p_pet_id: petId, p_min_role: 'editor' })
   if (accessErr || allowed !== true) return json({ error: 'Forbidden' }, 403)
 
-  const admin = createClient(url, serviceKey)
   const { data: blob, error: dlErr } = await admin.storage.from(bucket).download(path)
   if (dlErr || !blob) return json({ error: 'File not found' }, 404)
 

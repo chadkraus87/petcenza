@@ -3,11 +3,14 @@ import { AlertTriangle, Check } from 'lucide-react'
 import { useDashboard } from '@/hooks/useDashboard'
 import { useCompleteReminder } from '@/hooks/useReminders'
 import { useReminderNotifications } from '@/hooks/useNotifications'
+import { usePrimaryPhotos } from '@/hooks/usePetPhotos'
 import { fmtDate, fmtDateTime } from '@/lib/format'
+import { PetAvatar } from '@/components/PetAvatar'
 import InsightsPanel from './InsightsPanel'
 
 export default function Dashboard() {
   const { data, isLoading, error } = useDashboard()
+  const { data: photos } = usePrimaryPhotos()
   const complete = useCompleteReminder()
   useReminderNotifications(data?.remindersToday)
 
@@ -75,7 +78,12 @@ export default function Dashboard() {
         </section>
 
         <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4">
-          <h2 className="text-lg mb-3">Active medications</h2>
+          <div className="flex items-baseline justify-between gap-2 mb-3">
+            <h2 className="text-lg">Active medications</h2>
+            {data.medsActive.length > 0 && (
+              <Link to="/meds" className="text-sm text-moss hover:underline shrink-0">Today's rounds</Link>
+            )}
+          </div>
           {data.medsActive.length === 0 && <p className="text-sm text-ink/50">No active prescriptions.</p>}
           <ul className="space-y-2">
             {data.medsActive.map(m => (
@@ -106,9 +114,12 @@ export default function Dashboard() {
       <div className="mt-6 flex flex-wrap gap-3">
         {data.pets.map(p => (
           <Link key={p.id} to={`/pets/${p.id}`}
-            className="rounded-card border border-line bg-card px-4 py-3 hover:border-moss">
-            <span className="font-display">{p.name}</span>
-            <span className="block text-xs text-ink/50">{p.breed ?? p.species}</span>
+            className="flex items-center gap-3 rounded-card border border-line bg-card px-4 py-3 hover:border-moss">
+            <PetAvatar name={p.name} url={photos?.[p.id]} size="sm" />
+            <span>
+              <span className="font-display block">{p.name}</span>
+              <span className="block text-xs text-ink/50">{p.breed ?? p.species}</span>
+            </span>
           </Link>
         ))}
         <Link to="/pets/new" className="rounded-card border border-dashed border-moss text-moss px-4 py-3 grid place-items-center">

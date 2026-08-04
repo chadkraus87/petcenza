@@ -1,8 +1,11 @@
 import { useCallback, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { Star, Trash2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { validateUpload } from '@/schemas/records'
 import { scanUpload } from '@/lib/uploads'
+import { useSetPrimaryPhoto, useDeletePhoto } from '@/hooks/usePetPhotos'
+import { useCanEditPet } from '@/hooks/useSharing'
 import type { PetPhoto } from '@/types/db'
 
 export default function PhotosPanel({ petId }: { petId: string }) {
@@ -10,16 +13,24 @@ export default function PhotosPanel({ petId }: { petId: string }) {
   const [dragOver, setDragOver] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const setPrimary = useSetPrimaryPhoto(petId)
+  const del = useDeletePhoto(petId)
+  // Viewers can see the album but not change it (RLS enforces this regardless; hiding the
+  // controls keeps them from clicking something that would just quietly refuse).
+  const { data: canEdit } = useCanEditPet(petId)
+
   const { data: photos } = useQuery({
     queryKey: ['pet_photos', petId],
     queryFn: async () => {
       const { data, error } = await supabase.from('pet_photos').select('*').eq('pet_id', petId).order('created_at', { ascending: false })
       if (error) throw error
-      const withUrls = await Promise.all((data as PetPhoto[]).map(async p => {
-        const { data: signed } = await supabase.storage.from('pet-photos').createSignedUrl(p.storage_path, 3600)
-        return { ...p, url: signed?.signedUrl ?? '' }
-      }))
-      return withUrls
+      const rows = data as PetPhoto[]
+      if (rows.length === 0) return []
+      // One signing call for the whole album rather than one per photo.
+      const { data: signed } = await supabase.storage.from('pet-photos')
+        .createSignedUrls(rows.map(p => p.storage_path), 3600)
+      const urlFor = new Map((signed ?? []).map(s => [s.path, s.signedUrl]))
+      return rows.map(p => ({ ...p, url: urlFor.get(p.storage_path) ?? '' }))
     }
   })
 
@@ -58,11 +69,46 @@ export default function PhotosPanel({ petId }: { petId: string }) {
       {error && <p role="alert" className="text-sm text-alert mb-4">{error}</p>}
       <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {photos?.map(p => (
-          <li key={p.id} className="rounded-card overflow-hidden border border-line aspect-square bg-line">
+          <li key={p.id} className="relative group rounded-card overflow-hidden border border-line aspect-square bg-line">
             {p.url && <img src={p.url} alt={p.caption ?? 'Pet photo'} className="w-full h-full object-cover" loading="lazy" />}
+
+            {p.is_primary && (
+              <span className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-ink/80 text-paper px-2 py-0.5 text-xs">
+                <Star size={11} fill="currentColor" aria-hidden /> Profile
+              </span>
+            )}
+
+            {/* Always reachable by keyboard; the hover fade is only a visual nicety. */}
+            {canEdit && (
+            <div className="absolute bottom-0 inset-x-0 flex justify-end gap-1 p-2 bg-gradient-to-t from-ink/70 to-transparent
+                            opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+              {!p.is_primary && (
+                <button type="button" onClick={() => setPrimary.mutate(p.id)} disabled={setPrimary.isPending}
+                  title="Use as profile photo" aria-label={`Use as profile photo`}
+                  className="rounded-md bg-card/90 text-ink p-1.5 hover:bg-card disabled:opacity-50">
+                  <Star size={14} aria-hidden />
+                </button>
+              )}
+              <button type="button" disabled={del.isPending}
+                onClick={() => {
+                  if (confirm('Delete this photo? This cannot be undone.')) {
+                    del.mutate({ id: p.id, storagePath: p.storage_path })
+                  }
+                }}
+                title="Delete photo" aria-label="Delete photo"
+                className="rounded-md bg-card/90 text-alert p-1.5 hover:bg-card disabled:opacity-50">
+                <Trash2 size={14} aria-hidden />
+              </button>
+            </div>
+            )}
           </li>
         ))}
       </ul>
+      {(setPrimary.error || del.error) && (
+        <p role="alert" className="text-sm text-alert mt-3">
+          {(setPrimary.error ?? del.error)?.message}
+        </p>
+      )}
       {photos?.length === 0 && <p className="text-sm text-ink/50">No photos yet.</p>}
     </section>
   )

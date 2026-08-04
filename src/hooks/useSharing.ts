@@ -114,6 +114,39 @@ export function useCreateInvitation(petId: string) {
   })
 }
 
+export type SendInviteResult =
+  | { ok: true; sentTo: string }
+  | { ok: false; reason: 'not_configured' | 'no_email' | 'revoked' | 'already_used' | 'expired'
+                       | 'rate_limited' | 'send_failed' }
+
+/**
+ * Ask the backend to email an invitation.
+ *
+ * The recipient is whatever address the invitation is locked to — it is never sent from here,
+ * so this can't be used to mail an arbitrary person. When no mail provider is configured the
+ * function reports `not_configured` rather than failing, and the UI stays on copy-link.
+ */
+export function useSendInviteEmail(petId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (invitationId: string): Promise<SendInviteResult> => {
+      const { data, error } = await supabase.functions.invoke('send-invite', {
+        body: { invitationId }
+      })
+      // A non-2xx from the function surfaces as an error here, but the body still carries the
+      // reason — prefer that over a generic failure message.
+      if (error) {
+        const ctx = (error as { context?: Response }).context
+        const parsed = ctx ? await ctx.json().catch(() => null) : null
+        if (parsed?.reason) return { ok: false, reason: parsed.reason }
+        throw error
+      }
+      return data as SendInviteResult
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: ['pet_invitations', petId] })
+  })
+}
+
 export function useRevokeInvitation(petId: string) {
   const qc = useQueryClient()
   return useMutation({
