@@ -41,12 +41,20 @@ const SLOTS_FOR_COUNT: Record<number, TimeOfDay[]> = {
   4: ['morning', 'midday', 'evening', 'night']
 }
 
-/** Interval in hours → doses per day, for "q8h"-style notation. */
-function slotsForInterval(hours: number): TimeOfDay[] {
-  if (hours <= 0) return []
+/**
+ * Interval in hours → doses per day, for "q8h"-style notation.
+ *
+ * Returns null when the interval implies MORE doses than there are slots to hold them. Clamping
+ * instead would render q4h — six doses, real in post-op analgesia and critical care — as four,
+ * with no visible sign anything was lost. A confidently-wrong dosing schedule is worse than an
+ * unparsed one, so these fall through to 'unknown' and surface for the owner to read off the
+ * label themselves.
+ */
+function slotsForInterval(hours: number): TimeOfDay[] | null {
+  if (hours <= 0) return null
   if (hours >= 24) return SLOTS_FOR_COUNT[1]
   const perDay = Math.round(24 / hours)
-  return SLOTS_FOR_COUNT[Math.min(Math.max(perDay, 1), 4)] ?? SLOTS_FOR_COUNT[4]
+  return SLOTS_FOR_COUNT[perDay] ?? null
 }
 
 const WORD_NUMBERS: Record<string, number> = {
@@ -87,7 +95,9 @@ export function parseFrequency(frequency: string | null | undefined): DoseSchedu
   const interval = raw.match(/\bq\s*(\d{1,2})\s*h/) ?? raw.match(/\bevery\s+(\d{1,2})\s*(?:h|hours?)\b/)
   if (interval) {
     const slots = slotsForInterval(Number(interval[1]))
-    return { times: slots, cadence: slots.length ? 'daily' : 'unknown', withFood }
+    return slots
+      ? { times: slots, cadence: 'daily', withFood }
+      : { times: [], cadence: 'unknown', withFood }
   }
 
   // "3 times daily", "three times a day", "2x daily".
@@ -95,8 +105,10 @@ export function parseFrequency(frequency: string | null | undefined): DoseSchedu
   const worded = raw.match(/\b(one|once|two|twice|three|thrice|four)\b/) ?? null
   const count = numeric ? Number(numeric[1]) : worded ? WORD_NUMBERS[worded[1]] : null
   if (count && /\b(daily|a\s+day|per\s+day|each\s+day|day)\b/.test(raw)) {
-    const slots = SLOTS_FOR_COUNT[Math.min(count, 4)]
+    // Same rule as slotsForInterval: no slot to hold it means we say so, not round it down.
+    const slots = SLOTS_FOR_COUNT[count]
     if (slots) return { times: slots, cadence: 'daily', withFood }
+    return { times: [], cadence: 'unknown', withFood }
   }
 
   // Explicit slot words: "morning and evening", "at bedtime".

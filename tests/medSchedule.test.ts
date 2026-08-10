@@ -20,6 +20,12 @@ describe('parseFrequency — plain English', () => {
   it('bare "daily" means once', () => {
     expect(parseFrequency('daily').times).toEqual(['morning'])
   })
+
+  it('refuses to under-report counts above four', () => {
+    // Same clamp, other code path: "6 times daily" used to render as four doses.
+    expect(parseFrequency('6 times daily').cadence).toBe('unknown')
+    expect(parseFrequency('5x daily').times).toEqual([])
+  })
 })
 
 describe('parseFrequency — veterinary abbreviations', () => {
@@ -50,6 +56,24 @@ describe('parseFrequency — interval notation', () => {
   })
   it('q24h collapses to once', () => {
     expect(parseFrequency('q24h').times).toEqual(['morning'])
+  })
+
+  /**
+   * Regression: intervals below 6 hours used to be CLAMPED to four doses. q4h is six doses a day
+   * and is real in post-op analgesia and critical care — it rendered as four, confidently, with
+   * nothing on screen to say a third of the schedule had been dropped. Under-reporting a dose
+   * silently is the worst thing this module can do, so these must land in 'unknown'.
+   */
+  it('refuses to under-report intervals it has no slots for', () => {
+    for (const [text, prescribed] of [['q4h', 6], ['q3h', 8], ['q2h', 12]] as const) {
+      const s = parseFrequency(text)
+      expect(s.cadence, `${text} (${prescribed}/day) must not be silently clamped`).toBe('unknown')
+      expect(s.times).toEqual([])
+    }
+  })
+
+  it('still parses intervals that do fit', () => {
+    expect(parseFrequency('q6h').times).toHaveLength(4)
   })
 })
 
