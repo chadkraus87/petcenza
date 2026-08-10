@@ -14,7 +14,7 @@ export default function Dashboard() {
   const complete = useCompleteReminder()
   useReminderNotifications(data?.remindersToday)
 
-  if (isLoading) return <p className="p-6 text-ink/50">Loading your pack…</p>
+  if (isLoading) return <p className="p-6 text-muted">Loading your pack…</p>
   if (error) return <p className="p-6 text-alert">Couldn't load the dashboard. Check your connection and retry.</p>
   if (!data) return null
 
@@ -23,7 +23,7 @@ export default function Dashboard() {
   return (
     <main className="p-6 max-w-5xl mx-auto">
       <h1 className="text-3xl mb-1">Today</h1>
-      <p className="text-ink/60 mb-6">{data.pets.length} pet{data.pets.length !== 1 && 's'} in your care</p>
+      <p className="text-muted mb-6">{data.pets.length} pet{data.pets.length !== 1 && 's'} in your care</p>
 
       <InsightsPanel />
 
@@ -44,12 +44,12 @@ export default function Dashboard() {
       <div className="grid gap-4 md:grid-cols-2">
         <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4">
           <h2 className="text-lg mb-3">Due today</h2>
-          {data.remindersToday.length === 0 && <p className="text-sm text-ink/50">Nothing due. Enjoy the quiet.</p>}
+          {data.remindersToday.length === 0 && <p className="text-sm text-muted">Nothing due. Enjoy the quiet.</p>}
           <ul className="space-y-2">
             {data.remindersToday.map(r => (
               <li key={r.id} className="flex items-center justify-between gap-2 text-sm">
                 <span className="min-w-0 truncate">
-                  {r.title} <span className="text-ink/50">· {petName(r.pet_id)}</span>
+                  {r.title} <span className="text-muted">· {petName(r.pet_id)}</span>
                 </span>
                 <span className="flex items-center gap-2 shrink-0">
                   <time className="text-signal">{fmtDateTime(r.due_at).split('·')[1]}</time>
@@ -66,11 +66,11 @@ export default function Dashboard() {
 
         <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4">
           <h2 className="text-lg mb-3">Vaccinations due soon</h2>
-          {data.vaxDue.length === 0 && <p className="text-sm text-ink/50">All boosters current for the next 30 days.</p>}
+          {data.vaxDue.length === 0 && <p className="text-sm text-muted">All boosters current for the next 30 days.</p>}
           <ul className="space-y-2">
             {data.vaxDue.map(v => (
               <li key={v.id} className="flex justify-between text-sm">
-                <span>{v.vaccine} <span className="text-ink/50">· {petName(v.pet_id)}</span></span>
+                <span>{v.vaccine} <span className="text-muted">· {petName(v.pet_id)}</span></span>
                 {v.next_due_on && <time className="text-signal">{fmtDate(v.next_due_on)}</time>}
               </li>
             ))}
@@ -84,12 +84,12 @@ export default function Dashboard() {
               <Link to="/meds" className="text-sm text-moss hover:underline shrink-0">Today's rounds</Link>
             )}
           </div>
-          {data.medsActive.length === 0 && <p className="text-sm text-ink/50">No active prescriptions.</p>}
+          {data.medsActive.length === 0 && <p className="text-sm text-muted">No active prescriptions.</p>}
           <ul className="space-y-2">
             {data.medsActive.map(m => (
               <li key={m.id} className="text-sm">
                 <span className="font-medium">{m.name}</span> {m.dosage} — {m.frequency}
-                <span className="text-ink/50"> · {petName(m.pet_id)}</span>
+                <span className="text-muted"> · {petName(m.pet_id)}</span>
                 {m.refill_due_on && <span className="block text-xs text-signal">Refill by {fmtDate(m.refill_due_on)}</span>}
               </li>
             ))}
@@ -98,12 +98,12 @@ export default function Dashboard() {
 
         <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4">
           <h2 className="text-lg mb-3">Upcoming vet visits</h2>
-          {data.visitsUpcoming.length === 0 && <p className="text-sm text-ink/50">No appointments scheduled.</p>}
+          {data.visitsUpcoming.length === 0 && <p className="text-sm text-muted">No appointments scheduled.</p>}
           <ul className="space-y-2">
             {data.visitsUpcoming.map(v => (
               <li key={v.id} className="text-sm">
                 <span className="font-medium">{v.reason ?? 'Vet visit'}</span>
-                <span className="text-ink/50"> · {petName(v.pet_id)}</span>
+                <span className="text-muted"> · {petName(v.pet_id)}</span>
                 <time className="block text-xs text-moss">{fmtDateTime(v.visit_at)}</time>
               </li>
             ))}
@@ -118,7 +118,7 @@ export default function Dashboard() {
             <PetAvatar name={p.name} url={photos?.[p.id]} size="sm" />
             <span>
               <span className="font-display block">{p.name}</span>
-              <span className="block text-xs text-ink/50">{p.breed ?? p.species}</span>
+              <span className="block text-xs text-muted">{p.breed ?? p.species}</span>
             </span>
           </Link>
         ))}

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { AlertTriangle, Info, Sparkles, TriangleAlert } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { Disclaimer, DISCLAIMER } from '@/components/Disclaimer'
 import { buildInsights, type Severity } from '@/lib/insights'
 import type { Medication, Pet, Vaccination, WeightEntry } from '@/types/db'
 
@@ -40,7 +41,7 @@ export default function InsightsPanel() {
     return (
       <section className="rounded-card border border-line bg-card shadow-sm shadow-ink/5 p-4 mb-6 flex items-center gap-3">
         <Sparkles size={18} className="text-moss shrink-0" aria-hidden />
-        <p className="text-sm text-ink/70">Nothing needs attention — boosters, refills and weights all look current.</p>
+        <p className="text-sm text-muted">Nothing needs attention — boosters, refills and weights all look current.</p>
       </section>
     )
   }
@@ -56,7 +57,7 @@ export default function InsightsPanel() {
               <Icon size={16} className={`${tone} shrink-0 mt-0.5`} aria-hidden />
               <div className="min-w-0">
                 <p className="text-sm font-medium">{i.title}</p>
-                <p className="text-xs text-ink/60">{i.detail}</p>
+                <p className="text-xs text-muted">{i.detail}</p>
               </div>
             </div>
           )
@@ -67,6 +68,7 @@ export default function InsightsPanel() {
           )
         })}
       </ul>
+      <div className="mt-2"><Disclaimer text={DISCLAIMER.insights} /></div>
     </section>
   )
 }

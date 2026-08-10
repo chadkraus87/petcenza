@@ -17,7 +17,7 @@ export default function CareTeamPage() {
   return (
     <main className="p-6 max-w-3xl mx-auto">
       <h1 className="text-3xl mb-1">Care team</h1>
-      <p className="text-ink/60 mb-6">Your vets and emergency contacts power the Emergency screen — add them here.</p>
+      <p className="text-muted mb-6">Your vets and emergency contacts power the Emergency screen — add them here.</p>
       <VetsSection />
       <div className="h-8" />
       <ContactsSection />
@@ -69,15 +69,15 @@ function VetsSection() {
                 {v.is_primary && <span className="inline-flex items-center gap-1 text-xs text-moss"><Star size={12} aria-hidden /> Primary</span>}
                 {v.is_emergency_clinic && <span className="inline-flex items-center gap-1 text-xs text-alert"><Siren size={12} aria-hidden /> ER</span>}
               </p>
-              {v.clinic && <p className="text-sm text-ink/60">{v.clinic}</p>}
-              {v.phone && <p className="text-sm text-ink/60">{v.phone}</p>}
-              {v.address && <p className="text-sm text-ink/60">{v.address}</p>}
+              {v.clinic && <p className="text-sm text-muted">{v.clinic}</p>}
+              {v.phone && <p className="text-sm text-muted">{v.phone}</p>}
+              {v.address && <p className="text-sm text-muted">{v.address}</p>}
             </div>
             <button aria-label={`Delete ${v.name}`} onClick={() => { remove.mutate(v.id); refreshEmergency() }} className="text-alert self-start"><Trash2 size={16} /></button>
           </li>
         ))}
       </ul>
-      {vets?.length === 0 && <p className="text-sm text-ink/50">No veterinarians added yet.</p>}
+      {vets?.length === 0 && <p className="text-sm text-muted">No veterinarians added yet.</p>}
     </section>
   )
 }
@@ -117,15 +117,15 @@ function ContactsSection() {
         {contacts?.map(c => (
           <li key={c.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex justify-between gap-3">
             <div>
-              <p className="font-medium">{c.label} <span className="font-normal text-ink/70">— {c.name}</span></p>
-              <p className="text-sm text-ink/60">{c.phone}</p>
-              {c.notes && <p className="text-sm text-ink/60">{c.notes}</p>}
+              <p className="font-medium">{c.label} <span className="font-normal text-muted">— {c.name}</span></p>
+              <p className="text-sm text-muted">{c.phone}</p>
+              {c.notes && <p className="text-sm text-muted">{c.notes}</p>}
             </div>
             <button aria-label={`Delete ${c.label}`} onClick={() => { remove.mutate(c.id); refreshEmergency() }} className="text-alert self-start"><Trash2 size={16} /></button>
           </li>
         ))}
       </ul>
-      {contacts?.length === 0 && <p className="text-sm text-ink/50">No emergency contacts yet.</p>}
+      {contacts?.length === 0 && <p className="text-sm text-muted">No emergency contacts yet.</p>}
     </section>
   )
 }

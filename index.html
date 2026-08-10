@@ -10,7 +10,27 @@
     <meta name="theme-color" content="#154A5C" />
     <link rel="icon" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <title>PetCenza</title>
+    <title>PetCenza — every pet's health records, in one place</title>
+    <!--
+      This is a client-rendered SPA, so a crawler sees only what is in this head. Without a
+      description and social tags the app was entirely invisible in search and rendered as a bare
+      URL when anyone shared it — throwing away the one discovery advantage a PWA has over a
+      native app.
+    -->
+    <meta name="description" content="Track vaccinations, medication schedules, vet visits and weight for every pet in your home. See what needs attention today, share with family or a sitter, and give your vet a read-only link. Works offline." />
+    <link rel="canonical" href="https://pawchart-zeta.vercel.app/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PetCenza" />
+    <meta property="og:title" content="PetCenza — every pet's health records, in one place" />
+    <meta property="og:description" content="Boosters, medication rounds, vet visits and weight history for every pet in the home. Share with family, or give your vet a read-only link." />
+    <meta property="og:url" content="https://pawchart-zeta.vercel.app/" />
+    <meta property="og:image" content="https://pawchart-zeta.vercel.app/icon-512.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PetCenza — every pet's health records, in one place" />
+    <meta name="twitter:description" content="Boosters, medication rounds, vet visits and weight history for every pet in the home." />
+    <meta name="twitter:image" content="https://pawchart-zeta.vercel.app/icon-512.png" />
   </head>
   <body>
     <div id="root"></div>

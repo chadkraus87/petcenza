@@ -3,6 +3,7 @@ import { ShieldCheck, ShieldAlert, Trash2 } from 'lucide-react'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { listTotpFactors, enrollTotp, verifyEnrollment, unenrollTotp, type TotpFactor, type EnrollResult } from '@/features/auth/mfa'
 import NotificationSettings from './NotificationSettings'
+import AccountData from './AccountData'
 
 export default function SecuritySettings() {
   const { user, signOut, signOutEverywhere } = useAuth()
@@ -51,7 +52,7 @@ export default function SecuritySettings() {
   return (
     <main className="p-6 max-w-2xl mx-auto">
       <h1 className="text-3xl mb-1">Settings</h1>
-      <p className="text-ink/60 mb-6">{user?.email}</p>
+      <p className="text-muted mb-6">{user?.email}</p>
 
       <div className="mb-6"><NotificationSettings /></div>
 
@@ -60,7 +61,7 @@ export default function SecuritySettings() {
           {mfaOn ? <ShieldCheck className="text-moss" aria-hidden /> : <ShieldAlert className="text-signal" aria-hidden />}
           <h2 className="text-xl">Two-factor authentication</h2>
         </div>
-        <p className="text-sm text-ink/60 mb-4">
+        <p className="text-sm text-muted mb-4">
           {mfaOn
             ? 'Two-factor authentication is on. You\'ll enter a code from your authenticator app each time you sign in.'
             : 'Add a time-based one-time password (TOTP) app like Google Authenticator, 1Password, or Authy for a second layer of protection.'}
@@ -96,7 +97,7 @@ export default function SecuritySettings() {
               {/* Supabase returns the QR as an SVG data URI — rendered as an image. */}
               <img src={enroll.qrCode} alt="Two-factor QR code" width={160} height={160} className="rounded-md border border-line bg-white p-2" />
               <div className="text-xs">
-                <p className="text-ink/50 uppercase tracking-wide mb-1">Manual key</p>
+                <p className="text-muted uppercase tracking-wide mb-1">Manual key</p>
                 <code className="break-all">{enroll.secret}</code>
               </div>
             </div>
@@ -116,7 +117,7 @@ export default function SecuritySettings() {
 
       <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-6">
         <h2 className="text-xl mb-1">Sessions</h2>
-        <p className="text-sm text-ink/60 mb-4">Signed in on another device you no longer trust? Sign out everywhere to revoke all sessions.</p>
+        <p className="text-sm text-muted mb-4">Signed in on another device you no longer trust? Sign out everywhere to revoke all sessions.</p>
         <div className="flex flex-wrap gap-3">
           <button onClick={() => void signOut()} className="rounded-md border border-line px-5 py-2 text-sm">
             Sign out
@@ -126,6 +127,8 @@ export default function SecuritySettings() {
           </button>
         </div>
       </section>
+
+      <div className="mt-6"><AccountData /></div>
     </main>
   )
 }

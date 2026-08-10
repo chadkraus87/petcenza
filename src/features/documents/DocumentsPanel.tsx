@@ -69,22 +69,22 @@ export default function DocumentsPanel({ petId }: { petId: string }) {
             onChange={e => e.target.files && void upload(e.target.files)} />
         </label>
       </div>
-      <p className="text-xs text-ink/50 mb-4">PDF, JPEG, PNG, or WebP · up to 25 MB. Files are private and opened via short-lived secure links.</p>
+      <p className="text-xs text-muted mb-4">PDF, JPEG, PNG, or WebP · up to 25 MB. Files are private and opened via short-lived secure links.</p>
       {error && <p role="alert" className="text-sm text-alert mb-4">{error}</p>}
       <ul className="space-y-2">
         {docs?.map(d => (
           <li key={d.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-3 flex items-center gap-3">
-            <FileText size={18} className="text-ink/50 shrink-0" aria-hidden />
+            <FileText size={18} className="text-muted shrink-0" aria-hidden />
             <div className="min-w-0 flex-1">
               <p className="font-medium truncate">{d.file_name}</p>
-              <p className="text-xs text-ink/50">{(d.size_bytes / 1024).toFixed(0)} KB · {fmtDate(d.created_at)}</p>
+              <p className="text-xs text-muted">{(d.size_bytes / 1024).toFixed(0)} KB · {fmtDate(d.created_at)}</p>
             </div>
             <button onClick={() => open(d)} className="text-moss" aria-label={`Open ${d.file_name}`}><Download size={16} /></button>
             <button onClick={() => remove(d)} className="text-alert" aria-label={`Delete ${d.file_name}`}><Trash2 size={16} /></button>
           </li>
         ))}
       </ul>
-      {docs?.length === 0 && <p className="text-sm text-ink/50">No documents uploaded yet.</p>}
+      {docs?.length === 0 && <p className="text-sm text-muted">No documents uploaded yet.</p>}
     </section>
   )
 }

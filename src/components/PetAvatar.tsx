@@ -26,7 +26,7 @@ export function PetAvatar({ name, url, size = 'md' }: {
   }
   return (
     <span aria-hidden
-      className={`${dim} rounded-full grid place-items-center shrink-0 bg-wave text-ink/50 font-display`}>
+      className={`${dim} rounded-full grid place-items-center shrink-0 bg-wave text-muted font-display`}>
       {name.charAt(0).toUpperCase()}
     </span>
   )

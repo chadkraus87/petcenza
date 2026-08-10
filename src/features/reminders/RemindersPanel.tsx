@@ -75,7 +75,7 @@ export default function RemindersPanel() {
               className="rounded-md bg-moss text-paper px-5 py-2 w-fit disabled:opacity-50">
               {isSubmitting ? 'Saving…' : 'Save reminder'}
             </button>
-            <p className="text-xs text-ink/50 mt-2">
+            <p className="text-xs text-muted mt-2">
               Repeating reminders create the next one automatically when you mark this one done.
             </p>
           </div>
@@ -90,15 +90,15 @@ export default function RemindersPanel() {
               <div className="min-w-0">
                 <p className="font-medium truncate">
                   {r.title}
-                  {r.pet_id && <span className="font-normal text-ink/50"> · {petName(r.pet_id)}</span>}
+                  {r.pet_id && <span className="font-normal text-muted"> · {petName(r.pet_id)}</span>}
                 </p>
                 <p className="text-xs flex items-center gap-2 flex-wrap">
-                  <time className={overdue ? 'text-alert font-medium' : 'text-ink/60'}>
+                  <time className={overdue ? 'text-alert font-medium' : 'text-muted'}>
                     {fmtDateTime(r.due_at)}{overdue && ' — overdue'}
                   </time>
-                  <span className="text-ink/40">{KIND_LABEL[r.kind] ?? r.kind}</span>
+                  <span className="text-muted">{KIND_LABEL[r.kind] ?? r.kind}</span>
                   {r.recurrence !== 'none' && (
-                    <span className="inline-flex items-center gap-1 text-ink/40">
+                    <span className="inline-flex items-center gap-1 text-muted">
                       <Repeat size={11} aria-hidden /> {RECURRENCE_LABEL[r.recurrence]}
                     </span>
                   )}
@@ -133,7 +133,7 @@ export default function RemindersPanel() {
       </ul>
 
       {reminders?.length === 0 && (
-        <p className="text-sm text-ink/50 flex items-center gap-2">
+        <p className="text-sm text-muted flex items-center gap-2">
           <Clock size={14} aria-hidden /> No open reminders.
         </p>
       )}

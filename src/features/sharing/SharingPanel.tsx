@@ -117,7 +117,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
   return (
     <section>
       <h2 className="text-xl mb-1">Sharing</h2>
-      <p className="text-sm text-ink/60 mb-4">
+      <p className="text-sm text-muted mb-4">
         Give someone else access to {petName} — a partner, a family member, or a pet sitter.
       </p>
       {error && <p role="alert" className="text-sm text-alert mb-4">{error}</p>}
@@ -131,14 +131,14 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
               <div className="min-w-0">
                 <p className="font-medium flex items-center gap-2 truncate">
                   {m.display_name || m.email || 'Member'}
-                  {isMe && <span className="text-xs text-ink/50">(you)</span>}
+                  {isMe && <span className="text-xs text-muted">(you)</span>}
                   {m.is_owner && (
                     <span className="inline-flex items-center gap-1 text-xs text-moss">
                       <Crown size={12} aria-hidden /> Owner
                     </span>
                   )}
                 </p>
-                <p className="text-xs text-ink/50 truncate">
+                <p className="text-xs text-muted truncate">
                   {m.email}
                   {m.expires_at && <> · access ends {fmtDate(m.expires_at)}</>}
                 </p>
@@ -163,7 +163,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                         <button onClick={() => setConfirmTransfer(m.user_id)}
                           title="Make this person the owner"
                           aria-label={`Transfer ownership to ${m.display_name || m.email}`}
-                          className="text-ink/50 hover:text-moss">
+                          className="text-muted hover:text-moss">
                           <Crown size={16} />
                         </button>
                       )}
@@ -178,7 +178,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                       <LogOut size={14} aria-hidden /> Leave
                     </button>
                   ) : (
-                    <span className="text-sm text-ink/50">{ROLE_LABEL[m.role] ?? m.role}</span>
+                    <span className="text-sm text-muted">{ROLE_LABEL[m.role] ?? m.role}</span>
                   )}
                 </div>
               )}
@@ -195,7 +195,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
             Hand {petName} over to {members?.find(m => m.user_id === confirmTransfer)?.display_name
               || members?.find(m => m.user_id === confirmTransfer)?.email}?
           </p>
-          <p className="text-sm text-ink/70 mb-3">
+          <p className="text-sm text-muted mb-3">
             They become the owner and can invite, remove people, and delete {petName}. You stay on
             as an <strong>editor</strong>, so you keep adding and editing records — but you can't
             take ownership back yourself. Only they can hand it to you again.
@@ -225,16 +225,16 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                   <option value="viewer">Viewer</option>
                   <option value="editor">Editor</option>
                 </select>
-                <p className="text-xs text-ink/50 mt-1">{ROLE_HELP[role]}</p>
+                <p className="text-xs text-muted mt-1">{ROLE_HELP[role]}</p>
               </div>
               <div>
                 <label htmlFor="invite-email" className="block text-sm mb-1">
-                  Lock to an email <span className="text-ink/50">(optional)</span>
+                  Lock to an email <span className="text-muted">(optional)</span>
                 </label>
                 <input id="invite-email" type="email" value={email} onChange={e => setEmail(e.target.value)}
                   placeholder="them@example.com"
                   className="w-full rounded-md border border-line px-3 py-2" />
-                <p className="text-xs text-ink/50 mt-1">
+                <p className="text-xs text-muted mt-1">
                   Only this address can redeem the link. Leave blank for anyone with the link.
                 </p>
               </div>
@@ -253,11 +253,11 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                   <li key={inv.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-3 flex items-center justify-between gap-3">
                     <div className="min-w-0">
                       <p className="text-sm flex items-center gap-2">
-                        <Link2 size={14} className="text-ink/40 shrink-0" aria-hidden />
+                        <Link2 size={14} className="text-muted shrink-0" aria-hidden />
                         <span className="capitalize">{inv.role}</span>
-                        {inv.invited_email && <span className="text-ink/60 truncate">· {inv.invited_email}</span>}
+                        {inv.invited_email && <span className="text-muted truncate">· {inv.invited_email}</span>}
                       </p>
-                      <p className="text-xs text-ink/50">
+                      <p className="text-xs text-muted">
                         Expires {fmtDate(inv.expires_at)}
                         {inv.email_sent_at && <> · emailed {fmtDate(inv.email_sent_at)}</>}
                       </p>
@@ -294,7 +294,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
             <h3 className="font-medium flex items-center gap-2 mb-1">
               <Stethoscope size={16} className="text-moss" aria-hidden /> Vet links
             </h3>
-            <p className="text-sm text-ink/60 mb-3">
+            <p className="text-sm text-muted mb-3">
               A read-only summary — allergies, current meds, vaccinations, recent weights and
               visits — that a vet can open without an account. No sign-in, no editing, and it
               expires on its own. Anyone with the link can view it, so send it directly.
@@ -329,7 +329,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                   <li key={l.id} className="rounded-md border border-line p-3 flex items-center justify-between gap-3">
                     <div className="min-w-0">
                       <p className="text-sm truncate">{l.label || 'Vet link'}</p>
-                      <p className="text-xs text-ink/50 flex items-center gap-2">
+                      <p className="text-xs text-muted flex items-center gap-2">
                         Expires {fmtDate(l.expires_at)}
                         <span className="inline-flex items-center gap-1">
                           <Eye size={11} aria-hidden /> {l.view_count}
@@ -358,7 +358,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
       )}
 
       {isOwner === false && (
-        <p className="text-sm text-ink/50">
+        <p className="text-sm text-muted">
           This pet is shared with you. Only the owner can invite others or change access.
         </p>
       )}

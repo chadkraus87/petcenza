@@ -35,7 +35,7 @@ export default function WeightPanel({ petId, goalKg }: { petId: string; goalKg: 
         <div>
           <h2 className="text-xl">Weight history</h2>
           {latest && (
-            <p className="text-sm text-ink/60">
+            <p className="text-sm text-muted">
               Latest: {latest.weight_kg} kg ({kgToLb(Number(latest.weight_kg))} lb)
               {delta !== null && <span className={delta > 0 ? 'text-signal' : 'text-moss'}> · {delta > 0 ? '+' : ''}{delta.toFixed(1)} kg since last</span>}
             </p>
@@ -77,7 +77,7 @@ export default function WeightPanel({ petId, goalKg }: { petId: string; goalKg: 
           </ResponsiveContainer>
         </div>
       ) : (
-        <p className="text-sm text-ink/50">Log at least two weights to see the trend chart.</p>
+        <p className="text-sm text-muted">Log at least two weights to see the trend chart.</p>
       )}
     </section>
   )

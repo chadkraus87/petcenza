@@ -21,7 +21,7 @@ export default function NotificationSettings() {
 
   if (isLoading) return (
     <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-6">
-      <p className="text-sm text-ink/50">Loading notification settings…</p>
+      <p className="text-sm text-muted">Loading notification settings…</p>
     </section>
   )
 
@@ -30,10 +30,10 @@ export default function NotificationSettings() {
   return (
     <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-6">
       <div className="flex items-center gap-2 mb-1">
-        {settings?.browser_push ? <Bell className="text-moss" aria-hidden /> : <BellOff className="text-ink/40" aria-hidden />}
+        {settings?.browser_push ? <Bell className="text-moss" aria-hidden /> : <BellOff className="text-muted" aria-hidden />}
         <h2 className="text-xl">Notifications</h2>
       </div>
-      <p className="text-sm text-ink/60 mb-4">
+      <p className="text-sm text-muted mb-4">
         Reminders can raise a browser notification while PetCenza is open.
       </p>
 
@@ -44,7 +44,7 @@ export default function NotificationSettings() {
         </p>
       )}
       {permission === 'unsupported' && (
-        <p className="text-sm text-ink/50 mb-4">This browser doesn't support notifications.</p>
+        <p className="text-sm text-muted mb-4">This browser doesn't support notifications.</p>
       )}
 
       <label className="flex items-start gap-3 mb-5">
@@ -52,7 +52,7 @@ export default function NotificationSettings() {
           onChange={e => set({ browser_push: e.target.checked })} />
         <span>
           <span className="block font-medium">Browser notifications</span>
-          <span className="block text-sm text-ink/60">Master switch — turn this off to silence everything.</span>
+          <span className="block text-sm text-muted">Master switch — turn this off to silence everything.</span>
         </span>
       </label>
 
@@ -66,7 +66,7 @@ export default function NotificationSettings() {
                 onChange={e => set({ [col]: e.target.checked } as Partial<Settings>)} />
               <span>
                 <span className="block text-sm">{label}</span>
-                <span className="block text-xs text-ink/50">{help}</span>
+                <span className="block text-xs text-muted">{help}</span>
               </span>
             </label>
           ))}
@@ -76,7 +76,7 @@ export default function NotificationSettings() {
           <Moon size={16} className="text-calm" aria-hidden />
           <span className="text-sm font-medium">Quiet hours</span>
         </div>
-        <p className="text-xs text-ink/50 mb-2">
+        <p className="text-xs text-muted mb-2">
           Nothing will notify you between these times. Leave both blank to disable. A window that
           crosses midnight (say 22:00 to 07:00) works as you'd expect.
         </p>

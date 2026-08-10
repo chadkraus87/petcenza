@@ -1,0 +1,13 @@
+# PetCenza security contact (RFC 9116)
+#
+# The source is public, so someone will eventually find something. Make it easy for them to tell
+# us instead of guessing at an address or posting it publicly.
+
+Contact: mailto:security@petcenza.com
+Preferred-Languages: en
+Canonical: https://pawchart-zeta.vercel.app/.well-known/security.txt
+Policy: https://pawchart-zeta.vercel.app/legal/terms
+
+# Please give us a reasonable window to fix an issue before disclosing it. We will confirm
+# receipt, keep you updated, and credit you if you'd like.
+Expires: 2027-08-10T00:00:00.000Z

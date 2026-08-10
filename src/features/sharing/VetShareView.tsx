@@ -38,12 +38,12 @@ export default function VetShareView() {
       <div className="max-w-sm">
         <PawPrint className="mx-auto mb-3 text-ink/30" aria-hidden />
         <h1 className="text-xl mb-2">Summary unavailable</h1>
-        <p className="text-sm text-ink/70">{error}</p>
+        <p className="text-sm text-muted">{error}</p>
       </div>
     </main>
   )
 
-  if (!data) return <main className="min-h-screen grid place-items-center text-ink/50">Loading summary…</main>
+  if (!data) return <main className="min-h-screen grid place-items-center text-muted">Loading summary…</main>
 
   const { pet } = data
   const severe = data.allergies.filter(a => a.severity === 'severe' || a.severity === 'life_threatening')
@@ -52,14 +52,14 @@ export default function VetShareView() {
     <main className="p-6 max-w-3xl mx-auto">
       <header className="flex items-start justify-between gap-4 mb-6">
         <div>
-          <p className="text-xs uppercase tracking-wide text-ink/50 mb-1">Shared pet summary</p>
+          <p className="text-xs uppercase tracking-wide text-muted mb-1">Shared pet summary</p>
           <h1 className="text-3xl">{pet.name}</h1>
-          <p className="text-ink/60">
+          <p className="text-muted">
             {pet.breed ?? pet.species} · {petAge(pet.birth_date)} · {pet.sex.replace('_', ', ')}
             {pet.color && <> · {pet.color}</>}
           </p>
           {pet.microchip_no && (
-            <p className="text-sm text-ink/60">Microchip: <code>{pet.microchip_no}</code></p>
+            <p className="text-sm text-muted">Microchip: <code>{pet.microchip_no}</code></p>
           )}
         </div>
         <button onClick={() => window.print()}
@@ -89,8 +89,8 @@ export default function VetShareView() {
           {data.allergies.map((a, i) => (
             <li key={i} className="text-sm">
               <span className="font-medium">{a.allergen}</span> <SeverityBadge severity={a.severity} />
-              <span className="text-ink/50"> · {a.type}</span>
-              {a.symptoms && <span className="block text-ink/70">Symptoms: {a.symptoms}</span>}
+              <span className="text-muted"> · {a.type}</span>
+              {a.symptoms && <span className="block text-muted">Symptoms: {a.symptoms}</span>}
             </li>
           ))}
         </ul>
@@ -101,10 +101,10 @@ export default function VetShareView() {
           {data.medications.map((m, i) => (
             <li key={i} className="text-sm">
               <span className="font-medium">{m.name}</span> {m.dosage} — {m.frequency}
-              <span className="block text-ink/60 text-xs">
+              <span className="block text-muted text-xs">
                 Started {fmtDate(m.starts_on)}{m.ends_on ? ` · ends ${fmtDate(m.ends_on)}` : ' · ongoing'}
               </span>
-              {m.instructions && <span className="block text-ink/70">{m.instructions}</span>}
+              {m.instructions && <span className="block text-muted">{m.instructions}</span>}
             </li>
           ))}
         </ul>
@@ -115,7 +115,7 @@ export default function VetShareView() {
           {data.vaccinations.map((v, i) => (
             <li key={i} className="text-sm">
               <span className="font-medium">{v.vaccine}</span>
-              {v.administered_on && <span className="text-ink/60"> · given {fmtDate(v.administered_on)}</span>}
+              {v.administered_on && <span className="text-muted"> · given {fmtDate(v.administered_on)}</span>}
               {v.next_due_on && <span className="text-signal"> · next due {fmtDate(v.next_due_on)}</span>}
             </li>
           ))}
@@ -127,7 +127,7 @@ export default function VetShareView() {
           {data.weights.map((w, i) => (
             <li key={i} className="text-sm">
               {fmtDate(w.measured_on)} — {w.weight_kg} kg ({kgToLb(Number(w.weight_kg))} lb)
-              {w.body_condition && <span className="text-ink/60"> · BCS {w.body_condition}/9</span>}
+              {w.body_condition && <span className="text-muted"> · BCS {w.body_condition}/9</span>}
             </li>
           ))}
         </ul>
@@ -147,7 +147,7 @@ export default function VetShareView() {
         </ul>
       </Section>
 
-      <footer className="mt-8 pt-4 border-t border-line text-xs text-ink/50">
+      <footer className="mt-8 pt-4 border-t border-line text-xs text-muted">
         Read-only summary shared by the pet's owner. This link expires {fmtDate(data.expires_at)}.
       </footer>
     </main>
@@ -160,7 +160,7 @@ function Section({ title, empty, rows, children }: {
   return (
     <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 mb-4">
       <h2 className="text-lg mb-2">{title}</h2>
-      {rows === 0 ? <p className="text-sm text-ink/50">{empty}</p> : children}
+      {rows === 0 ? <p className="text-sm text-muted">{empty}</p> : children}
     </section>
   )
 }

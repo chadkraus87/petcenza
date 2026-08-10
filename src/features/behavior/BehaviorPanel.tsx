@@ -55,7 +55,7 @@ export default function BehaviorPanel({ petId }: { petId: string }) {
           </li>
         ))}
       </ul>
-      {notes?.length === 0 && <p className="text-sm text-ink/50">No behavior notes yet.</p>}
+      {notes?.length === 0 && <p className="text-sm text-muted">No behavior notes yet.</p>}
     </section>
   )
 }

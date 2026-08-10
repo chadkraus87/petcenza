@@ -53,7 +53,7 @@ export default function VaccinationsPanel({ petId }: { petId: string }) {
             <li key={v.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex justify-between gap-3">
               <div>
                 <p className="font-medium">{v.vaccine}</p>
-                <p className="text-sm text-ink/60">
+                <p className="text-sm text-muted">
                   {v.administered_on && <>Given {fmtDate(v.administered_on)}</>}
                   {v.next_due_on && (
                     <span className={status === 'overdue' ? 'text-alert font-medium' : status === 'soon' ? 'text-signal' : ''}>
@@ -67,7 +67,7 @@ export default function VaccinationsPanel({ petId }: { petId: string }) {
           )
         })}
       </ul>
-      {vax?.length === 0 && <p className="text-sm text-ink/50">No vaccinations recorded.</p>}
+      {vax?.length === 0 && <p className="text-sm text-muted">No vaccinations recorded.</p>}
     </section>
   )
 }

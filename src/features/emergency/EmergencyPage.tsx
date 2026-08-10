@@ -4,6 +4,7 @@ import { Phone, Siren } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import type { EmergencyContact, Veterinarian, Allergy } from '@/types/db'
 import SeverityBadge from '@/components/ui/SeverityBadge'
+import { Disclaimer, DISCLAIMER } from '@/components/Disclaimer'
 
 type EmergencyPet = { id: string; name: string; species: string; breed: string | null; color: string | null; microchip_no: string | null }
 
@@ -33,7 +34,8 @@ export default function EmergencyPage() {
   return (
     <main className="p-6 max-w-3xl mx-auto">
       <h1 className="text-3xl mb-1 flex items-center gap-2"><Siren className="text-alert" aria-hidden /> Emergency</h1>
-      <p className="text-ink/60 mb-6">Everything you need in a crisis, one screen, works offline.</p>
+      <div className="mb-4"><Disclaimer tone="loud" text={DISCLAIMER.emergency} /></div>
+      <p className="text-muted mb-6">Everything you need in a crisis, one screen, works offline.</p>
 
       {data && data.allergies.length > 0 && (
         <section className="mb-6 rounded-card border-2 border-alert bg-alert/5 p-4">
@@ -56,10 +58,10 @@ export default function EmergencyPage() {
             {data.pets.map(p => (
               <li key={p.id} className="text-sm">
                 <span className="font-medium">{p.name}</span>
-                <span className="text-ink/60"> · {p.breed ?? p.species}{p.color ? `, ${p.color}` : ''}</span>
+                <span className="text-muted"> · {p.breed ?? p.species}{p.color ? `, ${p.color}` : ''}</span>
                 {p.microchip_no
                   ? <span className="block text-xs">Microchip: <code className="text-ink">{p.microchip_no}</code></span>
-                  : <span className="block text-xs text-ink/40">No microchip on file</span>}
+                  : <span className="block text-xs text-muted">No microchip on file</span>}
               </li>
             ))}
           </ul>
@@ -74,7 +76,7 @@ export default function EmergencyPage() {
         ))}
       </div>
       {data && !primary && !erClinic && data.contacts.length === 0 && (
-        <p className="text-sm text-ink/50 mt-4">
+        <p className="text-sm text-muted mt-4">
           No emergency contacts yet.{' '}
           <Link to="/care-team" className="text-moss underline">Add your vet and an emergency clinic</Link>{' '}
           so they're ready when you need them.
@@ -87,9 +89,9 @@ export default function EmergencyPage() {
 function ContactCard({ title, name, phone, address, urgent }: { title: string; name: string; phone: string | null; address?: string | null; urgent?: boolean }) {
   return (
     <section className={`bg-card rounded-card border p-4 ${urgent ? 'border-alert' : 'border-line'}`}>
-      <h2 className="text-xs uppercase tracking-wide text-ink/50 mb-1">{title}</h2>
+      <h2 className="text-xs uppercase tracking-wide text-muted mb-1">{title}</h2>
       <p className="font-medium">{name}</p>
-      {address && <p className="text-sm text-ink/60">{address}</p>}
+      {address && <p className="text-sm text-muted">{address}</p>}
       {phone && (
         <a href={`tel:${phone.replace(/[^+\d]/g, '')}`} className="mt-2 inline-flex items-center gap-2 rounded-md bg-ink text-paper px-3 py-1.5 text-sm">
           <Phone size={14} aria-hidden /> {phone}

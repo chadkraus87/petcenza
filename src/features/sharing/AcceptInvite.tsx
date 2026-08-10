@@ -66,11 +66,11 @@ export default function AcceptInvite() {
       <div className="max-w-sm">
         <PawPrint className="mx-auto mb-3 text-moss" aria-hidden />
         {status === 'working' ? (
-          <p className="text-ink/60">Accepting your invitation…</p>
+          <p className="text-muted">Accepting your invitation…</p>
         ) : (
           <>
             <h1 className="text-xl mb-2">Invitation not accepted</h1>
-            <p className="text-sm text-ink/70 mb-4">{message}</p>
+            <p className="text-sm text-muted mb-4">{message}</p>
             <Link className="text-moss underline text-sm" to="/pets">Go to your pets</Link>
           </>
         )}

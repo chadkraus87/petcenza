@@ -54,8 +54,8 @@ export default function MedicationsPanel({ petId }: { petId: string }) {
           <li key={m.id} className={`bg-card rounded-card border p-4 ${isMedicationActive(m) ? 'border-line' : 'border-line opacity-60'}`}>
             <div className="flex justify-between gap-3">
               <div>
-                <p className="font-medium">{m.name} <span className="font-normal text-ink/70">{m.dosage} — {m.frequency}</span></p>
-                <p className="text-sm text-ink/60">
+                <p className="font-medium">{m.name} <span className="font-normal text-muted">{m.dosage} — {m.frequency}</span></p>
+                <p className="text-sm text-muted">
                   {fmtDate(m.starts_on)}{m.ends_on ? ` → ${fmtDate(m.ends_on)}` : ' → ongoing'}
                   {m.refill_due_on && <span className="text-signal"> · refill by {fmtDate(m.refill_due_on)}</span>}
                 </p>
@@ -66,7 +66,7 @@ export default function MedicationsPanel({ petId }: { petId: string }) {
           </li>
         ))}
       </ul>
-      {meds?.length === 0 && <p className="text-sm text-ink/50">No medications recorded.</p>}
+      {meds?.length === 0 && <p className="text-sm text-muted">No medications recorded.</p>}
     </section>
   )
 }

@@ -27,7 +27,7 @@ export default function SignUp() {
     <main className="min-h-screen grid place-items-center p-6">
       <div className="max-w-sm text-center">
         <h1 className="text-xl mb-2">Check your email</h1>
-        <p className="text-sm text-ink/70">We sent a verification link to {email}. Open it to activate your account.</p>
+        <p className="text-sm text-muted">We sent a verification link to {email}. Open it to activate your account.</p>
       </div>
     </main>
   )
@@ -46,6 +46,13 @@ export default function SignUp() {
         <Captcha onToken={setCaptchaToken} resetSignal={captchaAttempt} />
         <button onClick={submit} disabled={captchaEnabled && !captchaToken}
           className="w-full rounded-md bg-ink text-paper py-2 font-medium disabled:opacity-50">Create account</button>
+        {/* Must be visible BEFORE the account is created, not buried in a footer somewhere. */}
+        <p className="text-xs text-muted mt-3 leading-relaxed">
+          By creating an account you agree to our{' '}
+          <Link className="text-moss underline" to="/legal/terms">Terms</Link> and{' '}
+          <Link className="text-moss underline" to="/legal/privacy">Privacy Policy</Link>.
+          PetCenza keeps records — it does not give veterinary advice.
+        </p>
         <p className="text-sm mt-4"><Link className="text-moss underline" to="/auth/sign-in">Back to sign in</Link></p>
       </div>
     </main>

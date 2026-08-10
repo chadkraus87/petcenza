@@ -27,7 +27,7 @@ export default function ForgotPassword() {
     <main className="min-h-screen grid place-items-center p-6">
       <div className="max-w-sm text-center">
         <h1 className="text-xl mb-2">Check your email</h1>
-        <p className="text-sm text-ink/70">If an account exists for {email}, we sent a link to reset your password.</p>
+        <p className="text-sm text-muted">If an account exists for {email}, we sent a link to reset your password.</p>
         <p className="text-sm mt-4"><Link className="text-moss underline" to="/auth/sign-in">Back to sign in</Link></p>
       </div>
     </main>
@@ -37,7 +37,7 @@ export default function ForgotPassword() {
     <main className="min-h-screen grid place-items-center p-6">
       <div className="w-full max-w-sm bg-card/85 backdrop-blur-md shadow-lg shadow-ink/5 rounded-card border border-line p-8">
         <h1 className="text-2xl mb-1">Reset your password</h1>
-        <p className="text-sm text-ink/60 mb-6">Enter your email and we'll send you a reset link.</p>
+        <p className="text-sm text-muted mb-6">Enter your email and we'll send you a reset link.</p>
         {error && <p role="alert" className="text-sm text-alert mb-4">{error}</p>}
         <label className="block text-sm mb-1" htmlFor="email">Email</label>
         <input id="email" type="email" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)}

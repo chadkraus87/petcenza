@@ -17,7 +17,7 @@ export default function PetList() {
   const { user } = useAuth()
   const [activeTag, setActiveTag] = useState<string | null>(null)
 
-  if (isLoading) return <p className="p-6 text-ink/50">Loading…</p>
+  if (isLoading) return <p className="p-6 text-muted">Loading…</p>
 
   // Only offer tags that are actually in use — an empty filter chip is just noise.
   const usedTagIds = new Set(petTags?.map(pt => pt.tag_id))
@@ -46,7 +46,7 @@ export default function PetList() {
             return (
               <button key={t.id} onClick={() => setActiveTag(on ? null : t.id)} aria-pressed={on}
                 className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs transition ${
-                  on ? 'text-paper' : 'text-ink/70 border border-line bg-card hover:border-moss'}`}
+                  on ? 'text-paper' : 'text-muted border border-line bg-card hover:border-moss'}`}
                 style={on ? { backgroundColor: t.color } : undefined}>
                 {t.name}
                 {on && <X size={11} aria-hidden />}
@@ -57,10 +57,10 @@ export default function PetList() {
       )}
 
       {pets?.length === 0 && (
-        <p className="text-ink/60">No pets yet. Add your first pet to start their chart.</p>
+        <p className="text-muted">No pets yet. Add your first pet to start their chart.</p>
       )}
       {pets && pets.length > 0 && visible.length === 0 && (
-        <p className="text-ink/60">No pets carry that tag.</p>
+        <p className="text-muted">No pets carry that tag.</p>
       )}
 
       <PetGrid pets={owned} photos={photos} />
@@ -88,7 +88,7 @@ export default function PetList() {
                   <PetAvatar name={p.name} url={photos?.[p.id]} size="sm" />
                   <div className="min-w-0">
                     <h3 className="text-lg truncate">{p.name}</h3>
-                    <p className="text-sm text-ink/50 truncate">
+                    <p className="text-sm text-muted truncate">
                       {p.breed ?? p.species}
                       {p.deceased_on && <> · {new Date(p.deceased_on).getFullYear()}</>}
                     </p>
@@ -121,14 +121,14 @@ function PetGrid({ pets, photos, shared = false }: {
               <div className="min-w-0 flex-1">
                 <h2 className="text-xl flex items-center gap-2">
                   <span className="truncate">{p.name}</span>
-                  {p.nickname && <span className="text-ink/50 text-base truncate">“{p.nickname}”</span>}
+                  {p.nickname && <span className="text-muted text-base truncate">“{p.nickname}”</span>}
                   {shared && (
-                    <span className="ml-auto shrink-0 inline-flex items-center gap-1 rounded-full bg-wave text-ink/70 px-2 py-0.5 text-xs font-normal">
+                    <span className="ml-auto shrink-0 inline-flex items-center gap-1 rounded-full bg-wave text-muted px-2 py-0.5 text-xs font-normal">
                       <Users size={11} aria-hidden /> Shared
                     </span>
                   )}
                 </h2>
-                <p className="text-sm text-ink/60 truncate">
+                <p className="text-sm text-muted truncate">
                   {p.breed ?? p.species} · {petAge(p.birth_date, p.estimated_age_months)}
                 </p>
               </div>

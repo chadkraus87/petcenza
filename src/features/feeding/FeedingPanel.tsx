@@ -37,14 +37,14 @@ export default function FeedingPanel({ petId }: { petId: string }) {
         {feeds?.map(f => (
           <li key={f.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex justify-between gap-3">
             <div>
-              <p className="font-medium">{f.label} <span className="font-normal text-ink/70">· {f.feed_time?.slice(0, 5)}</span></p>
-              {f.portion && <p className="text-sm text-ink/60">{f.portion}</p>}
+              <p className="font-medium">{f.label} <span className="font-normal text-muted">· {f.feed_time?.slice(0, 5)}</span></p>
+              {f.portion && <p className="text-sm text-muted">{f.portion}</p>}
             </div>
             <button onClick={() => remove.mutate(f.id)} className="text-sm text-alert self-start">Delete</button>
           </li>
         ))}
       </ul>
-      {feeds?.length === 0 && <p className="text-sm text-ink/50">No feeding times set.</p>}
+      {feeds?.length === 0 && <p className="text-sm text-muted">No feeding times set.</p>}
     </section>
   )
 }

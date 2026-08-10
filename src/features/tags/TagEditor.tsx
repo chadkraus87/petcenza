@@ -37,7 +37,7 @@ export default function TagEditor({ petId, canEdit }: { petId: string; canEdit: 
   return (
     <div>
       <div className="flex flex-wrap items-center gap-2">
-        <TagIcon size={14} className="text-ink/40" aria-hidden />
+        <TagIcon size={14} className="text-muted" aria-hidden />
         {petTags?.map(t => (
           <span key={t.id}
             className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs text-paper"
@@ -51,11 +51,11 @@ export default function TagEditor({ petId, canEdit }: { petId: string; canEdit: 
             )}
           </span>
         ))}
-        {petTags?.length === 0 && <span className="text-xs text-ink/40">No tags</span>}
+        {petTags?.length === 0 && <span className="text-xs text-muted">No tags</span>}
 
         {canEdit && (
           <button onClick={() => setOpen(o => !o)}
-            className="inline-flex items-center gap-1 rounded-full border border-line px-2.5 py-0.5 text-xs text-ink/60 hover:border-moss hover:text-moss">
+            className="inline-flex items-center gap-1 rounded-full border border-line px-2.5 py-0.5 text-xs text-muted hover:border-moss hover:text-moss">
             <Plus size={11} aria-hidden /> Tag
           </button>
         )}
@@ -67,7 +67,7 @@ export default function TagEditor({ petId, canEdit }: { petId: string; canEdit: 
 
           {available.length > 0 && (
             <>
-              <p className="text-xs text-ink/50 mb-1.5">Add an existing tag</p>
+              <p className="text-xs text-muted mb-1.5">Add an existing tag</p>
               <div className="flex flex-wrap gap-1.5 mb-3">
                 {available.map(t => (
                   <button key={t.id} onClick={() => { assign.mutate(t.id); setOpen(false) }}
@@ -80,7 +80,7 @@ export default function TagEditor({ petId, canEdit }: { petId: string; canEdit: 
             </>
           )}
 
-          <p className="text-xs text-ink/50 mb-1.5">Or create a new one</p>
+          <p className="text-xs text-muted mb-1.5">Or create a new one</p>
           <div className="flex flex-wrap items-center gap-2">
             <input value={name} onChange={e => setName(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && addNew()}

@@ -50,7 +50,7 @@ export default function AllergiesPanel({ petId }: { petId: string }) {
             <div className="flex justify-between gap-3">
               <div>
                 <p className="font-medium">{a.allergen} <SeverityBadge severity={a.severity} /></p>
-                <p className="text-xs uppercase tracking-wide text-ink/50">{a.allergy_type}</p>
+                <p className="text-xs uppercase tracking-wide text-muted">{a.allergy_type}</p>
                 {a.symptoms && <p className="text-sm mt-1">Symptoms: {a.symptoms}</p>}
                 {a.emergency_treatment && <p className="text-sm text-alert mt-1">Emergency: {a.emergency_treatment}</p>}
               </div>
@@ -59,7 +59,7 @@ export default function AllergiesPanel({ petId }: { petId: string }) {
           </li>
         ))}
       </ul>
-      {allergies?.length === 0 && <p className="text-sm text-ink/50">No known allergies.</p>}
+      {allergies?.length === 0 && <p className="text-sm text-muted">No known allergies.</p>}
     </section>
   )
 }

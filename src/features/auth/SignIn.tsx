@@ -38,7 +38,7 @@ export default function SignIn() {
     <main className="min-h-screen grid place-items-center p-6">
       <div className="w-full max-w-sm bg-card/85 backdrop-blur-md shadow-lg shadow-ink/5 rounded-card border border-line p-8">
         <h1 className="text-2xl mb-1">PetCenza</h1>
-        <p className="text-sm text-ink/60 mb-6">Sign in to your pets' records.</p>
+        <p className="text-sm text-muted mb-6">Sign in to your pets' records.</p>
         {error && <p role="alert" className="text-sm text-alert mb-4">{error}</p>}
         <label className="block text-sm mb-1" htmlFor="email">Email</label>
         <input id="email" type="email" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)}
@@ -55,7 +55,7 @@ export default function SignIn() {
           className="w-full rounded-md bg-ink text-paper py-2 font-medium disabled:opacity-50">
           {busy ? 'Signing in…' : 'Sign in'}
         </button>
-        <div className="my-4 flex items-center gap-3 text-xs text-ink/40"><hr className="flex-1 border-line" />or<hr className="flex-1 border-line" /></div>
+        <div className="my-4 flex items-center gap-3 text-xs text-muted"><hr className="flex-1 border-line" />or<hr className="flex-1 border-line" /></div>
         <button onClick={signInWithGoogle} className="w-full rounded-md border border-line py-2 mb-2 text-sm">Continue with Google</button>
         <button onClick={signInWithApple} className="w-full rounded-md border border-line py-2 text-sm">Continue with Apple</button>
         <p className="text-sm mt-5 flex justify-between">

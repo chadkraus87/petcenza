@@ -1,0 +1,21 @@
+# PetCenza
+#
+# The marketing surface and the legal pages should be indexed. Everything behind sign-in is
+# useless to a crawler, and the capability URLs must never be indexed — the token in a /share/
+# or /invite/ path IS the credential, so an indexed one is permanent exposure. Those also send
+# X-Robots-Tag: noindex as the real enforcement; this file is the polite first line.
+
+User-agent: *
+Allow: /$
+Allow: /legal/
+Disallow: /share/
+Disallow: /invite/
+Disallow: /auth/
+Disallow: /pets/
+Disallow: /settings
+Disallow: /calendar
+Disallow: /meds
+Disallow: /care-team
+Disallow: /emergency
+
+Sitemap: https://pawchart-zeta.vercel.app/sitemap.xml

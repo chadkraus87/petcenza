@@ -43,7 +43,7 @@ export default function NotesPanel({ petId }: { petId: string }) {
             <div>
               <p className="font-medium flex items-center gap-1">
                 {n.pinned && <Pin size={14} className="text-signal" aria-label="Pinned" />}
-                {n.title || 'Note'} <span className="font-normal text-ink/50 text-sm">· {fmtDate(n.created_at)}</span>
+                {n.title || 'Note'} <span className="font-normal text-muted text-sm">· {fmtDate(n.created_at)}</span>
               </p>
               <p className="text-sm mt-1 whitespace-pre-wrap">{n.body}</p>
             </div>
@@ -51,7 +51,7 @@ export default function NotesPanel({ petId }: { petId: string }) {
           </li>
         ))}
       </ul>
-      {notes?.length === 0 && <p className="text-sm text-ink/50">No notes yet.</p>}
+      {notes?.length === 0 && <p className="text-sm text-muted">No notes yet.</p>}
     </section>
   )
 }

@@ -28,7 +28,7 @@ export default function PetDangerZone({ pet }: { pet: Pet }) {
 
   if (!isOwner) {
     return (
-      <p className="text-sm text-ink/50">
+      <p className="text-sm text-muted">
         Only {pet.name}'s owner can archive or delete this profile.
       </p>
     )
@@ -65,7 +65,7 @@ export default function PetDangerZone({ pet }: { pet: Pet }) {
             <Heart size={16} className="text-coral" aria-hidden />
             {pet.name} passed away on {fmtDate(pet.deceased_on!)}
           </p>
-          <p className="text-sm text-ink/60 mt-1">
+          <p className="text-sm text-muted mt-1">
             Their records are kept in full, and reminders have stopped. You'll find {pet.name} under
             “Remembered” on the pets page.
           </p>
@@ -79,7 +79,7 @@ export default function PetDangerZone({ pet }: { pet: Pet }) {
           <h3 className="font-medium flex items-center gap-2">
             <Heart size={16} className="text-coral" aria-hidden /> If {pet.name} has passed away
           </h3>
-          <p className="text-sm text-ink/60 mt-1">
+          <p className="text-sm text-muted mt-1">
             Nothing is deleted. {pet.name}'s full history stays available, and PetCenza stops
             sending reminders about their care.
           </p>
@@ -110,7 +110,7 @@ export default function PetDangerZone({ pet }: { pet: Pet }) {
       {/* --------------------------------------------------------- delete */}
       <div className="rounded-card border-2 border-alert bg-alert/5 p-4">
         <h3 className="font-medium text-alert">Delete {pet.name} permanently</h3>
-        <p className="text-sm text-ink/70 mt-1">
+        <p className="text-sm text-muted mt-1">
           This erases every medication, allergy, vaccination, weight, visit, note, document and
           photo for {pet.name}, for everyone it's shared with. It cannot be undone. If {pet.name} has
           passed away, use the option above instead — it keeps the history.

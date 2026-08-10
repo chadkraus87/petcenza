@@ -55,7 +55,7 @@ export default function VisitsPanel({ petId }: { petId: string }) {
           </li>
         ))}
       </ul>
-      {visits?.length === 0 && <p className="text-sm text-ink/50">No visits recorded.</p>}
+      {visits?.length === 0 && <p className="text-sm text-muted">No visits recorded.</p>}
     </section>
   )
 }

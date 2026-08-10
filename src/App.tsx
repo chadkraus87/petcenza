@@ -21,12 +21,15 @@ const CareTeam = lazy(() => import('@/features/careteam/CareTeamPage'))
 const SecuritySettings = lazy(() => import('@/features/account/SecuritySettings'))
 const AcceptInvite = lazy(() => import('@/features/sharing/AcceptInvite'))
 const VetShareView = lazy(() => import('@/features/sharing/VetShareView'))
+const Privacy = lazy(() => import('@/features/legal/Privacy'))
+const Terms = lazy(() => import('@/features/legal/Terms'))
+const DeleteAccountInfo = lazy(() => import('@/features/legal/DeleteAccountInfo'))
 
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Suspense fallback={<div className="min-h-screen grid place-items-center text-ink/50">Loading…</div>}>
+        <Suspense fallback={<div className="min-h-screen grid place-items-center text-muted">Loading…</div>}>
           <Routes>
             <Route path="/auth/sign-in" element={<SignIn />} />
             <Route path="/auth/sign-up" element={<SignUp />} />
@@ -38,6 +41,11 @@ export default function App() {
             <Route path="/invite/:token" element={<AcceptInvite />} />
             {/* Fully public — vets have no account; the token is the capability. */}
             <Route path="/share/:token" element={<VetShareView />} />
+            {/* Public by necessity: payment processors and both app stores check these URLs
+                before any human signs in, and a policy behind a login is not published. */}
+            <Route path="/legal/privacy" element={<Privacy />} />
+            <Route path="/legal/terms" element={<Terms />} />
+            <Route path="/legal/delete-account" element={<DeleteAccountInfo />} />
             <Route element={<Protected />}>
               <Route element={<AppShell />}>
                 <Route path="/" element={<Dashboard />} />

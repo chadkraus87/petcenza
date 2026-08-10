@@ -3,6 +3,7 @@ import { Pill, UtensilsCrossed, HelpCircle, CalendarClock, Hand } from 'lucide-r
 import { useMedSchedule, type MedWithPet } from '@/hooks/useMedSchedule'
 import { usePrimaryPhotos } from '@/hooks/usePetPhotos'
 import { PetAvatar } from '@/components/PetAvatar'
+import { Disclaimer, DISCLAIMER } from '@/components/Disclaimer'
 import {
   buildDayPlan, currentSlot, TIME_ORDER, TIME_LABEL,
   type ScheduledDose
@@ -12,7 +13,7 @@ export default function MedSchedulePage() {
   const { data: meds, isLoading, error } = useMedSchedule()
   const { data: photos } = usePrimaryPhotos()
 
-  if (isLoading) return <p className="p-6 text-ink/50">Loading today's doses…</p>
+  if (isLoading) return <p className="p-6 text-muted">Loading today's doses…</p>
   if (error) return <p className="p-6 text-alert">Couldn't load the medication schedule. Check your connection and retry.</p>
 
   const plan = buildDayPlan(meds ?? [])
@@ -23,12 +24,16 @@ export default function MedSchedulePage() {
   return (
     <main className="p-6 max-w-3xl mx-auto">
       <h1 className="text-3xl mb-1">Medication rounds</h1>
-      <p className="text-ink/60 mb-6">
+      <p className="text-muted mb-3">
         Everything your pets are on right now, grouped by when it's given.
       </p>
+      <div className="mb-6 space-y-1">
+        <Disclaimer text={DISCLAIMER.medication} />
+        <Disclaimer text={DISCLAIMER.reminders} />
+      </div>
 
       {nothingAtAll && (
-        <p className="text-ink/60">
+        <p className="text-muted">
           Nobody is on medication right now. Anything you add on a pet's page shows up here.
         </p>
       )}
@@ -42,7 +47,7 @@ export default function MedSchedulePage() {
                 Now
               </span>
             )}
-            <span className="text-sm font-normal text-ink/50">
+            <span className="text-sm font-normal text-muted">
               {plan.bySlot[slot].length} {plan.bySlot[slot].length === 1 ? 'dose' : 'doses'}
             </span>
           </h2>
@@ -85,7 +90,7 @@ function Group({ title, icon, note, children }: {
   return (
     <section className="mb-6">
       <h2 className="text-xl mt-8 mb-1 flex items-center gap-2">{icon} {title}</h2>
-      <p className="text-sm text-ink/50 mb-3">{note}</p>
+      <p className="text-sm text-muted mb-3">{note}</p>
       <ul className="space-y-2">{children}</ul>
     </section>
   )
@@ -105,18 +110,18 @@ function DoseRow({ dose, photos, showCadence = false }: {
         <div className="min-w-0 flex-1">
           <p className="flex items-center gap-2 flex-wrap">
             <span className="font-medium truncate">{med.name}</span>
-            <span className="text-sm text-ink/60">{med.dosage}</span>
+            <span className="text-sm text-muted">{med.dosage}</span>
           </p>
-          <p className="text-sm text-ink/60 truncate">
+          <p className="text-sm text-muted truncate">
             for {med.petName}
             {showCadence && <> · {med.frequency}</>}
           </p>
           {med.instructions && (
-            <p className="text-xs text-ink/50 truncate">{med.instructions}</p>
+            <p className="text-xs text-muted truncate">{med.instructions}</p>
           )}
         </div>
         {schedule.withFood && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-wave text-ink/70 px-2 py-1 text-xs shrink-0"
+          <span className="inline-flex items-center gap-1 rounded-full bg-wave text-muted px-2 py-1 text-xs shrink-0"
             title="Give with food">
             <UtensilsCrossed size={12} aria-hidden /> With food
           </span>

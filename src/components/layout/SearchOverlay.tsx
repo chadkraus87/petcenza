@@ -25,19 +25,19 @@ export default function SearchOverlay({ onClose }: { onClose: () => void }) {
           placeholder="Search pets, records, meds, notes…"
           className="w-full px-4 py-3 border-b border-line outline-none" />
         <ul className="max-h-80 overflow-y-auto divide-y divide-line">
-          {isFetching && <li className="px-4 py-3 text-sm text-ink/50">Searching…</li>}
+          {isFetching && <li className="px-4 py-3 text-sm text-muted">Searching…</li>}
           {data?.map(hit => (
             <li key={`${hit.entity}-${hit.id}`}>
               <button className="w-full text-left px-4 py-3 hover:bg-paper"
                 onClick={() => { nav(routeFor(hit.pet_id)); onClose() }}>
                 <span className="text-xs uppercase tracking-wide text-moss mr-2">{hit.entity.replace('_', ' ')}</span>
                 <span className="font-medium">{hit.title}</span>
-                {hit.snippet && <span className="block text-sm text-ink/60 truncate">{hit.snippet}</span>}
+                {hit.snippet && <span className="block text-sm text-muted truncate">{hit.snippet}</span>}
               </button>
             </li>
           ))}
           {q.length >= 2 && !isFetching && data?.length === 0 && (
-            <li className="px-4 py-3 text-sm text-ink/50">No matches. Try a pet name, medication, or diagnosis.</li>
+            <li className="px-4 py-3 text-sm text-muted">No matches. Try a pet name, medication, or diagnosis.</li>
           )}
         </ul>
       </div>

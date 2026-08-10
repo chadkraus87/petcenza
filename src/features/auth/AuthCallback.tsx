@@ -31,11 +31,11 @@ export default function AuthCallback() {
       {failed ? (
         <div className="max-w-sm">
           <h1 className="text-xl mb-2">Sign-in didn't complete</h1>
-          <p className="text-sm text-ink/70 mb-4">The link may have expired or already been used.</p>
+          <p className="text-sm text-muted mb-4">The link may have expired or already been used.</p>
           <Link className="text-moss underline text-sm" to="/auth/sign-in">Return to sign in</Link>
         </div>
       ) : (
-        <p className="text-ink/50">Finishing sign-in…</p>
+        <p className="text-muted">Finishing sign-in…</p>
       )}
     </main>
   )

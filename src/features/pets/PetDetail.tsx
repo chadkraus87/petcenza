@@ -32,7 +32,7 @@ export default function PetDetail() {
   const [tab, setTab] = useState<Tab>('Overview')
   const { data: canEdit } = useCanEditPet(id)
 
-  if (isLoading) return <p className="p-6 text-ink/50">Loading…</p>
+  if (isLoading) return <p className="p-6 text-muted">Loading…</p>
   if (!pet) return <p className="p-6 text-alert">Pet not found.</p>
 
   const severe = allergies?.filter(a => a.severity === 'severe' || a.severity === 'life_threatening') ?? []
@@ -43,7 +43,7 @@ export default function PetDetail() {
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-3xl">{pet.name}</h1>
-            <p className="text-ink/60">
+            <p className="text-muted">
               {pet.breed ?? pet.species}{pet.is_mixed_breed && ' mix'} · {petAge(pet.birth_date, pet.estimated_age_months)} · {pet.sex.replace('_', ', ')}
             </p>
           </div>
@@ -67,7 +67,7 @@ export default function PetDetail() {
       <nav className="flex gap-1 overflow-x-auto border-b border-line mb-6" aria-label="Pet sections">
         {TABS.map(t => (
           <button key={t} onClick={() => setTab(t)} aria-current={tab === t ? 'page' : undefined}
-            className={`px-3 py-2 text-sm whitespace-nowrap border-b-2 -mb-px ${tab === t ? 'border-moss text-moss font-medium' : 'border-transparent text-ink/60'}`}>
+            className={`px-3 py-2 text-sm whitespace-nowrap border-b-2 -mb-px ${tab === t ? 'border-moss text-moss font-medium' : 'border-transparent text-muted'}`}>
             {t}
           </button>
         ))}
@@ -109,9 +109,9 @@ function Overview({ pet }: { pet: NonNullable<ReturnType<typeof usePet>['data']>
   return (
     <dl className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-6 grid gap-x-8 gap-y-3 sm:grid-cols-2">
       {rows.filter(([, v]) => v).map(([k, v]) => (
-        <div key={k}><dt className="text-xs uppercase tracking-wide text-ink/50">{k}</dt><dd>{v}</dd></div>
+        <div key={k}><dt className="text-xs uppercase tracking-wide text-muted">{k}</dt><dd>{v}</dd></div>
       ))}
-      {rows.every(([, v]) => !v) && <p className="text-sm text-ink/50 sm:col-span-2">Profile is mostly empty — use Edit profile to fill it in.</p>}
+      {rows.every(([, v]) => !v) && <p className="text-sm text-muted sm:col-span-2">Profile is mostly empty — use Edit profile to fill it in.</p>}
     </dl>
   )
 }

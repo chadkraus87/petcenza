@@ -37,7 +37,7 @@ export default function MfaChallenge() {
     <main className="min-h-screen grid place-items-center p-6">
       <div className="w-full max-w-sm bg-card/85 backdrop-blur-md shadow-lg shadow-ink/5 rounded-card border border-line p-8">
         <h1 className="text-2xl mb-1">Two-factor verification</h1>
-        <p className="text-sm text-ink/60 mb-6">Enter the 6-digit code from your authenticator app.</p>
+        <p className="text-sm text-muted mb-6">Enter the 6-digit code from your authenticator app.</p>
         {error && <p role="alert" className="text-sm text-alert mb-4">{error}</p>}
         <label className="block text-sm mb-1" htmlFor="code">Authentication code</label>
         <input id="code" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]*" maxLength={6}
@@ -49,7 +49,7 @@ export default function MfaChallenge() {
           {busy ? 'Verifying…' : 'Verify'}
         </button>
         <button onClick={() => { void signOut(); nav('/auth/sign-in', { replace: true }) }}
-          className="w-full mt-3 text-sm text-ink/50 underline">
+          className="w-full mt-3 text-sm text-muted underline">
           Cancel and sign out
         </button>
       </div>

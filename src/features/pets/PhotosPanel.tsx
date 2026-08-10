@@ -59,7 +59,7 @@ export default function PhotosPanel({ petId }: { petId: string }) {
         onDragLeave={() => setDragOver(false)}
         onDrop={e => { e.preventDefault(); setDragOver(false); void upload(e.dataTransfer.files) }}
         className={`rounded-card border-2 border-dashed p-8 text-center mb-4 ${dragOver ? 'border-moss bg-moss/5' : 'border-line'}`}>
-        <p className="text-sm text-ink/60 mb-2">Drag photos here, or</p>
+        <p className="text-sm text-muted mb-2">Drag photos here, or</p>
         <label className="inline-block rounded-md bg-ink text-paper px-4 py-2 text-sm cursor-pointer">
           Choose photos
           <input type="file" accept="image/jpeg,image/png,image/webp" multiple className="sr-only"
@@ -109,7 +109,7 @@ export default function PhotosPanel({ petId }: { petId: string }) {
           {(setPrimary.error ?? del.error)?.message}
         </p>
       )}
-      {photos?.length === 0 && <p className="text-sm text-ink/50">No photos yet.</p>}
+      {photos?.length === 0 && <p className="text-sm text-muted">No photos yet.</p>}
     </section>
   )
 }

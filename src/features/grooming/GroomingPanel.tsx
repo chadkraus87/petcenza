@@ -41,14 +41,14 @@ export default function GroomingPanel({ petId }: { petId: string }) {
         {logs?.map(l => (
           <li key={l.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex justify-between gap-3">
             <div>
-              <p className="font-medium">{l.task} <span className="font-normal text-ink/60">· {fmtDate(l.done_on)}</span></p>
-              {l.notes && <p className="text-sm text-ink/60 mt-1">{l.notes}</p>}
+              <p className="font-medium">{l.task} <span className="font-normal text-muted">· {fmtDate(l.done_on)}</span></p>
+              {l.notes && <p className="text-sm text-muted mt-1">{l.notes}</p>}
             </div>
             <button onClick={() => remove.mutate(l.id)} className="text-sm text-alert self-start">Delete</button>
           </li>
         ))}
       </ul>
-      {logs?.length === 0 && <p className="text-sm text-ink/50">No grooming logged yet.</p>}
+      {logs?.length === 0 && <p className="text-sm text-muted">No grooming logged yet.</p>}
     </section>
   )
 }

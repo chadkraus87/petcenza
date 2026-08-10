@@ -95,7 +95,7 @@ export default function CalendarPage() {
         <DayView items={itemsOn(anchor)} />
       ) : (
         <>
-          <div className="grid grid-cols-7 text-xs uppercase tracking-wide text-ink/50 mb-1">
+          <div className="grid grid-cols-7 text-xs uppercase tracking-wide text-muted mb-1">
             {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => <div key={d} className="px-2 py-1">{d}</div>)}
           </div>
           <div className="grid grid-cols-7 gap-px bg-line rounded-card overflow-hidden border border-line">
@@ -121,7 +121,7 @@ export default function CalendarPage() {
                   className={`bg-card p-1.5 transition-colors ${view === 'week' ? 'min-h-56' : 'min-h-24'} ${
                     view === 'month' && !isSameMonth(day, anchor) ? 'opacity-40' : ''} ${
                     dropTarget === day.toDateString() ? 'ring-2 ring-inset ring-moss bg-wave' : ''}`}>
-                  <span className={`text-xs ${isToday(day) ? 'inline-grid place-items-center w-5 h-5 rounded-full bg-moss text-paper' : 'text-ink/60'}`}>
+                  <span className={`text-xs ${isToday(day) ? 'inline-grid place-items-center w-5 h-5 rounded-full bg-moss text-paper' : 'text-muted'}`}>
                     {format(day, 'd')}
                   </span>
                   <ul className="mt-1 space-y-0.5">
@@ -136,12 +136,12 @@ export default function CalendarPage() {
                           dragging?.id === i.id ? 'opacity-40' : ''}`}>
                         <span className={`w-1.5 h-1.5 mt-1 rounded-full shrink-0 ${kindColor[i.kind] ?? 'bg-ink/60'}`} aria-hidden />
                         <span className={view === 'week' ? '' : 'truncate'}>
-                          {view === 'week' && <time className="text-ink/40 mr-1">{format(i.date, 'HH:mm')}</time>}
+                          {view === 'week' && <time className="text-muted mr-1">{format(i.date, 'HH:mm')}</time>}
                           {i.label}
                         </span>
                       </li>
                     ))}
-                    {items.length > cap && <li className="text-[10px] text-ink/50">+{items.length - cap} more</li>}
+                    {items.length > cap && <li className="text-[10px] text-muted">+{items.length - cap} more</li>}
                   </ul>
                 </div>
               )
@@ -151,7 +151,7 @@ export default function CalendarPage() {
       )}
 
       {view !== 'day' && (
-        <p className="text-xs text-ink/50 mt-2">
+        <p className="text-xs text-muted mt-2">
           Drag a reminder to another day to reschedule it. Vet visits and birthdays stay put.
           Prefer the keyboard? Use <strong>Snooze</strong> in the list below.
         </p>
@@ -166,7 +166,7 @@ function DayView({ items }: { items: CalItem[] }) {
   if (items.length === 0) {
     return (
       <div className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-8 text-center">
-        <p className="text-ink/50">Nothing scheduled. Enjoy the quiet.</p>
+        <p className="text-muted">Nothing scheduled. Enjoy the quiet.</p>
       </div>
     )
   }
@@ -174,10 +174,10 @@ function DayView({ items }: { items: CalItem[] }) {
     <ul className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 divide-y divide-line overflow-hidden">
       {items.map(i => (
         <li key={i.id} className="flex items-center gap-3 p-4">
-          <time className="text-sm text-ink/60 w-16 shrink-0">{format(i.date, 'HH:mm')}</time>
+          <time className="text-sm text-muted w-16 shrink-0">{format(i.date, 'HH:mm')}</time>
           <span className={`w-2 h-2 rounded-full shrink-0 ${kindColor[i.kind] ?? 'bg-ink/60'}`} aria-hidden />
           <span className="flex-1 min-w-0">{i.label}</span>
-          <span className="text-xs text-ink/40 capitalize shrink-0">{i.kind.replace('_', ' ')}</span>
+          <span className="text-xs text-muted capitalize shrink-0">{i.kind.replace('_', ' ')}</span>
         </li>
       ))}
     </ul>
