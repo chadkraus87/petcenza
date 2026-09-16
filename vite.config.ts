@@ -28,6 +28,10 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         navigateFallback: '/index.html',
+        // Real files must reach the network. Without this, anyone with the app installed who
+        // opened /third-party-licenses.txt or /.well-known/security.txt got the SPA shell and a
+        // sign-in redirect instead. App routes never contain a file extension.
+        navigateFallbackDenylist: [/\.[a-z0-9]+$/i, /^\/\.well-known\//],
         runtimeCaching: [
           {
             // Read-through cache for Supabase REST GETs so views render offline.

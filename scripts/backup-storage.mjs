@@ -19,11 +19,15 @@
  * treat it like a root password: keep it in your shell/secret manager, never in the repo.
  * The ./backups directory is gitignored because it contains real medical records.
  */
-import { mkdir, writeFile, stat } from 'node:fs/promises'
-import { dirname, join } from 'node:path'
+import { mkdir, writeFile, stat, readdir, rename, rm } from 'node:fs/promises'
+import { dirname, join, relative } from 'node:path'
 
 const BUCKETS = ['pet-photos', 'pet-documents']
 const PAGE_SIZE = 100
+// The privacy policy promises deleted data leaves backups within 30 days. Files that vanish from a
+// bucket are parked in .trash for this long (so an ACCIDENTAL deletion is still recoverable), then
+// purged for good. Change this and the policy together.
+const RETENTION_DAYS = 30
 
 const url = process.env.SUPABASE_URL
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -84,7 +88,18 @@ async function download(bucket, path, dest) {
   return buf.length
 }
 
-let saved = 0, skipped = 0, failed = 0, bytes = 0
+/** Every file under dir, as paths relative to it. Missing dir = nothing backed up yet. */
+async function localFiles(dir) {
+  try {
+    const entries = await readdir(dir, { recursive: true, withFileTypes: true })
+    return entries.filter(e => e.isFile()).map(e => relative(dir, join(e.parentPath, e.name)))
+  } catch {
+    return []
+  }
+}
+
+let saved = 0, skipped = 0, failed = 0, bytes = 0, trashed = 0, purged = 0
+const today = new Date().toISOString().slice(0, 10)
 
 for (const bucket of BUCKETS) {
   process.stdout.write(`\n${bucket}: listing…`)
@@ -110,9 +125,38 @@ for (const bucket of BUCKETS) {
       console.error(`  ! ${path}: ${e.message}`)
     }
   }
+
+  // Park local copies of objects that no longer exist in the bucket.
+  const remote = new Set(objects.map(o => o.path))
+  const orphans = (await localFiles(join(outRoot, bucket))).filter(p => !remote.has(p))
+  // An empty listing against a non-empty backup is far likelier to be an API hiccup than every
+  // user deleting everything overnight. Refuse rather than trash the whole backup.
+  if (remote.size === 0 && orphans.length > 0) {
+    console.error(`  ! ${bucket}: bucket listed empty but ${orphans.length} local file(s) exist — not pruning`)
+    failed++
+    continue
+  }
+  for (const p of orphans) {
+    const dest = join(outRoot, '.trash', today, bucket, p)
+    await mkdir(dirname(dest), { recursive: true })
+    await rename(join(outRoot, bucket, p), dest)
+    trashed++
+    console.log(`  → trash ${p}`)
+  }
+}
+
+// Purge trash batches older than the retention window. Batches are named YYYY-MM-DD, so a plain
+// string comparison against the cutoff date is exact.
+const cutoff = new Date(Date.now() - RETENTION_DAYS * 86_400_000).toISOString().slice(0, 10)
+for (const batch of await readdir(join(outRoot, '.trash')).catch(() => [])) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(batch) && batch < cutoff) {
+    await rm(join(outRoot, '.trash', batch), { recursive: true, force: true })
+    purged++
+    console.log(`  ✗ purged trash batch ${batch}`)
+  }
 }
 
 console.log(
-  `\nDone → ${outRoot}\n  downloaded: ${saved}\n  up to date: ${skipped}\n  failed:     ${failed}\n  bytes:      ${(bytes / 1024).toFixed(0)} KB`
+  `\nDone → ${outRoot}\n  downloaded: ${saved}\n  up to date: ${skipped}\n  trashed:    ${trashed}\n  purged:     ${purged} batch(es)\n  failed:     ${failed}\n  bytes:      ${(bytes / 1024).toFixed(0)} KB`
 )
 process.exit(failed > 0 ? 1 : 0)

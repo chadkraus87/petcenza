@@ -33,3 +33,6 @@ coverage/
 
 # Supabase CLI scratch (project ref cache, not source)
 supabase/.temp
+
+# Generated at build by scripts/licenses.mjs
+public/third-party-licenses.txt

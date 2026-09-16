@@ -2,6 +2,34 @@ import { Link } from 'react-router-dom'
 import { PawPrint } from 'lucide-react'
 
 /**
+ * Every public contact address, in one place. A privacy policy whose contact bounces fails
+ * CalOPPA outright, so these must be real, monitored inboxes. public/.well-known/security.txt is a
+ * static file and has to be kept in step by hand.
+ */
+// ponytail: one shared inbox until the LLC and a real domain exist; split these then.
+const INBOX = 'kraushaustech@gmail.com'
+export const CONTACT = { support: INBOX, privacy: INBOX, security: INBOX } as const
+
+/** The legal operator — a person until the LLC is formed. Update this line when it is. */
+export const OPERATOR = 'Chad Kraus'
+
+/**
+ * Shown next to every control that can CREATE an account — including "Continue with Google", which
+ * signs a brand-new user up without ever visiting the sign-up form. Placed before the buttons, not
+ * after, so the terms are seen before the click that accepts them.
+ */
+export function ConsentNotice() {
+  return (
+    <p className="text-xs text-muted leading-relaxed mb-3">
+      By continuing you agree to our{' '}
+      <Link className="text-moss underline" to="/legal/terms">Terms</Link> and{' '}
+      <Link className="text-moss underline" to="/legal/privacy">Privacy Policy</Link>.
+      PetCenza keeps records — it does not give veterinary advice.
+    </p>
+  )
+}
+
+/**
  * Shared shell for the public legal pages.
  *
  * These must be reachable WITHOUT an account: payment processors, Apple and Google all check the
@@ -30,7 +58,9 @@ export function LegalShell({ title, updated, children }: {
           <Link to="/legal/privacy" className="hover:text-moss">Privacy</Link>
           <Link to="/legal/terms" className="hover:text-moss">Terms</Link>
           <Link to="/legal/delete-account" className="hover:text-moss">Delete your account</Link>
-          <a href="mailto:support@petcenza.com" className="hover:text-moss">Support</a>
+          <Link to="/legal/accessibility" className="hover:text-moss">Accessibility</Link>
+          <a href="/third-party-licenses.txt" className="hover:text-moss">Licenses</a>
+          <a href={`mailto:${CONTACT.support}`} className="hover:text-moss">Support</a>
         </nav>
       </div>
     </main>

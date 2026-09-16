@@ -1,4 +1,4 @@
-import { LegalShell, H2, P, UL } from './LegalPage'
+import { LegalShell, H2, P, UL, CONTACT, OPERATOR } from './LegalPage'
 
 /**
  * Privacy policy.
@@ -7,13 +7,14 @@ import { LegalShell, H2, P, UL } from './LegalPage'
  * because under FTC Section 5 this document is an enforceable promise: describing practices the
  * code doesn't have is itself the violation. Anything claimed here is verifiable in the repo.
  *
- * NOTE FOR REVIEW: has not been reviewed by a lawyer. See docs/LAUNCH_CHECKLIST.md.
+ * Not yet reviewed by a licensed attorney.
  */
 export default function Privacy() {
   return (
-    <LegalShell title="Privacy Policy" updated="10 August 2026">
+    <LegalShell title="Privacy Policy" updated="16 September 2026">
       <P>
-        PetCenza is a place to keep your pets' health records. This policy explains what we store,
+        PetCenza is a place to keep your pets' health records. It is operated by {OPERATOR} ("we",
+        "us"), who is responsible for your data. This policy explains what we store,
         why, and what control you have. We have tried to write it in plain language rather than
         legalese.
       </P>
@@ -37,8 +38,10 @@ export default function Privacy() {
           from your veterinarian.</li>
         <li><strong>Contacts you enter about other people:</strong> your vet's and emergency
           contacts' names, phone numbers and addresses. See below.</li>
-        <li><strong>Security metadata:</strong> sign-in timestamps and, for abuse prevention, a
-          one-way hash of your IP address. We do not store raw IP addresses.</li>
+        <li><strong>Security metadata:</strong> sign-in timestamps, and the IP address your
+          request came from. Our hosting and authentication providers record IP addresses in
+          standard security logs, kept for a limited period. Our own abuse protection stores only a
+          one-way hash of it.</li>
       </UL>
 
       <H2>What we do not do</H2>
@@ -75,7 +78,7 @@ export default function Privacy() {
       <UL>
         <li><strong>Supabase</strong> — database, authentication, and file storage.</li>
         <li><strong>Vercel</strong> — application hosting.</li>
-        <li><strong>Resend</strong> — sending invitation and reminder emails.</li>
+        <li><strong>Resend</strong> — sending the invitation emails you ask us to send.</li>
         <li><strong>Cloudflare</strong> — Turnstile, which tells humans from bots at sign-up.</li>
         <li><strong>Google</strong> — only if you choose to sign in with a Google account.</li>
       </UL>
@@ -107,8 +110,9 @@ export default function Privacy() {
       <H2>How long we keep it</H2>
       <P>
         Your records stay until you delete them or close your account. Deleting your account is
-        immediate and permanent. Deleted data is purged from our encrypted backups within 30 days,
-        after which nobody — including us — can recover it. If you have paid us, we keep the
+        immediate and permanent. Deleted data is purged from our backups within 30 days, after which
+        nobody — including us — can recover it. Backups are encrypted, and are held by our database
+        provider and on encrypted storage we control. If you have paid us, we keep the
         transaction record for as long as tax and accounting law requires, separately from your
         pet records.
       </P>
@@ -119,7 +123,7 @@ export default function Privacy() {
         <li><strong>Correct or delete individual records:</strong> edit or remove them in the app.</li>
         <li><strong>Delete your account:</strong> Settings → Delete your account.</li>
         <li><strong>Ask us anything:</strong> <a className="text-moss underline"
-          href="mailto:privacy@petcenza.com">privacy@petcenza.com</a>.</li>
+          href={`mailto:${CONTACT.privacy}`}>{CONTACT.privacy}</a>.</li>
       </UL>
 
       <H2>Children</H2>
@@ -144,7 +148,7 @@ export default function Privacy() {
 
       <H2>Contact</H2>
       <P>
-        <a className="text-moss underline" href="mailto:privacy@petcenza.com">privacy@petcenza.com</a>
+        <a className="text-moss underline" href={`mailto:${CONTACT.privacy}`}>{CONTACT.privacy}</a>
       </P>
     </LegalShell>
   )

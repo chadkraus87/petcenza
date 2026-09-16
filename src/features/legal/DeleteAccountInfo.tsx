@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { LegalShell, H2, P, UL } from './LegalPage'
+import { LegalShell, H2, P, UL, CONTACT } from './LegalPage'
 
 /**
  * Public account-deletion instructions.
@@ -10,7 +10,7 @@ import { LegalShell, H2, P, UL } from './LegalPage'
  */
 export default function DeleteAccountInfo() {
   return (
-    <LegalShell title="Deleting your PetCenza account" updated="10 August 2026">
+    <LegalShell title="Deleting your PetCenza account" updated="16 September 2026">
       <P>
         You can delete your PetCenza account yourself, at any time, without contacting us. It takes
         about thirty seconds.
@@ -71,7 +71,7 @@ export default function DeleteAccountInfo() {
       <H2>Need help?</H2>
       <P>
         If you can't get into your account to delete it, email{' '}
-        <a className="text-moss underline" href="mailto:support@petcenza.com">support@petcenza.com</a>{' '}
+        <a className="text-moss underline" href={`mailto:${CONTACT.support}`}>{CONTACT.support}</a>{' '}
         from the address on the account and we'll take care of it.
       </P>
     </LegalShell>

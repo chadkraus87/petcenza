@@ -1,0 +1,10 @@
+Copyright (c) 2026 Chad Kraus. All rights reserved.
+
+The source code in this repository is published for transparency, so that the way PetCenza
+handles and protects data can be inspected. Publishing it does not grant any licence.
+
+You may read and review the code. You may not copy, modify, distribute, sublicense, host, or
+create derivative works from it, in whole or in part, without prior written permission.
+
+Third-party open-source components remain under their own licences; see
+public/third-party-licenses.txt, generated at build.
