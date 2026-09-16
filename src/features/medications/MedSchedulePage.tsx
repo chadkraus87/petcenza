@@ -122,7 +122,8 @@ function DoseRow({ dose, photos, showCadence = false, slot, logs }: {
           <p className="text-sm text-muted truncate">
             for {med.petName}
             {showCadence && <>, {med.frequency}</>}
-            {schedule.withFood && <>, with food</>}
+            {/* Emphasised on purpose: some medications cause vomiting on an empty stomach. */}
+            {schedule.withFood && <>, <span className="font-semibold text-ink">give with food</span></>}
           </p>
           {med.instructions && <p className="text-xs text-muted truncate">{med.instructions}</p>}
         </div>

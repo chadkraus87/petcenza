@@ -20,6 +20,12 @@ vi.mock('@/hooks/useMedSchedule', () => ({
 vi.mock('@/hooks/usePetPhotos', () => ({
   usePrimaryPhotos: () => ({ data: {} })
 }))
+vi.mock('@/features/auth/AuthProvider', () => ({ useAuth: () => ({ user: { id: 'u1' } }) }))
+vi.mock('@/hooks/useDoseLogs', () => ({
+  useDoseLogs: () => ({ data: [] }),
+  findLog: () => undefined,
+  useToggleDose: () => ({ mutate: vi.fn() })
+}))
 
 import MedSchedulePage from '@/features/medications/MedSchedulePage'
 
@@ -64,7 +70,7 @@ describe('MedSchedulePage', () => {
   it('flags meds that must be given with food', () => {
     mockMeds.current = [med({ frequency: 'Once daily with food' })]
     renderPage()
-    expect(screen.getByText('With food')).toBeInTheDocument()
+    expect(screen.getByText('give with food')).toBeInTheDocument()
   })
 
   it('separates as-needed meds from scheduled doses', () => {

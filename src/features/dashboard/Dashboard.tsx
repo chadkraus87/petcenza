@@ -166,7 +166,7 @@ export default function Dashboard() {
                     <div className="min-w-0 flex-1">
                       <p className="font-medium">{med.name} <span className="font-normal text-muted">{med.dosage}</span></p>
                       <p className="text-sm text-muted">
-                        for {med.petName}{schedule.withFood && ', with food'}
+                        for {med.petName}{schedule.withFood && <>, <span className="font-semibold text-ink">give with food</span></>}
                         {slot !== nextSlot && <>, {TIME_LABEL[slot].toLowerCase()} dose</>}
                       </p>
                     </div>
