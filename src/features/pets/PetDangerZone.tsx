@@ -70,7 +70,7 @@ export default function PetDangerZone({ pet }: { pet: Pet }) {
             “Remembered” on the pets page.
           </p>
           <button onClick={restore} disabled={markDeceased.isPending}
-            className="mt-3 inline-flex items-center gap-1.5 rounded-md border border-line px-4 py-2 text-sm disabled:opacity-50">
+            className="btn btn-secondary mt-3 gap-1.5">
             <Undo2 size={14} aria-hidden /> Undo — {pet.name} is still with us
           </button>
         </div>
@@ -85,7 +85,7 @@ export default function PetDangerZone({ pet }: { pet: Pet }) {
           </p>
           {!showPassed ? (
             <button onClick={() => setShowPassed(true)}
-              className="mt-3 rounded-md border border-line px-4 py-2 text-sm">
+              className="btn btn-secondary mt-3">
               Mark as passed away
             </button>
           ) : (
@@ -94,14 +94,14 @@ export default function PetDangerZone({ pet }: { pet: Pet }) {
                 <label htmlFor="deceased-on" className="block text-sm mb-1">Date they passed</label>
                 <input id="deceased-on" type="date" value={date} max={new Date().toISOString().slice(0, 10)}
                   onChange={e => setDate(e.target.value)}
-                  className="rounded-md border border-line px-3 py-2 bg-card" />
+                  className="field w-auto" />
               </div>
               <button onClick={confirmPassed} disabled={markDeceased.isPending}
-                className="rounded-md bg-ink text-paper px-4 py-2 text-sm disabled:opacity-50">
+                className="btn btn-primary">
                 {markDeceased.isPending ? 'Saving…' : 'Confirm'}
               </button>
               <button onClick={() => setShowPassed(false)}
-                className="rounded-md border border-line px-4 py-2 text-sm">Cancel</button>
+                className="btn btn-secondary">Cancel</button>
             </div>
           )}
         </div>
@@ -117,7 +117,7 @@ export default function PetDangerZone({ pet }: { pet: Pet }) {
         </p>
         {!showDelete ? (
           <button onClick={() => setShowDelete(true)}
-            className="mt-3 inline-flex items-center gap-1.5 rounded-md border border-alert text-alert px-4 py-2 text-sm">
+            className="btn btn-danger-outline mt-3 gap-1.5">
             <Trash2 size={14} aria-hidden /> Delete permanently
           </button>
         ) : (
@@ -127,14 +127,14 @@ export default function PetDangerZone({ pet }: { pet: Pet }) {
             </label>
             <div className="flex flex-wrap gap-2">
               <input id="confirm-name" value={confirmName} onChange={e => setConfirmName(e.target.value)}
-                autoComplete="off" className="rounded-md border border-line px-3 py-2 bg-card" />
+                autoComplete="off" className="field w-auto" />
               <button onClick={confirmDelete}
                 disabled={confirmName !== pet.name || del.isPending}
-                className="rounded-md bg-alert text-paper px-4 py-2 text-sm disabled:opacity-50">
+                className="btn btn-danger">
                 {del.isPending ? 'Deleting…' : 'Delete forever'}
               </button>
               <button onClick={() => { setShowDelete(false); setConfirmName('') }}
-                className="rounded-md border border-line px-4 py-2 text-sm">Cancel</button>
+                className="btn btn-secondary">Cancel</button>
             </div>
           </div>
         )}

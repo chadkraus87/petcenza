@@ -23,7 +23,7 @@ export default function MedSchedulePage() {
 
   return (
     <main className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-3xl mb-1">Medication rounds</h1>
+      <h1 className="mb-1">Medication rounds</h1>
       <p className="text-muted mb-3">
         Everything your pets are on right now, grouped by when it's given.
       </p>
@@ -105,7 +105,7 @@ function DoseRow({ dose, photos, showCadence = false }: {
   return (
     <li>
       <Link to={`/pets/${med.petId}`}
-        className="flex items-center gap-3 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-3 hover:border-moss">
+        className="flex items-center gap-3 surface p-3 hover:border-moss">
         <PetAvatar name={med.petName} url={photos?.[med.petId]} size="sm" />
         <div className="min-w-0 flex-1">
           <p className="flex items-center gap-2 flex-wrap">

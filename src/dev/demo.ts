@@ -83,7 +83,7 @@ function seed(): DB {
     ],
     reminders: [
       { id: id(261), pet_id: biscuit, user_id: USER_ID, kind: 'medication', title: 'Biscuit — Levothyroxine', due_at: iso(0, 8), recurrence: 'daily', completed_at: null, snoozed_until: null },
-      { id: id(262), pet_id: mochi, user_id: USER_ID, kind: 'vaccination', title: 'Mochi — FVRCP booster', due_at: iso(-10, 9), recurrence: 'none', completed_at: null, snoozed_until: null },
+      { id: id(262), pet_id: mochi, user_id: USER_ID, kind: 'vaccination', title: 'Mochi — FVRCP booster', due_at: iso(-10, 9), recurrence: 'none', completed_at: null, snoozed_until: null, source_table: 'vaccinations', source_id: id(211) },
       { id: id(263), pet_id: juniper, user_id: USER_ID, kind: 'grooming', title: 'Juniper — nail trim', due_at: iso(1, 17), recurrence: 'monthly', completed_at: null, snoozed_until: null },
       { id: id(264), pet_id: juniper, user_id: USER_ID, kind: 'vet_appointment', title: 'Juniper — weight check', due_at: iso(5, 10, 30), recurrence: 'none', completed_at: null, snoozed_until: null }
     ],

@@ -27,19 +27,19 @@ export default function NotesPanel({ petId }: { petId: string }) {
     <section>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl">Notes</h2>
-        <button onClick={() => setAdding(a => !a)} className="rounded-md bg-ink text-paper px-4 py-2 text-sm">{adding ? 'Close' : 'Add note'}</button>
+        <button onClick={() => setAdding(a => !a)} className="btn btn-primary">{adding ? 'Close' : 'Add note'}</button>
       </div>
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 surface p-5 mb-6" noValidate>
           <TextField label="Title (optional)" error={errors.title} {...register('title')} />
           <TextArea label="Note" error={errors.body} {...register('body')} />
           <label className="flex items-center gap-2 text-sm"><input type="checkbox" {...register('pinned')} /> Pin to top</label>
-          <button type="submit" className="rounded-md bg-moss text-paper px-5 py-2 w-fit">Save note</button>
+          <button type="submit" className="btn btn-primary w-fit">Save note</button>
         </form>
       )}
       <ul className="space-y-3">
         {sorted.map(n => (
-          <li key={n.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex justify-between gap-3">
+          <li key={n.id} className="surface p-4 flex justify-between gap-3">
             <div>
               <p className="font-medium flex items-center gap-1">
                 {n.pinned && <Pin size={14} className="text-signal" aria-label="Pinned" />}

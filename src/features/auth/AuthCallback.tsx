@@ -30,7 +30,7 @@ export default function AuthCallback() {
     <main className="min-h-screen grid place-items-center p-6 text-center">
       {failed ? (
         <div className="max-w-sm">
-          <h1 className="text-xl mb-2">Sign-in didn't complete</h1>
+          <h1 className="text-2xl mb-2">Sign-in didn't complete</h1>
           <p className="text-sm text-muted mb-4">The link may have expired or already been used.</p>
           <Link className="text-moss underline text-sm" to="/auth/sign-in">Return to sign in</Link>
         </div>

@@ -21,8 +21,8 @@ export default class ErrorBoundary extends Component<{ children: ReactNode }, { 
           Your records are safe — nothing was lost. Try again, or head back to Today.
         </p>
         <div className="flex gap-3">
-          <button onClick={() => location.reload()} className="rounded-md bg-ink text-paper px-4 py-2 text-sm">Try again</button>
-          <a href="/" className="rounded-md border border-line px-4 py-2 text-sm">Back to Today</a>
+          <button onClick={() => location.reload()} className="btn btn-primary">Try again</button>
+          <a href="/" className="btn btn-secondary">Back to Today</a>
         </div>
       </main>
     )

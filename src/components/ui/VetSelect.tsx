@@ -11,7 +11,7 @@ export default function VetSelect({ label, registration }: { label: string; regi
   return (
     <div>
       <label className="block text-sm mb-1">{label}</label>
-      <select className="w-full rounded-md border border-line px-3 py-2 bg-card" {...registration}>
+      <select className="field w-full" {...registration}>
         <option value="">— None —</option>
         {vets?.map(v => (
           <option key={v.id} value={v.id}>{v.name}{v.clinic ? ` · ${v.clinic}` : ''}</option>

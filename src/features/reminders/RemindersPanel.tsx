@@ -49,13 +49,13 @@ export default function RemindersPanel() {
     <section className="mt-8">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl">Reminders</h2>
-        <button onClick={() => setAdding(a => !a)} className="rounded-md bg-ink text-paper px-4 py-2 text-sm">
+        <button onClick={() => setAdding(a => !a)} className="btn btn-primary">
           {adding ? 'Close' : 'Add reminder'}
         </button>
       </div>
 
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 surface p-5 mb-6" noValidate>
           <div className="sm:col-span-2">
             <TextField label="What's the reminder?" error={errors.title} {...register('title')}
               placeholder="Give Ranger his evening dose" />
@@ -73,7 +73,7 @@ export default function RemindersPanel() {
           </SelectField>
           <div className="sm:col-span-2">
             <button type="submit" disabled={isSubmitting}
-              className="rounded-md bg-moss text-paper px-5 py-2 w-fit disabled:opacity-50">
+              className="btn btn-primary w-fit">
               {isSubmitting ? 'Saving…' : 'Save reminder'}
             </button>
             <p className="text-xs text-muted mt-2">
@@ -87,7 +87,7 @@ export default function RemindersPanel() {
         {reminders?.map(r => {
           const overdue = isBefore(parseISO(r.due_at), new Date())
           return (
-            <li key={r.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex items-center justify-between gap-3">
+            <li key={r.id} className="surface p-4 flex items-center justify-between gap-3">
               <div className="min-w-0">
                 <p className="font-medium truncate">
                   {r.title}
@@ -108,7 +108,7 @@ export default function RemindersPanel() {
               <div className="flex items-center gap-1 shrink-0">
                 <button onClick={() => complete.mutate(r.id)} aria-label={`Mark "${r.title}" done`}
                   title="Mark done"
-                  className="inline-flex items-center gap-1 rounded-md bg-moss text-paper px-3 py-1.5 text-sm">
+                  className="btn btn-primary">
                   <Check size={14} aria-hidden /> Done
                 </button>
                 {/* The keyboard and touch path for the calendar's drag-to-reschedule. Native date
@@ -122,13 +122,13 @@ export default function RemindersPanel() {
                     const [y, m, d] = e.target.value.split('-').map(Number)
                     if (y && m && d) reschedule.mutate({ id: r.id, from: r.due_at, to: new Date(y, m - 1, d) })
                   }}
-                  className="rounded-md border border-line px-2 py-1.5 text-sm bg-card" />
+                  className="field w-auto" />
                 <select
                   aria-label={`Snooze "${r.title}"`}
                   title="Snooze"
                   value=""
                   onChange={e => { if (e.target.value) snooze.mutate({ id: r.id, hours: Number(e.target.value) }) }}
-                  className="rounded-md border border-line px-2 py-1.5 text-sm bg-card">
+                  className="field w-auto">
                   <option value="">Snooze…</option>
                   <option value="1">1 hour</option>
                   <option value="4">4 hours</option>

@@ -33,7 +33,7 @@ export default function EmergencyPage() {
 
   return (
     <main className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-3xl mb-1 flex items-center gap-2"><Siren className="text-alert" aria-hidden /> Emergency</h1>
+      <h1 className="mb-1 flex items-center gap-2"><Siren className="text-alert" aria-hidden /> Emergency</h1>
       <div className="mb-4"><Disclaimer tone="loud" text={DISCLAIMER.emergency} /></div>
       <p className="text-muted mb-6">Everything you need in a crisis, one screen, works offline.</p>
 
@@ -93,7 +93,7 @@ function ContactCard({ title, name, phone, address, urgent }: { title: string; n
       <p className="font-medium">{name}</p>
       {address && <p className="text-sm text-muted">{address}</p>}
       {phone && (
-        <a href={`tel:${phone.replace(/[^+\d]/g, '')}`} className="mt-2 inline-flex items-center gap-2 rounded-md bg-ink text-paper px-3 py-1.5 text-sm">
+        <a href={`tel:${phone.replace(/[^+\d]/g, '')}`} className="btn btn-primary mt-2">
           <Phone size={14} aria-hidden /> {phone}
         </a>
       )}

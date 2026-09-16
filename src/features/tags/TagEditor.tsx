@@ -86,7 +86,7 @@ export default function TagEditor({ petId, canEdit }: { petId: string; canEdit: 
               onKeyDown={e => e.key === 'Enter' && addNew()}
               placeholder="Senior, Anxious, Indoor…" maxLength={40}
               aria-label="New tag name"
-              className="rounded-md border border-line px-2.5 py-1.5 text-sm flex-1 min-w-40" />
+              className="field flex-1 min-w-40 w-auto" />
             <div className="flex gap-1" role="group" aria-label="Tag colour">
               {TAG_COLORS.map(c => (
                 <button key={c} onClick={() => setColor(c)} aria-label={`Colour ${c}`}
@@ -96,7 +96,7 @@ export default function TagEditor({ petId, canEdit }: { petId: string; canEdit: 
               ))}
             </div>
             <button onClick={addNew} disabled={!name.trim() || create.isPending}
-              className="rounded-md bg-moss text-paper px-3 py-1.5 text-sm disabled:opacity-50">
+              className="btn btn-primary">
               Add
             </button>
           </div>

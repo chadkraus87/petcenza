@@ -37,7 +37,7 @@ export default function VetShareView() {
     <main className="min-h-screen grid place-items-center p-6 text-center">
       <div className="max-w-sm">
         <PawPrint className="mx-auto mb-3 text-ink/30" aria-hidden />
-        <h1 className="text-xl mb-2">Summary unavailable</h1>
+        <h1 className="text-2xl mb-2">Summary unavailable</h1>
         <p className="text-sm text-muted">{error}</p>
       </div>
     </main>
@@ -53,7 +53,7 @@ export default function VetShareView() {
       <header className="flex items-start justify-between gap-4 mb-6">
         <div>
           <p className="text-xs uppercase tracking-wide text-muted mb-1">Shared pet summary</p>
-          <h1 className="text-3xl">{pet.name}</h1>
+          <h1>{pet.name}</h1>
           <p className="text-muted">
             {pet.breed ?? pet.species} · {petAge(pet.birth_date)} · {pet.sex.replace('_', ', ')}
             {pet.color && <> · {pet.color}</>}
@@ -63,7 +63,7 @@ export default function VetShareView() {
           )}
         </div>
         <button onClick={() => window.print()}
-          className="print:hidden rounded-md border border-line px-3 py-2 text-sm inline-flex items-center gap-2 shrink-0">
+          className="btn btn-secondary print:hidden shrink-0">
           <Printer size={14} aria-hidden /> Print
         </button>
       </header>
@@ -158,7 +158,7 @@ function Section({ title, empty, rows, children }: {
   title: string; empty: string; rows: number; children: React.ReactNode
 }) {
   return (
-    <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 mb-4">
+    <section className="surface p-4 mb-4">
       <h2 className="text-lg mb-2">{title}</h2>
       {rows === 0 ? <p className="text-sm text-muted">{empty}</p> : children}
     </section>

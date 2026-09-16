@@ -32,21 +32,21 @@ export default function BehaviorPanel({ petId }: { petId: string }) {
     <section>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl">Behavior & training</h2>
-        <button onClick={() => setAdding(a => !a)} className="rounded-md bg-ink text-paper px-4 py-2 text-sm">{adding ? 'Close' : 'Add note'}</button>
+        <button onClick={() => setAdding(a => !a)} className="btn btn-primary">{adding ? 'Close' : 'Add note'}</button>
       </div>
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 surface p-5 mb-6" noValidate>
           <SelectField label="Category" error={errors.category} {...register('category')}>
             {Object.entries(CATEGORY_LABEL).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
           </SelectField>
           <TextField label="Date" type="date" error={errors.noted_on} {...register('noted_on')} />
           <div className="sm:col-span-2"><TextArea label="Note" error={errors.content} {...register('content')} /></div>
-          <button type="submit" className="rounded-md bg-moss text-paper px-5 py-2 w-fit">Save</button>
+          <button type="submit" className="btn btn-primary w-fit">Save</button>
         </form>
       )}
       <ul className="space-y-3">
         {notes?.map(n => (
-          <li key={n.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex justify-between gap-3">
+          <li key={n.id} className="surface p-4 flex justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-wide text-moss">{CATEGORY_LABEL[n.category] ?? n.category} · {fmtDate(n.noted_on)}</p>
               <p className="text-sm mt-1">{n.content}</p>

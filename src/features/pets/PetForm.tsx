@@ -33,8 +33,8 @@ export default function PetForm() {
 
   return (
     <main className="p-6 max-w-2xl mx-auto">
-      <h1 className="text-3xl mb-6">{isEdit ? `Edit ${pet?.name ?? 'pet'}` : 'Add a pet'}</h1>
-      <form onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-6" noValidate>
+      <h1 className="mb-6">{isEdit ? `Edit ${pet?.name ?? 'pet'}` : 'Add a pet'}</h1>
+      <form onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-2 surface p-6" noValidate>
         <TextField label="Name" error={errors.name} {...register('name')} />
         <TextField label="Nickname" error={errors.nickname} {...register('nickname')} />
         <SelectField label="Species" error={errors.species} {...register('species')}>
@@ -61,10 +61,10 @@ export default function PetForm() {
           {['low','moderate','high','very_high'].map(a => <option key={a} value={a}>{a.replace('_',' ')}</option>)}
         </SelectField>
         <div className="sm:col-span-2 flex gap-3 mt-2">
-          <button type="submit" disabled={isSubmitting} className="rounded-md bg-ink text-paper px-5 py-2 disabled:opacity-50">
+          <button type="submit" disabled={isSubmitting} className="btn btn-primary">
             {isSubmitting ? 'Saving…' : 'Save pet'}
           </button>
-          <button type="button" onClick={() => history.back()} className="rounded-md border border-line px-5 py-2">Cancel</button>
+          <button type="button" onClick={() => history.back()} className="btn btn-secondary">Cancel</button>
         </div>
       </form>
     </main>

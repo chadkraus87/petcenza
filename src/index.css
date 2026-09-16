@@ -6,6 +6,35 @@
 body { @apply bg-paper text-ink font-body antialiased; }
 h1,h2,h3 { @apply font-display; }
 
+@layer base {
+  /* One title scale. Utilities still override it where a page genuinely needs to. */
+  h1 { @apply text-3xl md:text-4xl tracking-tight leading-tight; }
+}
+
+@layer components {
+  /* The card surface, which used to be this same class string pasted 46 times. */
+  .surface { @apply bg-card rounded-card border border-line shadow-sm shadow-ink/5; }
+
+  /* Controls. One primary colour (ink) — primary buttons used to be ink on some screens and moss
+     on others. Every control is at least 44px tall so it's comfortable to tap. */
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 min-h-11 text-sm font-medium
+                transition active:translate-y-px disabled:opacity-50 disabled:pointer-events-none; }
+  .btn-primary { @apply bg-ink text-paper hover:bg-ink/90; }
+  .btn-secondary { @apply border border-line bg-card text-ink hover:border-moss hover:text-moss; }
+  .btn-danger { @apply bg-alert text-paper hover:bg-alert/90; }
+  .btn-danger-outline { @apply border border-alert text-alert hover:bg-alert hover:text-paper; }
+  .btn-ghost { @apply text-moss hover:bg-wave; }
+  .field { @apply rounded-lg border border-line bg-card px-3 py-2 min-h-11; }
+}
+
+/* One visible focus style for everything keyboard-reachable. The white inner ring separates the
+   moss outline from any background, including the ink sidebar, so it stays visible everywhere. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid theme('colors.moss');
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #fff;
+}
+
 /* ---------------------------------------------------------------- background
    The illustrated artwork sits on a fixed pseudo-element behind everything, so
    it never scrolls or repaints with content. Two crops: the portrait art on
@@ -46,6 +75,14 @@ body::before {
 }
 
 /* Nothing decorative should print — the vet-share summary is meant for paper. */
+/* Decision (Sep 2026): the artwork is the welcome moment on sign-in and public pages only.
+   Signed-in screens are for reading records, and the illustrations competed with them — on phones
+   the page header sat directly on top of them. Out-specifies every body::before rule above, and
+   since the url() never applies, app screens don't download the artwork at all. */
+body:has(.app-shell)::before {
+  background-image: linear-gradient(180deg, theme('colors.wave') 0, theme('colors.paper') 320px);
+}
+
 @media print {
   body::before { display: none; }
   body { background: #fff; }

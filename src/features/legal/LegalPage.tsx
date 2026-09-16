@@ -48,8 +48,8 @@ export function LegalShell({ title, updated, children }: {
           <PawPrint size={20} aria-hidden /> PetCenza
         </Link>
 
-        <article className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-6 sm:p-8">
-          <h1 className="text-3xl mb-1">{title}</h1>
+        <article className="surface p-6 sm:p-8">
+          <h1 className="mb-1">{title}</h1>
           <p className="text-sm text-muted mb-6">Last updated {updated}</p>
           <div className="prose-legal space-y-4 text-ink/80">{children}</div>
         </article>

@@ -63,6 +63,8 @@ export interface Reminder {
   id: string; pet_id: string | null; kind: ReminderKind; title: string; due_at: string
   recurrence: 'none'|'daily'|'weekly'|'biweekly'|'monthly'|'quarterly'|'yearly'
   completed_at: string | null; snoozed_until: string | null
+  /** Set on reminders generated from a medication refill or vaccination due date. */
+  source_table?: 'medications' | 'vaccinations' | null; source_id?: string | null
 }
 
 export interface SearchHit { entity: string; id: string; pet_id: string | null; title: string; snippet: string }

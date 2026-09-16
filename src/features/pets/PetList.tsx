@@ -35,8 +35,8 @@ export default function PetList() {
   return (
     <main className="p-6 max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl">Your pets</h1>
-        <Link to="/pets/new" className="rounded-md bg-ink text-paper px-4 py-2 text-sm">Add pet</Link>
+        <h1>Your pets</h1>
+        <Link to="/pets/new" className="btn btn-primary">Add pet</Link>
       </div>
 
       {filterTags.length > 0 && (
@@ -116,7 +116,7 @@ function PetGrid({ pets, photos, shared = false }: {
         return (
           <li key={p.id}>
             <Link to={`/pets/${p.id}`}
-              className="flex items-center gap-4 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 hover:border-moss">
+              className="flex items-center gap-4 surface p-4 hover:border-moss">
               <PetAvatar name={p.name} url={photo} />
               <div className="min-w-0 flex-1">
                 <h2 className="text-xl flex items-center gap-2">

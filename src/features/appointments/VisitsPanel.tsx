@@ -28,22 +28,22 @@ export default function VisitsPanel({ petId }: { petId: string }) {
     <section>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl">Vet visits</h2>
-        <button onClick={() => setAdding(a => !a)} className="rounded-md bg-ink text-paper px-4 py-2 text-sm">{adding ? 'Close' : 'Add visit'}</button>
+        <button onClick={() => setAdding(a => !a)} className="btn btn-primary">{adding ? 'Close' : 'Add visit'}</button>
       </div>
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 surface p-5 mb-6" noValidate>
           <TextField label="Date & time" type="datetime-local" error={errors.visit_at} {...register('visit_at')} />
           <TextField label="Reason" error={errors.reason} {...register('reason')} />
           <VetSelect label="Veterinarian" registration={register('veterinarian_id')} />
           <TextArea label="Diagnosis" error={errors.diagnosis} {...register('diagnosis')} />
           <TextArea label="Treatment" error={errors.treatment} {...register('treatment')} />
           <TextArea label="Follow-up recommendations" error={errors.followup} {...register('followup')} />
-          <button type="submit" className="rounded-md bg-moss text-paper px-5 py-2 w-fit">Save visit</button>
+          <button type="submit" className="btn btn-primary w-fit">Save visit</button>
         </form>
       )}
       <ul className="space-y-3">
         {visits?.map(v => (
-          <li key={v.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex justify-between gap-3">
+          <li key={v.id} className="surface p-4 flex justify-between gap-3">
             <div>
               <p className="font-medium">{v.reason ?? 'Vet visit'}</p>
               <time className="text-sm text-moss">{fmtDateTime(v.visit_at)}</time>

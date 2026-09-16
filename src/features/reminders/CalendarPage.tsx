@@ -80,9 +80,9 @@ export default function CalendarPage() {
   return (
     <main className="p-6 max-w-5xl mx-auto">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <h1 className="text-3xl">{heading}</h1>
+        <h1>{heading}</h1>
         <div className="flex items-center gap-2">
-          <div className="flex rounded-md border border-line overflow-hidden" role="group" aria-label="Calendar view">
+          <div className="flex rounded-lg border border-line overflow-hidden" role="group" aria-label="Calendar view">
             {(['month','week','day'] as View[]).map(v => (
               <button key={v} onClick={() => setView(v)} aria-pressed={view === v}
                 className={`px-3 py-1.5 text-sm capitalize ${view === v ? 'bg-ink text-paper' : 'bg-card hover:bg-wave'}`}>
@@ -90,9 +90,9 @@ export default function CalendarPage() {
               </button>
             ))}
           </div>
-          <button aria-label={`Previous ${view}`} onClick={() => step(-1)} className="rounded-md border border-line px-3 py-1.5">←</button>
-          <button onClick={() => setAnchor(new Date())} className="rounded-md border border-line px-3 py-1.5 text-sm">Today</button>
-          <button aria-label={`Next ${view}`} onClick={() => step(1)} className="rounded-md border border-line px-3 py-1.5">→</button>
+          <button aria-label={`Previous ${view}`} onClick={() => step(-1)} className="btn btn-secondary">←</button>
+          <button onClick={() => setAnchor(new Date())} className="btn btn-secondary">Today</button>
+          <button aria-label={`Next ${view}`} onClick={() => step(1)} className="btn btn-secondary">→</button>
         </div>
       </div>
 
@@ -170,13 +170,13 @@ export default function CalendarPage() {
 function DayView({ items }: { items: CalItem[] }) {
   if (items.length === 0) {
     return (
-      <div className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-8 text-center">
+      <div className="surface p-8 text-center">
         <p className="text-muted">Nothing scheduled. Enjoy the quiet.</p>
       </div>
     )
   }
   return (
-    <ul className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 divide-y divide-line overflow-hidden">
+    <ul className="surface divide-y divide-line overflow-hidden">
       {items.map(i => (
         <li key={i.id} className="flex items-center gap-3 p-4">
           <time className="text-sm text-muted w-16 shrink-0">{format(i.date, 'HH:mm')}</time>

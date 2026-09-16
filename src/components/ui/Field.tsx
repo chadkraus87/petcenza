@@ -15,7 +15,7 @@ import type { FieldError } from 'react-hook-form'
  * it at all and validation failed on every submit.
  */
 
-const base = 'w-full rounded-md border border-line px-3 py-2 bg-card'
+const base = 'field w-full'
 
 type TextFieldProps = InputHTMLAttributes<HTMLInputElement> & { label: string; error?: FieldError }
 

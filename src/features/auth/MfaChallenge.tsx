@@ -43,9 +43,9 @@ export default function MfaChallenge() {
         <input id="code" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]*" maxLength={6}
           value={code} onChange={e => setCode(e.target.value.replace(/\D/g, ''))}
           onKeyDown={e => e.key === 'Enter' && code.length === 6 && submit()}
-          className="w-full mb-4 rounded-md border border-line px-3 py-2 tracking-widest text-center text-lg" />
+          className="field w-full mb-4 tracking-widest text-center text-lg" />
         <button onClick={submit} disabled={busy || code.length !== 6}
-          className="w-full rounded-md bg-ink text-paper py-2 font-medium disabled:opacity-50">
+          className="btn btn-primary w-full">
           {busy ? 'Verifying…' : 'Verify'}
         </button>
         <button onClick={() => { void signOut(); nav('/auth/sign-in', { replace: true }) }}

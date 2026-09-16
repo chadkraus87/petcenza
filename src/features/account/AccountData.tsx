@@ -34,7 +34,7 @@ export default function AccountData() {
   return (
     <section className="space-y-8">
       {/* -------------------------------------------------------------- export */}
-      <div className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5">
+      <div className="surface p-5">
         <h2 className="text-xl mb-1">Your data</h2>
         <p className="text-sm text-muted mb-4">
           Download everything PetCenza holds for you — every pet, every record, and links to your
@@ -46,7 +46,7 @@ export default function AccountData() {
             onSuccess: r => setDone(`${r.filename} — ${r.records} records, ${r.files} files`)
           })}
           disabled={exportAccount.isPending}
-          className="inline-flex items-center gap-2 rounded-md bg-ink text-paper px-4 py-2 text-sm disabled:opacity-50">
+          className="btn btn-primary">
           <Download size={15} aria-hidden />
           {exportAccount.isPending ? 'Preparing…' : 'Download my data'}
         </button>
@@ -90,7 +90,7 @@ export default function AccountData() {
 
         {!armed ? (
           <button onClick={() => setArmed(true)}
-            className="rounded-md border border-alert text-alert px-4 py-2 text-sm hover:bg-alert hover:text-paper transition">
+            className="btn btn-danger-outline">
             Delete my account
           </button>
         ) : (
@@ -102,18 +102,18 @@ export default function AccountData() {
               <input id="confirm-email" type="email" value={typed} autoComplete="off"
                 onChange={e => setTyped(e.target.value)}
                 aria-describedby="confirm-help"
-                className="w-full max-w-md rounded-md border border-line px-3 py-2 bg-card" />
+                className="field w-full max-w-md" />
               <p id="confirm-help" className="text-xs text-muted mt-1">
                 We ask for this so an accidental click can't close your account.
               </p>
             </div>
             <div className="flex gap-2">
               <button onClick={doDelete} disabled={!emailMatches || del.isPending}
-                className="rounded-md bg-alert text-paper px-4 py-2 text-sm disabled:opacity-40">
+                className="btn btn-danger">
                 {del.isPending ? 'Deleting…' : 'Permanently delete'}
               </button>
               <button onClick={() => { setArmed(false); setTyped('') }}
-                className="rounded-md border border-line px-4 py-2 text-sm">
+                className="btn btn-secondary">
                 Cancel
               </button>
             </div>

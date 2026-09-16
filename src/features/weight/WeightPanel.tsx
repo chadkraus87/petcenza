@@ -41,7 +41,7 @@ export default function WeightPanel({ petId, goalKg }: { petId: string; goalKg: 
             </p>
           )}
         </div>
-        <button onClick={() => setAdding(a => !a)} className="rounded-md bg-ink text-paper px-4 py-2 text-sm">{adding ? 'Close' : 'Log weight'}</button>
+        <button onClick={() => setAdding(a => !a)} className="btn btn-primary">{adding ? 'Close' : 'Log weight'}</button>
       </div>
 
       {notable && pct !== null && (
@@ -55,16 +55,16 @@ export default function WeightPanel({ petId, goalKg }: { petId: string; goalKg: 
       )}
 
       {adding && (
-        <form onSubmit={onSubmit} className="flex flex-wrap gap-3 items-end bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="flex flex-wrap gap-3 items-end surface p-5 mb-6" noValidate>
           <TextField label="Date" type="date" error={errors.measured_on} {...register('measured_on')} />
           <TextField label="Weight (kg)" type="number" step="0.1" error={errors.weight_kg} {...register('weight_kg')} />
           <TextField label="Body condition (1–9)" type="number" error={errors.body_condition as never} {...register('body_condition')} />
-          <button type="submit" className="rounded-md bg-moss text-paper px-5 py-2">Save</button>
+          <button type="submit" className="btn btn-primary">Save</button>
         </form>
       )}
 
       {chartData.length >= 2 ? (
-        <div className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 h-72" role="img" aria-label={`Weight trend chart with ${chartData.length} measurements`}>
+        <div className="surface p-4 h-72" role="img" aria-label={`Weight trend chart with ${chartData.length} measurements`}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
               <CartesianGrid stroke={theme.line} strokeDasharray="3 3" />

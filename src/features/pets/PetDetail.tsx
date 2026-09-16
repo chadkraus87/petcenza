@@ -42,22 +42,22 @@ export default function PetDetail() {
       <header className="mb-4">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-3xl">{pet.name}</h1>
+            <h1>{pet.name}</h1>
             <p className="text-muted">
               {pet.breed ?? pet.species}{pet.is_mixed_breed && ' mix'} · {petAge(pet.birth_date, pet.estimated_age_months)} · {pet.sex.replace('_', ', ')}
             </p>
           </div>
-          <Link to={`/pets/${id}/edit`} className="rounded-md border border-line px-4 py-2 text-sm shrink-0">Edit profile</Link>
+          <Link to={`/pets/${id}/edit`} className="btn btn-secondary shrink-0">Edit profile</Link>
         </div>
         <div className="mt-3"><TagEditor petId={id} canEdit={canEdit === true} /></div>
         {pet.deceased_on && (
-          <p className="mt-3 flex items-center gap-2 rounded-md bg-wave text-ink px-3 py-2 text-sm">
+          <p className="mt-3 flex items-center gap-2 rounded-lg bg-wave text-ink px-3 py-2 text-sm">
             <Heart size={16} className="text-coral shrink-0" aria-hidden />
             In memory of {pet.name} · {fmtDate(pet.deceased_on)}
           </p>
         )}
         {severe.length > 0 && (
-          <p role="alert" className="mt-3 flex items-center gap-2 rounded-md bg-alert text-paper px-3 py-2 text-sm">
+          <p role="alert" className="mt-3 flex items-center gap-2 rounded-lg bg-alert text-paper px-3 py-2 text-sm">
             <AlertTriangle size={16} aria-hidden />
             Severe allergy: {severe.map(a => a.allergen).join(', ')} — see Allergies tab for emergency treatment.
           </p>
@@ -107,7 +107,7 @@ function Overview({ pet }: { pet: NonNullable<ReturnType<typeof usePet>['data']>
     ['Favorite activities', pet.favorite_activities?.join(', ')]
   ]
   return (
-    <dl className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-6 grid gap-x-8 gap-y-3 sm:grid-cols-2">
+    <dl className="surface p-6 grid gap-x-8 gap-y-3 sm:grid-cols-2">
       {rows.filter(([, v]) => v).map(([k, v]) => (
         <div key={k}><dt className="text-xs uppercase tracking-wide text-muted">{k}</dt><dd>{v}</dd></div>
       ))}

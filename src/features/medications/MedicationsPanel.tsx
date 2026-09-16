@@ -28,13 +28,13 @@ export default function MedicationsPanel({ petId }: { petId: string }) {
     <section>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl">Medications</h2>
-        <button onClick={() => setAdding(a => !a)} className="rounded-md bg-ink text-paper px-4 py-2 text-sm">
+        <button onClick={() => setAdding(a => !a)} className="btn btn-primary">
           {adding ? 'Close' : 'Add medication'}
         </button>
       </div>
 
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 surface p-5 mb-6" noValidate>
           <TextField label="Medication" error={errors.name} {...register('name')} />
           <TextField label="Dosage" error={errors.dosage} {...register('dosage')} placeholder="75 mg" />
           <TextField label="Frequency" error={errors.frequency} {...register('frequency')} placeholder="Twice daily with food" />
@@ -45,7 +45,7 @@ export default function MedicationsPanel({ petId }: { petId: string }) {
           <VetSelect label="Prescriber" registration={register('prescriber_id')} />
           <div className="sm:col-span-2"><TextArea label="Administration instructions" error={errors.instructions} {...register('instructions')} /></div>
           <div className="sm:col-span-2"><TextArea label="Side effects to watch for" error={errors.side_effects} {...register('side_effects')} /></div>
-          <button type="submit" disabled={isSubmitting} className="rounded-md bg-moss text-paper px-5 py-2 w-fit">Save medication</button>
+          <button type="submit" disabled={isSubmitting} className="btn btn-primary w-fit">Save medication</button>
         </form>
       )}
 
