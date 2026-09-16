@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { PawPrint, LayoutDashboard, CalendarDays, Siren, Search, LogOut, WifiOff, Stethoscope, Settings, Pill } from 'lucide-react'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { useRealtimeSync } from '@/hooks/useRealtime'
 import { replay, watchConnectivity, pending } from '@/lib/outbox'
 import SearchOverlay from './SearchOverlay'
+import ErrorBoundary from './ErrorBoundary'
 
 const nav = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -18,6 +19,7 @@ const nav = [
 
 export default function AppShell() {
   const { signOut } = useAuth()
+  const { pathname } = useLocation()
   const [online, setOnline] = useState(navigator.onLine)
   const [queued, setQueued] = useState(0)
   const [searchOpen, setSearchOpen] = useState(false)
@@ -69,7 +71,7 @@ export default function AppShell() {
       </aside>
 
       <div className="pb-16 md:pb-0">
-        <Outlet />
+        <ErrorBoundary key={pathname}><Outlet /></ErrorBoundary>
       </div>
 
       {/* Mobile tab bar */}

@@ -7,7 +7,7 @@ import Captcha, { captchaEnabled } from '@/components/ui/Captcha'
 import { takePendingInvite } from '@/features/sharing/AcceptInvite'
 
 export default function SignIn() {
-  const { signIn, signInWithGoogle, signInWithApple } = useAuth()
+  const { signIn, signInWithGoogle } = useAuth()
   const nav = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -58,8 +58,7 @@ export default function SignIn() {
         </button>
         <div className="my-4 flex items-center gap-3 text-xs text-muted"><hr className="flex-1 border-line" />or<hr className="flex-1 border-line" /></div>
         <ConsentNotice />
-        <button onClick={signInWithGoogle} className="w-full rounded-md border border-line py-2 mb-2 text-sm">Continue with Google</button>
-        <button onClick={signInWithApple} className="w-full rounded-md border border-line py-2 text-sm">Continue with Apple</button>
+        <button onClick={signInWithGoogle} className="w-full rounded-md border border-line py-2 text-sm">Continue with Google</button>
         <p className="text-sm mt-5 flex justify-between">
           <Link className="text-moss underline" to="/auth/forgot">Forgot password</Link>
           <Link className="text-moss underline" to="/auth/sign-up">Create account</Link>

@@ -2,12 +2,12 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { isBefore, parseISO } from 'date-fns'
+import { format, isBefore, parseISO } from 'date-fns'
 import { Check, Clock, Trash2, Repeat } from 'lucide-react'
 import { reminderSchema } from '@/schemas/records'
 import { toRow } from '@/schemas/pet'
 import { usePets } from '@/hooks/usePets'
-import { useReminders, useCreateReminder, useCompleteReminder, useSnoozeReminder, useDeleteReminder } from '@/hooks/useReminders'
+import { useReminders, useCreateReminder, useCompleteReminder, useSnoozeReminder, useDeleteReminder, useRescheduleReminder } from '@/hooks/useReminders'
 import { TextField, SelectField } from '@/components/ui/Field'
 import { fmtDateTime } from '@/lib/format'
 
@@ -28,6 +28,7 @@ export default function RemindersPanel() {
   const create = useCreateReminder()
   const complete = useCompleteReminder()
   const snooze = useSnoozeReminder()
+  const reschedule = useRescheduleReminder()
   const remove = useDeleteReminder()
   const [adding, setAdding] = useState(false)
 
@@ -110,6 +111,18 @@ export default function RemindersPanel() {
                   className="inline-flex items-center gap-1 rounded-md bg-moss text-paper px-3 py-1.5 text-sm">
                   <Check size={14} aria-hidden /> Done
                 </button>
+                {/* The keyboard and touch path for the calendar's drag-to-reschedule. Native date
+                    input, same mutation. Parsed as a LOCAL date: new Date('YYYY-MM-DD') is UTC
+                    midnight, which west of Greenwich is the previous evening. */}
+                <input type="date"
+                  aria-label={`Move "${r.title}" to another day`}
+                  title="Move to another day"
+                  value={format(parseISO(r.due_at), 'yyyy-MM-dd')}
+                  onChange={e => {
+                    const [y, m, d] = e.target.value.split('-').map(Number)
+                    if (y && m && d) reschedule.mutate({ id: r.id, from: r.due_at, to: new Date(y, m - 1, d) })
+                  }}
+                  className="rounded-md border border-line px-2 py-1.5 text-sm bg-card" />
                 <select
                   aria-label={`Snooze "${r.title}"`}
                   title="Snooze"

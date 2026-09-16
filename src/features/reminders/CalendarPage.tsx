@@ -35,6 +35,11 @@ export default function CalendarPage() {
 
   const { data } = useQuery({
     queryKey: ['calendar', view, start.toISOString()],
+    // The query cache is persisted to localStorage as JSON, which turns Date objects into strings.
+    // Caching Dates here meant any reload after visiting the calendar threw on getTime() and
+    // white-screened the app. Cache ISO strings; `select` rebuilds Dates on every read.
+    select: (rows: (Omit<CalItem, 'date'> & { date: string })[]): CalItem[] =>
+      rows.map(r => ({ ...r, date: parseISO(r.date) })),
     queryFn: async () => {
       const from = start.toISOString(), to = end.toISOString()
       const [reminders, visits, pets] = await Promise.all([
@@ -42,11 +47,11 @@ export default function CalendarPage() {
         supabase.from('vet_visits').select('*').gte('visit_at', from).lte('visit_at', to),
         supabase.from('pets').select('id, name, birth_date').eq('archived', false)
       ])
-      const items: CalItem[] = []
+      const items: (Omit<CalItem, 'date'> & { date: string })[] = []
       // Only reminders can be dragged — a vet visit is an appointment with a clinic, and a
       // birthday is a fact. Moving either from a calendar cell would be a lie.
-      for (const r of (reminders.data ?? []) as Reminder[]) items.push({ id: r.id, date: parseISO(r.due_at), label: r.title, kind: r.kind, draggable: true })
-      for (const v of (visits.data ?? []) as VetVisit[]) items.push({ id: v.id, date: parseISO(v.visit_at), label: v.reason ?? 'Vet visit', kind: 'vet_appointment', draggable: false })
+      for (const r of (reminders.data ?? []) as Reminder[]) items.push({ id: r.id, date: r.due_at, label: r.title, kind: r.kind, draggable: true })
+      for (const v of (visits.data ?? []) as VetVisit[]) items.push({ id: v.id, date: v.visit_at, label: v.reason ?? 'Vet visit', kind: 'vet_appointment', draggable: false })
       // The visible span can straddle two calendar years, so place each birthday in every year it
       // touches; the per-day filter keeps only the ones actually in range.
       const years = new Set([start.getFullYear(), end.getFullYear()])
@@ -54,7 +59,7 @@ export default function CalendarPage() {
         if (!p.birth_date) continue
         const bd = parseISO(p.birth_date)
         for (const year of years) {
-          items.push({ id: `bday-${p.id}-${year}`, date: new Date(year, bd.getMonth(), bd.getDate()), label: `${p.name}'s birthday`, kind: 'birthday', draggable: false })
+          items.push({ id: `bday-${p.id}-${year}`, date: new Date(year, bd.getMonth(), bd.getDate()).toISOString(), label: `${p.name}'s birthday`, kind: 'birthday', draggable: false })
         }
       }
       return items

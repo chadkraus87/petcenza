@@ -17,6 +17,8 @@
     "dev:demo": "vite --mode demo --port 5179"
   },
   "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/public-sans": "^5.3.0",
     "@hookform/resolvers": "^3.9.0",
     "@supabase/supabase-js": "^2.45.0",
     "@tanstack/query-sync-storage-persister": "^5.51.0",

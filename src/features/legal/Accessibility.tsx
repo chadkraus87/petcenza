@@ -24,17 +24,10 @@ export default function Accessibility() {
         <li>Decorative images and icons are hidden from assistive technology; meaningful ones are
           labelled.</li>
         <li>We avoid conveying information by colour alone.</li>
+        <li>Anything you can drag, like moving a reminder on the calendar, can also be done without
+          dragging — each reminder has its own date field.</li>
         <li>The artwork background is removed when your system asks for more contrast, and when
           printing.</li>
-      </UL>
-
-      <H2>Known limitations</H2>
-      <UL>
-        <li>
-          Moving a reminder to a different day by dragging it on the calendar needs a mouse. With a
-          keyboard or touchscreen you can snooze a reminder later from the reminders list, but not
-          yet move it to an earlier date. We're fixing this.
-        </li>
       </UL>
 
       <H2>Tell us what doesn't work</H2>

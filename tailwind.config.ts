@@ -27,8 +27,10 @@ export default {
         muted: '#487280'        // artwork mid-wave tone, for subtle fills
       },
       fontFamily: {
-        display: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
-        body: ['"Public Sans"', 'system-ui', 'sans-serif']
+        // Self-hosted via @fontsource-variable (imported in main.tsx). They were named here but
+        // never loaded, so until now the whole app rendered in the system font.
+        display: ['"Bricolage Grotesque Variable"', 'system-ui', 'sans-serif'],
+        body: ['"Public Sans Variable"', 'system-ui', 'sans-serif']
       },
       borderRadius: { card: '14px' }
     }
