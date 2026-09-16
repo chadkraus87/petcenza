@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { format, parseISO } from 'date-fns'
+import { format, isToday, parseISO } from 'date-fns'
 import {
   AlertTriangle, CalendarClock, Check, CheckCircle2, ChevronRight, Clock, Info, OctagonAlert, PawPrint, Pill, Plus,
   ShieldAlert, Stethoscope, Syringe
@@ -10,6 +10,8 @@ import { useMedSchedule } from '@/hooks/useMedSchedule'
 import { useCompleteReminder } from '@/hooks/useReminders'
 import { useReminderNotifications } from '@/hooks/useNotifications'
 import { usePrimaryPhotos } from '@/hooks/usePetPhotos'
+import { findLog, useDoseLogs } from '@/hooks/useDoseLogs'
+import { DoseToggle } from '@/features/medications/DoseToggle'
 import { buildToday, actionCount, type Urgency } from '@/lib/today'
 import { buildDayPlan, currentSlot, TIME_LABEL, TIME_ORDER } from '@/lib/medSchedule'
 import { fmtDate } from '@/lib/format'
@@ -35,6 +37,7 @@ export default function Dashboard() {
   const { data: insights } = useInsights()
   const { data: meds } = useMedSchedule()
   const { data: photos } = usePrimaryPhotos()
+  const { data: doseLogs } = useDoseLogs()
   const complete = useCompleteReminder()
   useReminderNotifications(data?.remindersToday)
 
@@ -58,13 +61,21 @@ export default function Dashboard() {
 
   const petName = (id: string | null) => data.pets.find(p => p.id === id)?.name ?? 'Pet'
   const today = buildToday(insights ?? [], data.remindersToday)
-  const needs = actionCount(today)
   const todayIso = new Date().toISOString().slice(0, 10)
 
   const plan = buildDayPlan(meds ?? [])
   const now = currentSlot()
   const nextSlot = TIME_ORDER.slice(TIME_ORDER.indexOf(now)).find(s => plan.bySlot[s].length > 0)
-  const doses = nextSlot ? plan.bySlot[nextSlot] : []
+  // A dose from an earlier slot that nobody logged is the most important thing on this screen, so
+  // it leads the rounds card and counts toward "things need you". Previously only the current slot
+  // was shown and a missed morning dose simply vanished by midday.
+  const missed = TIME_ORDER.slice(0, TIME_ORDER.indexOf(now)).flatMap(slot =>
+    plan.bySlot[slot].filter(d => !findLog(doseLogs, d.med.id, slot)).map(d => ({ ...d, slot })))
+  const doses = [
+    ...missed,
+    ...(nextSlot ? plan.bySlot[nextSlot].map(d => ({ ...d, slot: nextSlot })) : [])
+  ]
+  const needs = actionCount(today) + missed.length
 
   const comingUp = [
     ...data.vaxDue.filter(v => v.next_due_on && v.next_due_on >= todayIso)
@@ -112,6 +123,9 @@ export default function Dashboard() {
                             <span className="block text-sm text-muted">
                               {item.detail}
                               {item.dueAt && item.urgency === 'due' && <> at {format(parseISO(item.dueAt), 'h:mm a')}</>}
+                              {item.dueAt && item.detail === 'Overdue' && (
+                                <>, was due {isToday(parseISO(item.dueAt)) ? format(parseISO(item.dueAt), 'h:mm a') : format(parseISO(item.dueAt), 'MMM d')}</>
+                              )}
                             </span>
                           </>
                         )
@@ -121,7 +135,8 @@ export default function Dashboard() {
                       })()}
                       {item.reminderId && (
                         <Button variant="secondary" className="shrink-0 px-3"
-                          disabled={complete.isPending}
+                          // Only the row being completed is busy; the others stay usable.
+                          disabled={complete.isPending && complete.variables === item.reminderId}
                           onClick={() => complete.mutate(item.reminderId!)}
                           aria-label={`Mark "${item.title}" done`}>
                           <Check size={16} aria-hidden /> Done
@@ -136,22 +151,27 @@ export default function Dashboard() {
           </Card>
 
           {/* ------------------------------------------------------------ med rounds */}
-          {doses.length > 0 && nextSlot && (
+          {doses.length > 0 && (
             <Card aria-labelledby="rounds-heading">
               <div className="flex items-center justify-between gap-3 px-5 pt-5 pb-3">
                 <h2 id="rounds-heading" className="text-xl flex items-center gap-2">
                   <Pill size={19} className="text-moss" aria-hidden /> Medication rounds
                 </h2>
-                <span className="text-sm text-muted">{nextSlot === now ? 'Now' : 'Next'}: {TIME_LABEL[nextSlot]}</span>
+                {nextSlot && <span className="text-sm text-muted">{nextSlot === now ? 'Now' : 'Next'}: {TIME_LABEL[nextSlot]}</span>}
               </div>
               <ul className="divide-y divide-line">
-                {doses.map(({ med, schedule }) => (
-                  <li key={`${med.id}-${nextSlot}`} className="flex items-center gap-3 px-5 py-3">
+                {doses.map(({ med, schedule, slot }) => (
+                  <li key={`${med.id}-${slot}`} className="flex items-center gap-3 px-5 py-3">
                     <PetAvatar name={med.petName} url={photos?.[med.petId]} size="sm" />
                     <div className="min-w-0 flex-1">
                       <p className="font-medium">{med.name} <span className="font-normal text-muted">{med.dosage}</span></p>
-                      <p className="text-sm text-muted">for {med.petName}{schedule.withFood && ' · with food'}</p>
+                      <p className="text-sm text-muted">
+                        for {med.petName}{schedule.withFood && ', with food'}
+                        {slot !== nextSlot && <>, {TIME_LABEL[slot].toLowerCase()} dose</>}
+                      </p>
                     </div>
+                    <DoseToggle petId={med.petId} petName={med.petName} medicationId={med.id} medName={med.name}
+                      slot={slot} logs={doseLogs} />
                   </li>
                 ))}
               </ul>

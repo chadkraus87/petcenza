@@ -117,7 +117,8 @@ function seed(): DB {
     pet_shares: [{ id: id(601), pet_id: biscuit, user_id: PARTNER_ID, role: 'owner', invited_by: USER_ID, expires_at: null, created_at: iso(-100, 9) }],
     pet_invitations: [{ id: id(611), pet_id: juniper, token: id(612), role: 'viewer', invited_email: 'sitter@example.com', invited_by: USER_ID, expires_at: iso(9, 9), accepted_at: null, accepted_by: null, revoked_at: null, email_sent_at: null, email_send_count: 0, created_at: iso(-5, 9) }],
     pet_share_links: [{ id: id(621), pet_id: mochi, token: id(622), label: 'Dr. Rivera — thyroid follow-up', created_by: USER_ID, expires_at: iso(4, 9), revoked_at: null, last_viewed_at: iso(-1, 16), view_count: 2, created_at: iso(-3, 9) }],
-    activity_logs: []
+    activity_logs: [],
+    dose_logs: []
   }
 }
 
@@ -240,7 +241,9 @@ function rest(method: string, table: string, params: URLSearchParams, headers: H
     const written = incoming.map(r => {
       const existing = conflict && rows.find(x => conflict.every(k => x[k] === r[k]))
       if (existing) return Object.assign(existing, r, { updated_at: stamp() })
-      const row = { id: crypto.randomUUID(), user_id: USER_ID, created_at: stamp(), updated_at: stamp(), ...r }
+      // Mirror the column defaults the real schema supplies.
+      const defaults = table === 'dose_logs' ? { given_at: stamp() } : {}
+      const row = { id: crypto.randomUUID(), user_id: USER_ID, created_at: stamp(), updated_at: stamp(), ...defaults, ...r }
       rows.push(row); return row
     })
     return reply(written, 201)

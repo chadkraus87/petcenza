@@ -6,7 +6,7 @@ import { useAuth } from '@/features/auth/AuthProvider'
 const SYNCED_TABLES = [
   'pets','medications','allergies','vaccinations','weight_entries','vet_visits','reminders',
   'feeding_schedules','nutrition_plans','grooming_logs','behavior_notes','notes','documents',
-  'veterinarians','emergency_contacts'
+  'veterinarians','emergency_contacts','dose_logs'
 ]
 
 /**

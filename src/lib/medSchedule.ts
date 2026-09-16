@@ -181,3 +181,22 @@ export function buildDayPlan<T extends { frequency: string | null }>(meds: T[]):
 
   return plan
 }
+
+export type DoseStatus = 'given' | 'overdue' | 'due' | 'upcoming'
+
+/**
+ * Where a scheduled dose stands right now. A slot is overdue once its window has passed without
+ * a logged dose — e.g. a morning dose not given by 11am.
+ */
+export function doseStatus(slot: TimeOfDay, given: boolean, now: Date = new Date()): DoseStatus {
+  if (given) return 'given'
+  const diff = TIME_ORDER.indexOf(slot) - TIME_ORDER.indexOf(currentSlot(now))
+  return diff < 0 ? 'overdue' : diff === 0 ? 'due' : 'upcoming'
+}
+
+/** The user's LOCAL calendar day as YYYY-MM-DD. toISOString() would give the UTC day, which for
+ *  US evenings is already tomorrow — logging tonight's dose against the wrong date. */
+export function localDay(now: Date = new Date()) {
+  const p = (n: number) => String(n).padStart(2, '0')
+  return `${now.getFullYear()}-${p(now.getMonth() + 1)}-${p(now.getDate())}`
+}

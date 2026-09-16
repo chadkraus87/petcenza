@@ -1,18 +1,21 @@
 import { Link } from 'react-router-dom'
-import { Pill, UtensilsCrossed, HelpCircle, CalendarClock, Hand } from 'lucide-react'
+import { HelpCircle, CalendarClock, Hand } from 'lucide-react'
 import { useMedSchedule, type MedWithPet } from '@/hooks/useMedSchedule'
 import { usePrimaryPhotos } from '@/hooks/usePetPhotos'
+import { useDoseLogs, type DoseLog } from '@/hooks/useDoseLogs'
+import { DoseToggle } from './DoseToggle'
 import { PetAvatar } from '@/components/PetAvatar'
 import { Disclaimer, DISCLAIMER } from '@/components/Disclaimer'
 import { PageSkeleton } from '@/components/ui/primitives'
 import {
   buildDayPlan, currentSlot, TIME_ORDER, TIME_LABEL,
-  type ScheduledDose
+  type ScheduledDose, type TimeOfDay
 } from '@/lib/medSchedule'
 
 export default function MedSchedulePage() {
   const { data: meds, isLoading, error } = useMedSchedule()
   const { data: photos } = usePrimaryPhotos()
+  const { data: logs } = useDoseLogs()
 
   if (isLoading) return <PageSkeleton />
   if (error) return <p className="p-6 text-alert">Couldn't load the medication schedule. Check your connection and retry.</p>
@@ -54,7 +57,7 @@ export default function MedSchedulePage() {
           </h2>
           <ul className="space-y-2">
             {plan.bySlot[slot].map(dose => (
-              <DoseRow key={`${dose.med.id}-${slot}`} dose={dose} photos={photos} />
+              <DoseRow key={`${dose.med.id}-${slot}`} dose={dose} photos={photos} slot={slot} logs={logs} />
             ))}
           </ul>
         </section>
@@ -97,16 +100,19 @@ function Group({ title, icon, note, children }: {
   )
 }
 
-function DoseRow({ dose, photos, showCadence = false }: {
+function DoseRow({ dose, photos, showCadence = false, slot, logs }: {
   dose: ScheduledDose<MedWithPet>
   photos?: Record<string, string>
   showCadence?: boolean
+  slot?: TimeOfDay
+  logs?: DoseLog[]
 }) {
   const { med, schedule } = dose
   return (
-    <li>
-      <Link to={`/pets/${med.petId}`}
-        className="flex items-center gap-3 surface p-3 hover:border-moss">
+    <li className="surface flex items-center gap-3 p-3">
+      {/* The link and the toggle are siblings: a button nested inside a link is invalid and
+          unpredictable for screen readers. */}
+      <Link to={`/pets/${med.petId}?tab=medications`} className="flex items-center gap-3 min-w-0 flex-1 rounded-lg hover:text-moss">
         <PetAvatar name={med.petName} url={photos?.[med.petId]} size="sm" />
         <div className="min-w-0 flex-1">
           <p className="flex items-center gap-2 flex-wrap">
@@ -115,20 +121,16 @@ function DoseRow({ dose, photos, showCadence = false }: {
           </p>
           <p className="text-sm text-muted truncate">
             for {med.petName}
-            {showCadence && <> · {med.frequency}</>}
+            {showCadence && <>, {med.frequency}</>}
+            {schedule.withFood && <>, with food</>}
           </p>
-          {med.instructions && (
-            <p className="text-xs text-muted truncate">{med.instructions}</p>
-          )}
+          {med.instructions && <p className="text-xs text-muted truncate">{med.instructions}</p>}
         </div>
-        {schedule.withFood && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-wave text-muted px-2 py-1 text-xs shrink-0"
-            title="Give with food">
-            <UtensilsCrossed size={12} aria-hidden /> With food
-          </span>
-        )}
-        <Pill size={16} className="text-ink/30 shrink-0" aria-hidden />
       </Link>
+      {slot && (
+        <DoseToggle petId={med.petId} petName={med.petName} medicationId={med.id} medName={med.name}
+          slot={slot} logs={logs} />
+      )}
     </li>
   )
 }

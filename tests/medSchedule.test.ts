@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { parseFrequency, buildDayPlan, currentSlot } from '@/lib/medSchedule'
+import { parseFrequency, buildDayPlan, currentSlot, doseStatus, localDay } from '@/lib/medSchedule'
 
 describe('parseFrequency — plain English', () => {
   it('once daily', () => {
@@ -185,5 +185,19 @@ describe('currentSlot', () => {
     expect(at(19)).toBe('evening')
     expect(at(20)).toBe('night')
     expect(at(0)).toBe('morning')
+  })
+})
+
+describe('doseStatus', () => {
+  const at = (h: number) => new Date(2026, 8, 16, h, 0)
+  it('given always wins', () => expect(doseStatus('morning', true, at(22))).toBe('given'))
+  it('a missed earlier slot is overdue', () => expect(doseStatus('morning', false, at(12))).toBe('overdue'))
+  it('the current slot is due', () => expect(doseStatus('evening', false, at(18))).toBe('due'))
+  it('a later slot is upcoming', () => expect(doseStatus('night', false, at(9))).toBe('upcoming'))
+})
+
+describe('localDay', () => {
+  it('uses the local date, not UTC (9pm in Texas is already tomorrow in UTC)', () => {
+    expect(localDay(new Date(2026, 8, 16, 21, 30))).toBe('2026-09-16')
   })
 })
