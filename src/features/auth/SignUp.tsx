@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ConsentNotice } from '@/features/legal/LegalPage'
 import { Link } from 'react-router-dom'
 import { useAuth } from './AuthProvider'
 import Captcha, { captchaEnabled } from '@/components/ui/Captcha'
@@ -44,15 +45,9 @@ export default function SignUp() {
         <label className="block text-sm mb-1" htmlFor="password">Password (12+ characters)</label>
         <input id="password" type="password" autoComplete="new-password" value={password} onChange={e => setPassword(e.target.value)} className="w-full mb-4 rounded-md border border-line px-3 py-2" />
         <Captcha onToken={setCaptchaToken} resetSignal={captchaAttempt} />
+        <ConsentNotice />
         <button onClick={submit} disabled={captchaEnabled && !captchaToken}
           className="w-full rounded-md bg-ink text-paper py-2 font-medium disabled:opacity-50">Create account</button>
-        {/* Must be visible BEFORE the account is created, not buried in a footer somewhere. */}
-        <p className="text-xs text-muted mt-3 leading-relaxed">
-          By creating an account you agree to our{' '}
-          <Link className="text-moss underline" to="/legal/terms">Terms</Link> and{' '}
-          <Link className="text-moss underline" to="/legal/privacy">Privacy Policy</Link>.
-          PetCenza keeps records — it does not give veterinary advice.
-        </p>
         <p className="text-sm mt-4"><Link className="text-moss underline" to="/auth/sign-in">Back to sign in</Link></p>
       </div>
     </main>

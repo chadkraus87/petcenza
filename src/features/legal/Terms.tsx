@@ -1,4 +1,4 @@
-import { LegalShell, H2, P, UL } from './LegalPage'
+import { LegalShell, H2, P, UL, CONTACT, OPERATOR } from './LegalPage'
 
 /**
  * Terms of service.
@@ -9,14 +9,14 @@ import { LegalShell, H2, P, UL } from './LegalPage'
  * itself rather than only living here.
  *
  * NOTE FOR REVIEW: the limitation of liability, warranty disclaimer and dispute sections need a
- * licensed attorney before charging money. See docs/LAUNCH_CHECKLIST.md.
+ * licensed attorney before charging money.
  */
 export default function Terms() {
   return (
-    <LegalShell title="Terms of Service" updated="10 August 2026">
+    <LegalShell title="Terms of Service" updated="16 September 2026">
       <P>
-        These terms are the agreement between you and PetCenza. By creating an account you accept
-        them.
+        These terms are the agreement between you and {OPERATOR}, who operates PetCenza as an
+        individual ("we", "us"). By creating an account you accept them. You must be at least 13 years old to use PetCenza.
       </P>
 
       <H2>PetCenza is a record-keeping tool, not veterinary advice</H2>
@@ -124,6 +124,14 @@ export default function Terms() {
         export working throughout.
       </P>
 
+      <H2>Governing law</H2>
+      <P>
+        These terms are governed by the laws of the State of Texas, without regard to its
+        conflict-of-law rules. Any dispute that isn't resolved informally will be heard in the state
+        or federal courts located in Texas. Nothing in these terms takes away a protection you have
+        under the consumer protection laws of the place where you live.
+      </P>
+
       <H2>Changes</H2>
       <P>
         We may update these terms. If a change materially affects you we will give notice in the
@@ -132,7 +140,7 @@ export default function Terms() {
 
       <H2>Contact</H2>
       <P>
-        <a className="text-moss underline" href="mailto:support@petcenza.com">support@petcenza.com</a>
+        <a className="text-moss underline" href={`mailto:${CONTACT.support}`}>{CONTACT.support}</a>
       </P>
     </LegalShell>
   )

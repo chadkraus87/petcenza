@@ -24,6 +24,7 @@ const VetShareView = lazy(() => import('@/features/sharing/VetShareView'))
 const Privacy = lazy(() => import('@/features/legal/Privacy'))
 const Terms = lazy(() => import('@/features/legal/Terms'))
 const DeleteAccountInfo = lazy(() => import('@/features/legal/DeleteAccountInfo'))
+const Accessibility = lazy(() => import('@/features/legal/Accessibility'))
 
 export default function App() {
   return (
@@ -46,6 +47,7 @@ export default function App() {
             <Route path="/legal/privacy" element={<Privacy />} />
             <Route path="/legal/terms" element={<Terms />} />
             <Route path="/legal/delete-account" element={<DeleteAccountInfo />} />
+            <Route path="/legal/accessibility" element={<Accessibility />} />
             <Route element={<Protected />}>
               <Route element={<AppShell />}>
                 <Route path="/" element={<Dashboard />} />

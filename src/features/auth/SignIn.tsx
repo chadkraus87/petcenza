@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthProvider'
+import { ConsentNotice } from '@/features/legal/LegalPage'
 import { assuranceState } from './mfa'
 import Captcha, { captchaEnabled } from '@/components/ui/Captcha'
 import { takePendingInvite } from '@/features/sharing/AcceptInvite'
@@ -56,6 +57,7 @@ export default function SignIn() {
           {busy ? 'Signing in…' : 'Sign in'}
         </button>
         <div className="my-4 flex items-center gap-3 text-xs text-muted"><hr className="flex-1 border-line" />or<hr className="flex-1 border-line" /></div>
+        <ConsentNotice />
         <button onClick={signInWithGoogle} className="w-full rounded-md border border-line py-2 mb-2 text-sm">Continue with Google</button>
         <button onClick={signInWithApple} className="w-full rounded-md border border-line py-2 text-sm">Continue with Apple</button>
         <p className="text-sm mt-5 flex justify-between">

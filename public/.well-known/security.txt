@@ -3,7 +3,7 @@
 # The source is public, so someone will eventually find something. Make it easy for them to tell
 # us instead of guessing at an address or posting it publicly.
 
-Contact: mailto:security@petcenza.com
+Contact: mailto:kraushaustech@gmail.com
 Preferred-Languages: en
 Canonical: https://pawchart-zeta.vercel.app/.well-known/security.txt
 Policy: https://pawchart-zeta.vercel.app/legal/terms

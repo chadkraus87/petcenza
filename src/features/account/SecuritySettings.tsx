@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useCallback, useEffect, useState } from 'react'
 import { ShieldCheck, ShieldAlert, Trash2 } from 'lucide-react'
 import { useAuth } from '@/features/auth/AuthProvider'
@@ -129,6 +130,13 @@ export default function SecuritySettings() {
       </section>
 
       <div className="mt-6"><AccountData /></div>
+
+      <nav aria-label="Legal" className="flex flex-wrap gap-x-4 gap-y-1 justify-center mt-8 text-sm text-muted">
+        <Link to="/legal/privacy" className="hover:text-moss">Privacy</Link>
+        <Link to="/legal/terms" className="hover:text-moss">Terms</Link>
+        <Link to="/legal/accessibility" className="hover:text-moss">Accessibility</Link>
+        <a href="/third-party-licenses.txt" className="hover:text-moss">Open-source licenses</a>
+      </nav>
     </main>
   )
 }
