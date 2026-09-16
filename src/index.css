@@ -9,6 +9,11 @@ h1,h2,h3 { @apply font-display; }
 @layer base {
   /* One title scale. Utilities still override it where a page genuinely needs to. */
   h1 { @apply text-3xl md:text-4xl tracking-tight leading-tight; }
+  h1, h2, h3 { text-wrap: balance; }
+  /* No double-tap-to-zoom delay on controls, and no grey flash on tap: every control already has
+     its own pressed state. */
+  a, button, input, select, textarea, label, summary { touch-action: manipulation; }
+  html { -webkit-tap-highlight-color: transparent; }
   input[type='checkbox'], input[type='radio'] { @apply size-5 shrink-0 accent-moss; }
   label:has(> input[type='checkbox']), label:has(> input[type='radio']) { @apply min-h-11 cursor-pointer; }
 }

@@ -57,6 +57,10 @@ export default function AppShell() {
 
   return (
     <div className="app-shell min-h-screen md:grid md:grid-cols-[220px_minmax(0,1fr)]">
+      {/* Keyboard users would otherwise tab through every sidebar link on every page. */}
+      <a href="#content" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 btn btn-primary">
+        Skip to main content
+      </a>
       {/* Translucent so the artwork reads through the chrome; content cards stay solid. */}
       <aside className="hidden md:flex flex-col bg-ink/95 backdrop-blur-md text-paper p-4 gap-1 md:sticky md:top-0 md:h-screen md:overflow-y-auto">
         <div className="font-display text-xl px-2 py-3 flex items-center gap-2"><PawPrint size={20} aria-hidden /> PetCenza</div>
@@ -78,7 +82,7 @@ export default function AppShell() {
         </div>
       </aside>
 
-      <div className="pb-24 md:pb-0">
+      <div id="content" tabIndex={-1} className="pb-24 md:pb-0 focus:outline-none">
         {/* The sidebar shows sync status on desktop; phones had no indicator at all. */}
         {(!online || queued > 0) && (
           <p role="status" className="md:hidden flex items-center justify-center gap-2 bg-signal/10 text-signal text-xs px-4 py-2">
@@ -113,14 +117,16 @@ export default function AppShell() {
         onClick={e => { if (e.target === e.currentTarget) e.currentTarget.close() }}
         // Native Escape handling is inconsistent across mobile browsers; don't rely on it alone.
         onKeyDown={e => { if (e.key === 'Escape') e.currentTarget.close() }}
-        className="md:hidden m-0 mt-auto w-full max-w-none rounded-t-card bg-card p-0 text-ink backdrop:bg-ink/40">
+        className="md:hidden m-0 mt-auto w-full max-w-none rounded-t-card bg-card p-0 text-ink backdrop:bg-ink/40 overscroll-contain">
         <div className="flex items-center justify-between px-5 pt-4 pb-2">
           <p className="font-display text-lg">More</p>
           <button onClick={() => more.current?.close()} aria-label="Close" className="grid place-items-center size-11 rounded-lg hover:bg-wave">
             <X size={20} aria-hidden />
           </button>
         </div>
-        <ul className="px-3 pb-[max(1rem,env(safe-area-inset-bottom))]">
+        {/* Bottom padding keeps the last item clear of where the tab bar was: a double-tap on More
+            otherwise landed its second tap squarely on Sign out. */}
+        <ul className="px-3 pb-[calc(4.5rem+env(safe-area-inset-bottom))]">
           {MORE.map(({ to, label, icon: Icon }) => (
             <li key={to}>
               <NavLink to={to} className="flex items-center gap-3 rounded-lg px-3 min-h-12 hover:bg-wave">
@@ -133,7 +139,7 @@ export default function AppShell() {
               <Search size={20} className="text-moss" aria-hidden /> Search
             </button>
           </li>
-          <li>
+          <li className="mt-2 pt-2 border-t border-line">
             <button onClick={() => void signOut()} className="flex w-full items-center gap-3 rounded-lg px-3 min-h-12 hover:bg-wave text-alert">
               <LogOut size={20} aria-hidden /> Sign out
             </button>

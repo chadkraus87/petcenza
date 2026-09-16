@@ -151,7 +151,14 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                       <select
                         aria-label={`Role for ${m.display_name || m.email}`}
                         value={m.role}
-                        onChange={e => updateRole.mutate({ userId: m.user_id, role: e.target.value as 'viewer' | 'editor' | 'owner' })}
+                        onChange={e => {
+                          const role = e.target.value as 'viewer' | 'editor' | 'owner'
+                          // Co-owners can invite and remove people. Confirm, as transferring ownership does.
+                          if (role === 'owner' && !confirm(`Make ${m.display_name || m.email} a co-owner of ${petName}? Co-owners can invite and remove people.`)) {
+                            e.target.value = m.role; return
+                          }
+                          updateRole.mutate({ userId: m.user_id, role })
+                        }}
                         className="field w-auto">
                         <option value="viewer">Viewer</option>
                         <option value="editor">Editor</option>
