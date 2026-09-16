@@ -13,7 +13,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "audit:prod": "npm audit --omit=dev",
-    "backup:storage": "node scripts/backup-storage.mjs"
+    "backup:storage": "node scripts/backup-storage.mjs",
+    "dev:demo": "vite --mode demo --port 5179"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
