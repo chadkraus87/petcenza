@@ -15,7 +15,7 @@ export default class ErrorBoundary extends Component<{ children: ReactNode }, { 
   render() {
     if (!this.state.failed) return this.props.children
     return (
-      <main className="p-6 max-w-lg mx-auto">
+      <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-lg mx-auto">
         <h1 className="text-2xl mb-2">This page hit a problem</h1>
         <p className="text-muted mb-4">
           Your records are safe — nothing was lost. Try again, or head back to Today.

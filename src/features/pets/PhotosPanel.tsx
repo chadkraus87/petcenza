@@ -7,6 +7,7 @@ import { scanUpload } from '@/lib/uploads'
 import { useSetPrimaryPhoto, useDeletePhoto } from '@/hooks/usePetPhotos'
 import { useCanEditPet } from '@/hooks/useSharing'
 import type { PetPhoto } from '@/types/db'
+import { EmptyState } from '@/components/ui/primitives'
 
 export default function PhotosPanel({ petId }: { petId: string }) {
   const qc = useQueryClient()
@@ -109,7 +110,7 @@ export default function PhotosPanel({ petId }: { petId: string }) {
           {(setPrimary.error ?? del.error)?.message}
         </p>
       )}
-      {photos?.length === 0 && <p className="text-sm text-muted">No photos yet.</p>}
+      {photos?.length === 0 && <EmptyState title="No photos yet">Add a clear photo of their face. It becomes their picture everywhere in the app.</EmptyState>}
     </section>
   )
 }

@@ -51,7 +51,7 @@ export default function SecuritySettings() {
   }
 
   return (
-    <main className="p-6 max-w-2xl mx-auto">
+    <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-2xl mx-auto">
       <h1 className="mb-1">Settings</h1>
       <p className="text-muted mb-6">{user?.email}</p>
 
@@ -74,7 +74,7 @@ export default function SecuritySettings() {
             {verified.map(f => (
               <li key={f.id} className="flex items-center justify-between rounded-lg border border-line px-3 py-2">
                 <span className="text-sm flex items-center gap-2"><ShieldCheck size={16} className="text-moss" aria-hidden /> {f.friendlyName || 'Authenticator app'}</span>
-                <button onClick={() => remove(f.id)} className="text-alert" aria-label="Remove this authenticator"><Trash2 size={16} /></button>
+                <button onClick={() => remove(f.id)} className="btn-icon text-alert hover:bg-alert/10" aria-label="Remove this authenticator"><Trash2 size={16} /></button>
               </li>
             ))}
           </ul>
@@ -132,10 +132,10 @@ export default function SecuritySettings() {
       <div className="mt-6"><AccountData /></div>
 
       <nav aria-label="Legal" className="flex flex-wrap gap-x-4 gap-y-1 justify-center mt-8 text-sm text-muted">
-        <Link to="/legal/privacy" className="hover:text-moss">Privacy</Link>
-        <Link to="/legal/terms" className="hover:text-moss">Terms</Link>
-        <Link to="/legal/accessibility" className="hover:text-moss">Accessibility</Link>
-        <a href="/third-party-licenses.txt" className="hover:text-moss">Open-source licenses</a>
+        <Link to="/legal/privacy" className="inline-flex items-center min-h-11 hover:text-moss">Privacy</Link>
+        <Link to="/legal/terms" className="inline-flex items-center min-h-11 hover:text-moss">Terms</Link>
+        <Link to="/legal/accessibility" className="inline-flex items-center min-h-11 hover:text-moss">Accessibility</Link>
+        <a href="/third-party-licenses.txt" className="inline-flex items-center min-h-11 hover:text-moss">Open-source licenses</a>
       </nav>
     </main>
   )

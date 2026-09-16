@@ -6,6 +6,7 @@ import { validateUpload } from '@/schemas/records'
 import { scanUpload } from '@/lib/uploads'
 import { fmtDate } from '@/lib/format'
 import type { PetDocument } from '@/types/db'
+import { EmptyState } from '@/components/ui/primitives'
 
 const BUCKET = 'pet-documents'
 
@@ -79,12 +80,12 @@ export default function DocumentsPanel({ petId }: { petId: string }) {
               <p className="font-medium truncate">{d.file_name}</p>
               <p className="text-xs text-muted">{(d.size_bytes / 1024).toFixed(0)} KB · {fmtDate(d.created_at)}</p>
             </div>
-            <button onClick={() => open(d)} className="text-moss" aria-label={`Open ${d.file_name}`}><Download size={16} /></button>
-            <button onClick={() => remove(d)} className="text-alert" aria-label={`Delete ${d.file_name}`}><Trash2 size={16} /></button>
+            <button onClick={() => open(d)} className="btn-icon text-moss" aria-label={`Open ${d.file_name}`}><Download size={16} /></button>
+            <button onClick={() => remove(d)} className="btn-icon text-alert hover:bg-alert/10" aria-label={`Delete ${d.file_name}`}><Trash2 size={16} /></button>
           </li>
         ))}
       </ul>
-      {docs?.length === 0 && <p className="text-sm text-muted">No documents uploaded yet.</p>}
+      {docs?.length === 0 && <EmptyState title="No documents yet">Upload vaccine certificates, lab results and invoices so they are on hand at the vet.</EmptyState>}
     </section>
   )
 }

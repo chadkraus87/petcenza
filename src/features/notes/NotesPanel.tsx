@@ -9,6 +9,7 @@ import { usePetCollection, useSaveRow, useDeleteRow } from '@/hooks/usePetRecord
 import { TextField, TextArea } from '@/components/ui/Field'
 import { fmtDate } from '@/lib/format'
 import type { Note } from '@/types/db'
+import { EmptyState } from '@/components/ui/primitives'
 
 type Form = z.infer<typeof noteSchema>
 
@@ -51,7 +52,7 @@ export default function NotesPanel({ petId }: { petId: string }) {
           </li>
         ))}
       </ul>
-      {notes?.length === 0 && <p className="text-sm text-muted">No notes yet.</p>}
+      {notes?.length === 0 && <EmptyState title="No notes yet">Pill tricks, quirks, questions for the next vet visit: anything worth remembering.</EmptyState>}
     </section>
   )
 }

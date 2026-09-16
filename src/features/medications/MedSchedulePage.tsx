@@ -4,6 +4,7 @@ import { useMedSchedule, type MedWithPet } from '@/hooks/useMedSchedule'
 import { usePrimaryPhotos } from '@/hooks/usePetPhotos'
 import { PetAvatar } from '@/components/PetAvatar'
 import { Disclaimer, DISCLAIMER } from '@/components/Disclaimer'
+import { PageSkeleton } from '@/components/ui/primitives'
 import {
   buildDayPlan, currentSlot, TIME_ORDER, TIME_LABEL,
   type ScheduledDose
@@ -13,7 +14,7 @@ export default function MedSchedulePage() {
   const { data: meds, isLoading, error } = useMedSchedule()
   const { data: photos } = usePrimaryPhotos()
 
-  if (isLoading) return <p className="p-6 text-muted">Loading today's doses…</p>
+  if (isLoading) return <PageSkeleton />
   if (error) return <p className="p-6 text-alert">Couldn't load the medication schedule. Check your connection and retry.</p>
 
   const plan = buildDayPlan(meds ?? [])
@@ -22,7 +23,7 @@ export default function MedSchedulePage() {
   const nothingAtAll = (meds ?? []).length === 0
 
   return (
-    <main className="p-6 max-w-3xl mx-auto">
+    <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-3xl mx-auto">
       <h1 className="mb-1">Medication rounds</h1>
       <p className="text-muted mb-3">
         Everything your pets are on right now, grouped by when it's given.

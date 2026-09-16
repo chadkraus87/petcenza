@@ -40,7 +40,7 @@ export default function Dashboard() {
   if (isLoading) return <PageSkeleton />
   if (error || !data) {
     return (
-      <main className="p-6 max-w-lg mx-auto">
+      <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-lg mx-auto">
         <Card className="p-6">
           <EmptyState icon={<AlertTriangle size={20} />} title="Couldn't load today"
             action={<Button onClick={() => void refetch()}>Try again</Button>}>

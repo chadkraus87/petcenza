@@ -56,7 +56,7 @@ export default function AppShell() {
   }, [])
 
   return (
-    <div className="app-shell min-h-screen md:grid md:grid-cols-[220px_1fr]">
+    <div className="app-shell min-h-screen md:grid md:grid-cols-[220px_minmax(0,1fr)]">
       {/* Translucent so the artwork reads through the chrome; content cards stay solid. */}
       <aside className="hidden md:flex flex-col bg-ink/95 backdrop-blur-md text-paper p-4 gap-1 md:sticky md:top-0 md:h-screen md:overflow-y-auto">
         <div className="font-display text-xl px-2 py-3 flex items-center gap-2"><PawPrint size={20} aria-hidden /> PetCenza</div>

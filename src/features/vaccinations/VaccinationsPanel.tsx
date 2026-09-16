@@ -10,6 +10,7 @@ import { TextField } from '@/components/ui/Field'
 import VetSelect from '@/components/ui/VetSelect'
 import { fmtDate } from '@/lib/format'
 import type { Vaccination } from '@/types/db'
+import { EmptyState } from '@/components/ui/primitives'
 
 type Form = z.infer<typeof vaccinationSchema>
 
@@ -67,7 +68,7 @@ export default function VaccinationsPanel({ petId }: { petId: string }) {
           )
         })}
       </ul>
-      {vax?.length === 0 && <p className="text-sm text-muted">No vaccinations recorded.</p>}
+      {vax?.length === 0 && <EmptyState title="No vaccinations on file">Add each vaccine with its next due date and you will get a reminder a week before the booster is due.</EmptyState>}
     </section>
   )
 }

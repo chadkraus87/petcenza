@@ -9,6 +9,7 @@ import { TextField, TextArea } from '@/components/ui/Field'
 import VetSelect from '@/components/ui/VetSelect'
 import { fmtDateTime } from '@/lib/format'
 import type { VetVisit } from '@/types/db'
+import { EmptyState } from '@/components/ui/primitives'
 
 type Form = z.infer<typeof visitSchema>
 
@@ -55,7 +56,7 @@ export default function VisitsPanel({ petId }: { petId: string }) {
           </li>
         ))}
       </ul>
-      {visits?.length === 0 && <p className="text-sm text-muted">No visits recorded.</p>}
+      {visits?.length === 0 && <EmptyState title="No vet visits yet">Log each appointment to keep diagnoses, treatments and follow-ups in one place.</EmptyState>}
     </section>
   )
 }

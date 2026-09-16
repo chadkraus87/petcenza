@@ -163,11 +163,11 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                         <button onClick={() => setConfirmTransfer(m.user_id)}
                           title="Make this person the owner"
                           aria-label={`Transfer ownership to ${m.display_name || m.email}`}
-                          className="text-muted hover:text-moss">
+                          className="btn-icon text-muted hover:text-moss">
                           <Crown size={16} />
                         </button>
                       )}
-                      <button onClick={() => removeMember.mutate(m.user_id)} className="text-alert"
+                      <button onClick={() => removeMember.mutate(m.user_id)} className="btn-icon text-alert hover:bg-alert/10"
                         aria-label={`Remove ${m.display_name || m.email}`}>
                         <Trash2 size={16} />
                       </button>
@@ -279,7 +279,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                           ? <><Check size={14} className="text-moss" aria-hidden /> Copied</>
                           : <><Copy size={14} aria-hidden /> Copy link</>}
                       </button>
-                      <button onClick={() => revokeInvite.mutate(inv.id)} className="text-alert"
+                      <button onClick={() => revokeInvite.mutate(inv.id)} className="btn-icon text-alert hover:bg-alert/10"
                         aria-label="Revoke invitation">
                         <Trash2 size={16} />
                       </button>
@@ -344,7 +344,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                           ? <><Check size={14} className="text-moss" aria-hidden /> Copied</>
                           : <><Copy size={14} aria-hidden /> Copy link</>}
                       </button>
-                      <button onClick={() => revokeVetLink.mutate(l.id)} className="text-alert"
+                      <button onClick={() => revokeVetLink.mutate(l.id)} className="btn-icon text-alert hover:bg-alert/10"
                         aria-label="Revoke vet link">
                         <Trash2 size={16} />
                       </button>

@@ -7,6 +7,7 @@ import { toRow } from '@/schemas/pet'
 import { usePetCollection, useSaveRow, useDeleteRow } from '@/hooks/usePetRecords'
 import { TextField } from '@/components/ui/Field'
 import type { FeedingSchedule } from '@/types/db'
+import { EmptyState } from '@/components/ui/primitives'
 
 type Form = z.infer<typeof feedingSchema>
 
@@ -44,7 +45,7 @@ export default function FeedingPanel({ petId }: { petId: string }) {
           </li>
         ))}
       </ul>
-      {feeds?.length === 0 && <p className="text-sm text-muted">No feeding times set.</p>}
+      {feeds?.length === 0 && <EmptyState title="No feeding times set">Add each meal so everyone who cares for them feeds the same amount at the same time.</EmptyState>}
     </section>
   )
 }

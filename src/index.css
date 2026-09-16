@@ -9,6 +9,8 @@ h1,h2,h3 { @apply font-display; }
 @layer base {
   /* One title scale. Utilities still override it where a page genuinely needs to. */
   h1 { @apply text-3xl md:text-4xl tracking-tight leading-tight; }
+  input[type='checkbox'], input[type='radio'] { @apply size-5 shrink-0 accent-moss; }
+  label:has(> input[type='checkbox']), label:has(> input[type='radio']) { @apply min-h-11 cursor-pointer; }
 }
 
 @layer components {
@@ -25,6 +27,9 @@ h1,h2,h3 { @apply font-display; }
   .btn-danger-outline { @apply border border-alert text-alert hover:bg-alert hover:text-paper; }
   .btn-ghost { @apply text-moss hover:bg-wave; }
   .field { @apply rounded-lg border border-line bg-card px-3 py-2 min-h-11; }
+  /* Icon-only buttons: a real 44px target. Destructive ones stay visibly this size on purpose — an
+     invisible oversized hit area beside other controls makes accidental deletes more likely. */
+  .btn-icon { @apply inline-grid place-items-center size-11 shrink-0 rounded-lg hover:bg-wave transition; }
 }
 
 /* One visible focus style for everything keyboard-reachable. The white inner ring separates the

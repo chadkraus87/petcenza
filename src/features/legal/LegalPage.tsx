@@ -55,12 +55,12 @@ export function LegalShell({ title, updated, children }: {
         </article>
 
         <nav className="flex flex-wrap gap-4 justify-center mt-6 text-sm text-muted">
-          <Link to="/legal/privacy" className="hover:text-moss">Privacy</Link>
-          <Link to="/legal/terms" className="hover:text-moss">Terms</Link>
-          <Link to="/legal/delete-account" className="hover:text-moss">Delete your account</Link>
-          <Link to="/legal/accessibility" className="hover:text-moss">Accessibility</Link>
-          <a href="/third-party-licenses.txt" className="hover:text-moss">Licenses</a>
-          <a href={`mailto:${CONTACT.support}`} className="hover:text-moss">Support</a>
+          <Link to="/legal/privacy" className="inline-flex items-center min-h-11 hover:text-moss">Privacy</Link>
+          <Link to="/legal/terms" className="inline-flex items-center min-h-11 hover:text-moss">Terms</Link>
+          <Link to="/legal/delete-account" className="inline-flex items-center min-h-11 hover:text-moss">Delete your account</Link>
+          <Link to="/legal/accessibility" className="inline-flex items-center min-h-11 hover:text-moss">Accessibility</Link>
+          <a href="/third-party-licenses.txt" className="inline-flex items-center min-h-11 hover:text-moss">Licenses</a>
+          <a href={`mailto:${CONTACT.support}`} className="inline-flex items-center min-h-11 hover:text-moss">Support</a>
         </nav>
       </div>
     </main>

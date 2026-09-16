@@ -136,7 +136,7 @@ export default function RemindersPanel() {
                   <option value="168">1 week</option>
                 </select>
                 <button onClick={() => remove.mutate(r.id)} aria-label={`Delete "${r.title}"`}
-                  className="text-alert px-1">
+                  className="btn-icon text-alert hover:bg-alert/10">
                   <Trash2 size={16} />
                 </button>
               </div>

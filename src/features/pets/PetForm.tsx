@@ -32,7 +32,7 @@ export default function PetForm() {
   })
 
   return (
-    <main className="p-6 max-w-2xl mx-auto">
+    <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-2xl mx-auto">
       <h1 className="mb-6">{isEdit ? `Edit ${pet?.name ?? 'pet'}` : 'Add a pet'}</h1>
       <form onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-2 surface p-6" noValidate>
         <TextField label="Name" error={errors.name} {...register('name')} />

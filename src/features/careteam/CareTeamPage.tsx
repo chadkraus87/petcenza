@@ -9,13 +9,14 @@ import { toRow } from '@/schemas/pet'
 import { useUserCollection, useSaveUserRow, useDeleteUserRow } from '@/hooks/useUserRecords'
 import { TextField, TextArea } from '@/components/ui/Field'
 import type { Veterinarian, EmergencyContact } from '@/types/db'
+import { EmptyState } from '@/components/ui/primitives'
 
 type VetForm = z.infer<typeof vetSchema>
 type ContactForm = z.infer<typeof emergencyContactSchema>
 
 export default function CareTeamPage() {
   return (
-    <main className="p-6 max-w-3xl mx-auto">
+    <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-3xl mx-auto">
       <h1 className="mb-1">Care team</h1>
       <p className="text-muted mb-6">Your vets and emergency contacts power the Emergency screen — add them here.</p>
       <VetsSection />
@@ -73,11 +74,11 @@ function VetsSection() {
               {v.phone && <p className="text-sm text-muted">{v.phone}</p>}
               {v.address && <p className="text-sm text-muted">{v.address}</p>}
             </div>
-            <button aria-label={`Delete ${v.name}`} onClick={() => { remove.mutate(v.id); refreshEmergency() }} className="text-alert self-start"><Trash2 size={16} /></button>
+            <button aria-label={`Delete ${v.name}`} onClick={() => { remove.mutate(v.id); refreshEmergency() }} className="btn-icon text-alert hover:bg-alert/10 self-start"><Trash2 size={16} /></button>
           </li>
         ))}
       </ul>
-      {vets?.length === 0 && <p className="text-sm text-muted">No veterinarians added yet.</p>}
+      {vets?.length === 0 && <EmptyState title="No vets added yet">Add your regular clinic and the nearest 24-hour emergency vet, so both are one tap away in an emergency.</EmptyState>}
     </section>
   )
 }
@@ -121,11 +122,11 @@ function ContactsSection() {
               <p className="text-sm text-muted">{c.phone}</p>
               {c.notes && <p className="text-sm text-muted">{c.notes}</p>}
             </div>
-            <button aria-label={`Delete ${c.label}`} onClick={() => { remove.mutate(c.id); refreshEmergency() }} className="text-alert self-start"><Trash2 size={16} /></button>
+            <button aria-label={`Delete ${c.label}`} onClick={() => { remove.mutate(c.id); refreshEmergency() }} className="btn-icon text-alert hover:bg-alert/10 self-start"><Trash2 size={16} /></button>
           </li>
         ))}
       </ul>
-      {contacts?.length === 0 && <p className="text-sm text-muted">No emergency contacts yet.</p>}
+      {contacts?.length === 0 && <EmptyState title="No emergency contacts yet">Add someone who can step in for your pet if you cannot be reached.</EmptyState>}
     </section>
   )
 }

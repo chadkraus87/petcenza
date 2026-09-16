@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { AlertTriangle, Heart } from 'lucide-react'
+import { AlertTriangle, Heart, SearchX } from 'lucide-react'
+import { EmptyState, PageSkeleton, ButtonLink } from '@/components/ui/primitives'
 import { usePet } from '@/hooks/usePets'
 import { usePetCollection } from '@/hooks/usePetRecords'
 import { petAge, fmtDate } from '@/lib/format'
@@ -32,13 +33,22 @@ export default function PetDetail() {
   const [tab, setTab] = useState<Tab>('Overview')
   const { data: canEdit } = useCanEditPet(id)
 
-  if (isLoading) return <p className="p-6 text-muted">Loading…</p>
-  if (!pet) return <p className="p-6 text-alert">Pet not found.</p>
+  if (isLoading) return <PageSkeleton />
+  if (!pet) {
+    return (
+      <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-lg mx-auto">
+        <EmptyState icon={<SearchX size={20} />} title="We couldn't find that pet"
+          action={<ButtonLink to="/pets" variant="secondary">Back to your pets</ButtonLink>}>
+          It may have been deleted, or it was shared with you and access has ended.
+        </EmptyState>
+      </main>
+    )
+  }
 
   const severe = allergies?.filter(a => a.severity === 'severe' || a.severity === 'life_threatening') ?? []
 
   return (
-    <main className="p-6 max-w-4xl mx-auto">
+    <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-5xl mx-auto">
       <header className="mb-4">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -64,10 +74,10 @@ export default function PetDetail() {
         )}
       </header>
 
-      <nav className="flex gap-1 overflow-x-auto border-b border-line mb-6" aria-label="Pet sections">
+      <nav className="flex gap-1 overflow-x-auto md:overflow-visible md:flex-wrap snap-x border-b border-line mb-6 -mx-4 px-4 sm:mx-0 sm:px-0" aria-label="Pet sections">
         {TABS.map(t => (
           <button key={t} onClick={() => setTab(t)} aria-current={tab === t ? 'page' : undefined}
-            className={`px-3 py-2 text-sm whitespace-nowrap border-b-2 -mb-px ${tab === t ? 'border-moss text-moss font-medium' : 'border-transparent text-muted'}`}>
+            className={`snap-start px-3 min-h-11 text-sm whitespace-nowrap border-b-2 -mb-px ${tab === t ? 'border-moss text-moss font-medium' : 'border-transparent text-muted'}`}>
             {t}
           </button>
         ))}
@@ -99,7 +109,7 @@ function Overview({ pet }: { pet: NonNullable<ReturnType<typeof usePet>['data']>
     ['Rescue org', pet.rescue_org],
     ['Color', pet.color],
     ['Microchip', pet.microchip_no],
-    ['Insurance', pet.insurance_provider && `${pet.insurance_provider} · ${pet.insurance_policy_no ?? ''}`],
+    ['Insurance', pet.insurance_provider && [pet.insurance_provider, pet.insurance_policy_no].filter(Boolean).join(' · ')],
     ['Registration', pet.registration_no],
     ['Activity level', pet.activity_level?.replace('_', ' ')],
     ['Favorite foods', pet.favorite_foods?.join(', ')],
@@ -111,7 +121,14 @@ function Overview({ pet }: { pet: NonNullable<ReturnType<typeof usePet>['data']>
       {rows.filter(([, v]) => v).map(([k, v]) => (
         <div key={k}><dt className="text-xs uppercase tracking-wide text-muted">{k}</dt><dd>{v}</dd></div>
       ))}
-      {rows.every(([, v]) => !v) && <p className="text-sm text-muted sm:col-span-2">Profile is mostly empty — use Edit profile to fill it in.</p>}
+      {rows.every(([, v]) => !v) && (
+        <div className="sm:col-span-2">
+          <EmptyState title="Nothing on file yet"
+            action={<ButtonLink to={`/pets/${pet.id}/edit`} variant="secondary">Fill in the profile</ButtonLink>}>
+            Birth date, microchip and insurance are the details a vet or sitter asks for first.
+          </EmptyState>
+        </div>
+      )}
     </dl>
   )
 }

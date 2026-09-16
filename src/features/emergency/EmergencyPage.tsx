@@ -32,7 +32,7 @@ export default function EmergencyPage() {
   const erClinic = data?.vets.find(v => v.is_emergency_clinic)
 
   return (
-    <main className="p-6 max-w-3xl mx-auto">
+    <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-3xl mx-auto">
       <h1 className="mb-1 flex items-center gap-2"><Siren className="text-alert" aria-hidden /> Emergency</h1>
       <div className="mb-4"><Disclaimer tone="loud" text={DISCLAIMER.emergency} /></div>
       <p className="text-muted mb-6">Everything you need in a crisis, one screen, works offline.</p>

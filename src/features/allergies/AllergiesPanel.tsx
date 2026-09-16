@@ -8,6 +8,7 @@ import { usePetCollection, useSaveRow, useDeleteRow } from '@/hooks/usePetRecord
 import { SelectField, TextField, TextArea } from '@/components/ui/Field'
 import SeverityBadge from '@/components/ui/SeverityBadge'
 import type { Allergy } from '@/types/db'
+import { EmptyState } from '@/components/ui/primitives'
 
 type Form = z.infer<typeof allergySchema>
 
@@ -59,7 +60,7 @@ export default function AllergiesPanel({ petId }: { petId: string }) {
           </li>
         ))}
       </ul>
-      {allergies?.length === 0 && <p className="text-sm text-muted">No known allergies.</p>}
+      {allergies?.length === 0 && <EmptyState title="No known allergies">Record any reaction to a food or medication. Severe allergies are flagged on Today and included in vet links.</EmptyState>}
     </section>
   )
 }

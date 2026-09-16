@@ -78,14 +78,14 @@ export default function CalendarPage() {
     : format(anchor, 'EEEE, MMMM d, yyyy')
 
   return (
-    <main className="p-6 max-w-5xl mx-auto">
+    <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-5xl mx-auto">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <h1>{heading}</h1>
         <div className="flex items-center gap-2">
           <div className="flex rounded-lg border border-line overflow-hidden" role="group" aria-label="Calendar view">
             {(['month','week','day'] as View[]).map(v => (
               <button key={v} onClick={() => setView(v)} aria-pressed={view === v}
-                className={`px-3 py-1.5 text-sm capitalize ${view === v ? 'bg-ink text-paper' : 'bg-card hover:bg-wave'}`}>
+                className={`px-3 min-h-11 text-sm capitalize ${view === v ? 'bg-ink text-paper' : 'bg-card hover:bg-wave'}`}>
                 {v}
               </button>
             ))}

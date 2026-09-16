@@ -8,6 +8,7 @@ import { usePetCollection, useSaveRow, useDeleteRow } from '@/hooks/usePetRecord
 import { TextField, TextArea } from '@/components/ui/Field'
 import { fmtDate } from '@/lib/format'
 import type { GroomingLog } from '@/types/db'
+import { EmptyState } from '@/components/ui/primitives'
 
 type Form = z.infer<typeof groomingSchema>
 
@@ -48,7 +49,7 @@ export default function GroomingPanel({ petId }: { petId: string }) {
           </li>
         ))}
       </ul>
-      {logs?.length === 0 && <p className="text-sm text-muted">No grooming logged yet.</p>}
+      {logs?.length === 0 && <EmptyState title="Nothing logged yet">Track nail trims, baths and grooming appointments so you know when the next one is due.</EmptyState>}
     </section>
   )
 }

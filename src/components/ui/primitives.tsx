@@ -70,7 +70,7 @@ export function Skeleton({ className = '' }: { className?: string }) {
 
 export function PageSkeleton() {
   return (
-    <main className="p-6 max-w-5xl mx-auto" aria-busy="true" aria-label="Loading">
+    <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-5xl mx-auto" aria-busy="true" aria-label="Loading">
       <Skeleton className="h-10 w-48 mb-2" />
       <Skeleton className="h-4 w-64 mb-8" />
       <div className="grid gap-4 lg:grid-cols-[1.6fr_1fr]">

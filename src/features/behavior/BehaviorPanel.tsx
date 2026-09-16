@@ -8,6 +8,7 @@ import { usePetCollection, useSaveRow, useDeleteRow } from '@/hooks/usePetRecord
 import { SelectField, TextField, TextArea } from '@/components/ui/Field'
 import { fmtDate } from '@/lib/format'
 import type { BehaviorNote } from '@/types/db'
+import { EmptyState } from '@/components/ui/primitives'
 
 type Form = z.infer<typeof behaviorSchema>
 
@@ -55,7 +56,7 @@ export default function BehaviorPanel({ petId }: { petId: string }) {
           </li>
         ))}
       </ul>
-      {notes?.length === 0 && <p className="text-sm text-muted">No behavior notes yet.</p>}
+      {notes?.length === 0 && <EmptyState title="No behavior notes yet">Jot down triggers, habits and what calms them, so a sitter or trainer knows what to expect.</EmptyState>}
     </section>
   )
 }

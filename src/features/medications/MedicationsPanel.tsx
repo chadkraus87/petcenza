@@ -9,6 +9,7 @@ import { TextField, TextArea } from '@/components/ui/Field'
 import VetSelect from '@/components/ui/VetSelect'
 import { fmtDate } from '@/lib/format'
 import { isMedicationActive, type Medication } from '@/types/db'
+import { EmptyState } from '@/components/ui/primitives'
 
 type Form = z.infer<typeof medicationSchema>
 
@@ -66,7 +67,7 @@ export default function MedicationsPanel({ petId }: { petId: string }) {
           </li>
         ))}
       </ul>
-      {meds?.length === 0 && <p className="text-sm text-muted">No medications recorded.</p>}
+      {meds?.length === 0 && <EmptyState title="No medications on file">Add a prescription and it appears in medication rounds, with a reminder before the refill is due.</EmptyState>}
     </section>
   )
 }

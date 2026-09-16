@@ -49,7 +49,7 @@ export default function VetShareView() {
   const severe = data.allergies.filter(a => a.severity === 'severe' || a.severity === 'life_threatening')
 
   return (
-    <main className="p-6 max-w-3xl mx-auto">
+    <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-3xl mx-auto">
       <header className="flex items-start justify-between gap-4 mb-6">
         <div>
           <p className="text-xs uppercase tracking-wide text-muted mb-1">Shared pet summary</p>
