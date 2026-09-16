@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 import { format, parseISO } from 'date-fns'
 import {
-  AlertTriangle, CalendarClock, Check, CheckCircle2, ChevronRight, Clock, Info, PawPrint, Pill, Plus,
-  ShieldAlert, Stethoscope, Syringe, TriangleAlert
+  AlertTriangle, CalendarClock, Check, CheckCircle2, ChevronRight, Clock, Info, OctagonAlert, PawPrint, Pill, Plus,
+  ShieldAlert, Stethoscope, Syringe
 } from 'lucide-react'
 import { useDashboard } from '@/hooks/useDashboard'
 import { useInsights } from '@/hooks/useInsights'
@@ -18,7 +18,8 @@ import { Disclaimer, DISCLAIMER } from '@/components/Disclaimer'
 import { Button, ButtonLink, Card, EmptyState, PageHeader, PageSkeleton } from '@/components/ui/primitives'
 
 const TONE: Record<Urgency, { icon: typeof Info; chip: string; label: string }> = {
-  urgent:    { icon: TriangleAlert, chip: 'bg-alert/10 text-alert',   label: 'Urgent' },
+  // Distinct shapes, not just colours: TriangleAlert and AlertTriangle are the same Lucide glyph.
+  urgent:    { icon: OctagonAlert,  chip: 'bg-alert/10 text-alert',   label: 'Urgent' },
   attention: { icon: AlertTriangle, chip: 'bg-signal/10 text-signal', label: 'Needs attention' },
   due:       { icon: Clock,         chip: 'bg-wave text-moss',        label: 'Due today' },
   info:      { icon: Info,          chip: 'bg-paper text-muted',      label: 'For your information' }
@@ -99,12 +100,14 @@ export default function Dashboard() {
                     <li key={item.key} className="flex items-center gap-3 px-5 py-3">
                       <span className={`grid place-items-center size-9 rounded-full shrink-0 ${tone.chip}`}>
                         <Icon size={17} aria-hidden />
-                        <span className="sr-only">{tone.label}</span>
                       </span>
                       {(() => {
                         // The whole text block is the tap target, not just the title's line box.
                         const text = (
                           <>
+                            {(item.urgency === 'urgent' || item.urgency === 'attention') && (
+                              <span className={`block text-xs font-semibold ${item.urgency === 'urgent' ? 'text-alert' : 'text-signal'}`}>{tone.label}</span>
+                            )}
                             <span className="block font-medium">{item.title}</span>
                             <span className="block text-sm text-muted">
                               {item.detail}
