@@ -41,7 +41,8 @@ export default function FeedingPanel({ petId }: { petId: string }) {
               <p className="font-medium">{f.label} <span className="font-normal text-muted">· {f.feed_time?.slice(0, 5)}</span></p>
               {f.portion && <p className="text-sm text-muted">{f.portion}</p>}
             </div>
-            <button onClick={() => remove.mutate(f.id)} className="text-sm text-alert self-start">Delete</button>
+            <button onClick={() => remove.mutate(f.id)} aria-label={`Delete ${f.label}`}
+                className="btn btn-ghost text-alert hover:bg-alert/10 self-start -mr-2">Delete</button>
           </li>
         ))}
       </ul>

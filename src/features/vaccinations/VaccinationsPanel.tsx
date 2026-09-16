@@ -63,7 +63,8 @@ export default function VaccinationsPanel({ petId }: { petId: string }) {
                   )}
                 </p>
               </div>
-              <button onClick={() => remove.mutate(v.id)} className="text-sm text-alert self-start">Delete</button>
+              <button onClick={() => remove.mutate(v.id)} aria-label={`Delete ${v.vaccine}`}
+                className="btn btn-ghost text-alert hover:bg-alert/10 self-start -mr-2">Delete</button>
             </li>
           )
         })}

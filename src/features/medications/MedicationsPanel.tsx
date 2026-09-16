@@ -62,7 +62,8 @@ export default function MedicationsPanel({ petId }: { petId: string }) {
                 </p>
                 {m.instructions && <p className="text-sm mt-1">{m.instructions}</p>}
               </div>
-              <button onClick={() => remove.mutate(m.id)} className="text-sm text-alert self-start">Delete</button>
+              <button onClick={() => remove.mutate(m.id)} aria-label={`Delete ${m.name}`}
+                className="btn btn-ghost text-alert hover:bg-alert/10 self-start -mr-2">Delete</button>
             </div>
           </li>
         ))}

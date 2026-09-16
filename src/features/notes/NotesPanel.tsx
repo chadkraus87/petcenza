@@ -48,7 +48,8 @@ export default function NotesPanel({ petId }: { petId: string }) {
               </p>
               <p className="text-sm mt-1 whitespace-pre-wrap">{n.body}</p>
             </div>
-            <button onClick={() => remove.mutate(n.id)} className="text-sm text-alert self-start">Delete</button>
+            <button onClick={() => remove.mutate(n.id)} aria-label={`Delete ${n.title ?? 'note'}`}
+                className="btn btn-ghost text-alert hover:bg-alert/10 self-start -mr-2">Delete</button>
           </li>
         ))}
       </ul>

@@ -45,7 +45,8 @@ export default function GroomingPanel({ petId }: { petId: string }) {
               <p className="font-medium">{l.task} <span className="font-normal text-muted">· {fmtDate(l.done_on)}</span></p>
               {l.notes && <p className="text-sm text-muted mt-1">{l.notes}</p>}
             </div>
-            <button onClick={() => remove.mutate(l.id)} className="text-sm text-alert self-start">Delete</button>
+            <button onClick={() => remove.mutate(l.id)} aria-label={`Delete ${l.task}`}
+                className="btn btn-ghost text-alert hover:bg-alert/10 self-start -mr-2">Delete</button>
           </li>
         ))}
       </ul>

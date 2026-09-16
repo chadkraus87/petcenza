@@ -52,7 +52,8 @@ export default function BehaviorPanel({ petId }: { petId: string }) {
               <p className="text-xs uppercase tracking-wide text-moss">{CATEGORY_LABEL[n.category] ?? n.category} · {fmtDate(n.noted_on)}</p>
               <p className="text-sm mt-1">{n.content}</p>
             </div>
-            <button onClick={() => remove.mutate(n.id)} className="text-sm text-alert self-start">Delete</button>
+            <button onClick={() => remove.mutate(n.id)} aria-label={`Delete ${n.category}`}
+                className="btn btn-ghost text-alert hover:bg-alert/10 self-start -mr-2">Delete</button>
           </li>
         ))}
       </ul>

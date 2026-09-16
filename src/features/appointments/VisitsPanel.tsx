@@ -52,7 +52,8 @@ export default function VisitsPanel({ petId }: { petId: string }) {
               {v.treatment && <p className="text-sm">Treatment: {v.treatment}</p>}
               {v.followup && <p className="text-sm text-signal">Follow-up: {v.followup}</p>}
             </div>
-            <button onClick={() => remove.mutate(v.id)} className="text-sm text-alert self-start">Delete</button>
+            <button onClick={() => remove.mutate(v.id)} aria-label={`Delete ${v.reason ?? 'vet visit'}`}
+                className="btn btn-ghost text-alert hover:bg-alert/10 self-start -mr-2">Delete</button>
           </li>
         ))}
       </ul>

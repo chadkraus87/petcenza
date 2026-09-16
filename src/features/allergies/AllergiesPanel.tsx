@@ -55,7 +55,8 @@ export default function AllergiesPanel({ petId }: { petId: string }) {
                 {a.symptoms && <p className="text-sm mt-1">Symptoms: {a.symptoms}</p>}
                 {a.emergency_treatment && <p className="text-sm text-alert mt-1">Emergency: {a.emergency_treatment}</p>}
               </div>
-              <button onClick={() => remove.mutate(a.id)} className="text-sm text-alert self-start">Delete</button>
+              <button onClick={() => remove.mutate(a.id)} aria-label={`Delete ${a.allergen}`}
+                className="btn btn-ghost text-alert hover:bg-alert/10 self-start -mr-2">Delete</button>
             </div>
           </li>
         ))}
