@@ -122,7 +122,10 @@ function seed(): DB {
 }
 
 let db: DB | null = null
-const data = () => (db ??= seed())
+// `?empty` starts from a brand-new account, for designing first-run and empty states.
+const data = () => (db ??= new URLSearchParams(location.search).has('empty')
+  ? Object.fromEntries(Object.keys(seed()).map(k => [k, k === 'notification_settings' ? seed()[k] : []]))
+  : seed())
 
 // ------------------------------------------------------------------ PostgREST emulation
 

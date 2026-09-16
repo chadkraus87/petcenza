@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { format, parseISO } from 'date-fns'
 import {
-  AlertTriangle, CalendarClock, Check, CheckCircle2, ChevronRight, Clock, Info, Pill, Plus,
+  AlertTriangle, CalendarClock, Check, CheckCircle2, ChevronRight, Clock, Info, PawPrint, Pill, Plus,
   ShieldAlert, Stethoscope, Syringe, TriangleAlert
 } from 'lucide-react'
 import { useDashboard } from '@/hooks/useDashboard'
@@ -50,6 +50,10 @@ export default function Dashboard() {
       </main>
     )
   }
+
+  // A brand-new account has nothing to be "clear" about. Saying "All clear today" to someone who
+  // hasn't added a pet yet is false comfort; show them how to start instead.
+  if (data.pets.length === 0) return <FirstRun />
 
   const petName = (id: string | null) => data.pets.find(p => p.id === id)?.name ?? 'Pet'
   const today = buildToday(insights ?? [], data.remindersToday)
@@ -223,6 +227,37 @@ export default function Dashboard() {
           </Card>
         </div>
       </div>
+    </main>
+  )
+}
+
+const FIRST_STEPS = [
+  { icon: PawPrint, title: 'Add your pet', body: 'Start with a name. Birth date, microchip and insurance can all come later.' },
+  { icon: Syringe, title: 'Record their vaccinations', body: 'Add each vaccine with its next due date, and you’ll get a reminder a week before the booster is due.' },
+  { icon: Pill, title: 'Add any medications', body: 'Prescriptions appear in your daily medication rounds, with a reminder before each refill.' }
+]
+
+function FirstRun() {
+  return (
+    <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-3xl mx-auto">
+      <PageHeader title="Welcome to PetCenza"
+        subtitle="Set up a record your vet, your sitter and your family can rely on." />
+      <Card className="p-6 sm:p-8">
+        <ol className="space-y-6">
+          {FIRST_STEPS.map(({ icon: Icon, title, body }, i) => (
+            <li key={title} className="flex gap-4">
+              <span className="grid place-items-center size-11 shrink-0 rounded-full bg-wave text-moss" aria-hidden>
+                <Icon size={20} />
+              </span>
+              <div>
+                <p className="font-display text-lg"><span className="sr-only">Step {i + 1}: </span>{title}</p>
+                <p className="text-muted">{body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <ButtonLink to="/pets/new" className="mt-8 w-full sm:w-auto"><Plus size={16} aria-hidden /> Add your first pet</ButtonLink>
+      </Card>
     </main>
   )
 }
