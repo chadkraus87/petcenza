@@ -158,7 +158,7 @@ export default function CalendarPage() {
       {view !== 'day' && (
         <p className="text-xs text-muted mt-2">
           Drag a reminder to another day to reschedule it. Vet visits and birthdays stay put.
-          Prefer the keyboard? Use <strong>Snooze</strong> in the list below.
+          No mouse? Change the <strong>date</strong> on any reminder in the list below.
         </p>
       )}
 
