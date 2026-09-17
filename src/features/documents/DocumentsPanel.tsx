@@ -6,6 +6,7 @@ import { validateUpload } from '@/schemas/records'
 import { scanUpload } from '@/lib/uploads'
 import { fmtDate } from '@/lib/format'
 import type { PetDocument } from '@/types/db'
+import { EmptyState } from '@/components/ui/primitives'
 
 const BUCKET = 'pet-documents'
 
@@ -63,7 +64,7 @@ export default function DocumentsPanel({ petId }: { petId: string }) {
     <section>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl">Documents</h2>
-        <label className="rounded-md bg-ink text-paper px-4 py-2 text-sm cursor-pointer">
+        <label className="btn btn-primary cursor-pointer">
           {busy ? 'Uploading…' : 'Upload file'}
           <input type="file" accept="application/pdf,image/jpeg,image/png,image/webp" multiple className="sr-only"
             onChange={e => e.target.files && void upload(e.target.files)} />
@@ -73,18 +74,18 @@ export default function DocumentsPanel({ petId }: { petId: string }) {
       {error && <p role="alert" className="text-sm text-alert mb-4">{error}</p>}
       <ul className="space-y-2">
         {docs?.map(d => (
-          <li key={d.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-3 flex items-center gap-3">
+          <li key={d.id} className="surface p-3 flex items-center gap-3">
             <FileText size={18} className="text-muted shrink-0" aria-hidden />
             <div className="min-w-0 flex-1">
               <p className="font-medium truncate">{d.file_name}</p>
               <p className="text-xs text-muted">{(d.size_bytes / 1024).toFixed(0)} KB · {fmtDate(d.created_at)}</p>
             </div>
-            <button onClick={() => open(d)} className="text-moss" aria-label={`Open ${d.file_name}`}><Download size={16} /></button>
-            <button onClick={() => remove(d)} className="text-alert" aria-label={`Delete ${d.file_name}`}><Trash2 size={16} /></button>
+            <button onClick={() => open(d)} className="btn-icon text-moss" aria-label={`Open ${d.file_name}`}><Download size={16} /></button>
+            <button onClick={() => remove(d)} className="btn-icon text-alert hover:bg-alert/10" aria-label={`Delete ${d.file_name}`}><Trash2 size={16} /></button>
           </li>
         ))}
       </ul>
-      {docs?.length === 0 && <p className="text-sm text-muted">No documents uploaded yet.</p>}
+      {docs?.length === 0 && <EmptyState title="No documents yet">Upload vaccine certificates, lab results and invoices so they are on hand at the vet.</EmptyState>}
     </section>
   )
 }

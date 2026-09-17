@@ -26,7 +26,7 @@ export default function ForgotPassword() {
   if (sent) return (
     <main className="min-h-screen grid place-items-center p-6">
       <div className="max-w-sm text-center">
-        <h1 className="text-xl mb-2">Check your email</h1>
+        <h1 className="text-2xl mb-2">Check your email</h1>
         <p className="text-sm text-muted">If an account exists for {email}, we sent a link to reset your password.</p>
         <p className="text-sm mt-4"><Link className="text-moss underline" to="/auth/sign-in">Back to sign in</Link></p>
       </div>
@@ -41,10 +41,10 @@ export default function ForgotPassword() {
         {error && <p role="alert" className="text-sm text-alert mb-4">{error}</p>}
         <label className="block text-sm mb-1" htmlFor="email">Email</label>
         <input id="email" type="email" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)}
-          className="w-full mb-4 rounded-md border border-line px-3 py-2" />
+          className="field w-full mb-4" />
         <Captcha onToken={setCaptchaToken} resetSignal={captchaAttempt} />
         <button onClick={submit} disabled={busy || !email || (captchaEnabled && !captchaToken)}
-          className="w-full rounded-md bg-ink text-paper py-2 font-medium disabled:opacity-50">
+          className="btn btn-primary w-full">
           {busy ? 'Sending…' : 'Send reset link'}
         </button>
         <p className="text-sm mt-5"><Link className="text-moss underline" to="/auth/sign-in">Back to sign in</Link></p>

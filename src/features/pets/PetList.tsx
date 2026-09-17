@@ -7,6 +7,7 @@ import { PetAvatar } from '@/components/PetAvatar'
 import { useTags, useAllPetTags } from '@/hooks/useTags'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { petAge } from '@/lib/format'
+import { PageSkeleton } from '@/components/ui/primitives'
 
 export default function PetList() {
   const { data: pets, isLoading } = usePets()
@@ -17,7 +18,7 @@ export default function PetList() {
   const { user } = useAuth()
   const [activeTag, setActiveTag] = useState<string | null>(null)
 
-  if (isLoading) return <p className="p-6 text-muted">Loading…</p>
+  if (isLoading) return <PageSkeleton />
 
   // Only offer tags that are actually in use — an empty filter chip is just noise.
   const usedTagIds = new Set(petTags?.map(pt => pt.tag_id))
@@ -33,10 +34,10 @@ export default function PetList() {
   const shared = visible.filter(p => p.user_id !== user?.id)
 
   return (
-    <main className="p-6 max-w-4xl mx-auto">
+    <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl">Your pets</h1>
-        <Link to="/pets/new" className="rounded-md bg-ink text-paper px-4 py-2 text-sm">Add pet</Link>
+        <h1>Your pets</h1>
+        <Link to="/pets/new" className="btn btn-primary">Add pet</Link>
       </div>
 
       {filterTags.length > 0 && (
@@ -45,7 +46,7 @@ export default function PetList() {
             const on = activeTag === t.id
             return (
               <button key={t.id} onClick={() => setActiveTag(on ? null : t.id)} aria-pressed={on}
-                className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs transition ${
+                className={`inline-flex items-center gap-1 rounded-full px-3 min-h-9 text-xs transition ${
                   on ? 'text-paper' : 'text-muted border border-line bg-card hover:border-moss'}`}
                 style={on ? { backgroundColor: t.color } : undefined}>
                 {t.name}
@@ -116,7 +117,7 @@ function PetGrid({ pets, photos, shared = false }: {
         return (
           <li key={p.id}>
             <Link to={`/pets/${p.id}`}
-              className="flex items-center gap-4 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 hover:border-moss">
+              className="flex items-center gap-4 surface p-4 hover:border-moss">
               <PetAvatar name={p.name} url={photo} />
               <div className="min-w-0 flex-1">
                 <h2 className="text-xl flex items-center gap-2">

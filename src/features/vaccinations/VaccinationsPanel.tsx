@@ -10,6 +10,7 @@ import { TextField } from '@/components/ui/Field'
 import VetSelect from '@/components/ui/VetSelect'
 import { fmtDate } from '@/lib/format'
 import type { Vaccination } from '@/types/db'
+import { EmptyState } from '@/components/ui/primitives'
 
 type Form = z.infer<typeof vaccinationSchema>
 
@@ -34,23 +35,23 @@ export default function VaccinationsPanel({ petId }: { petId: string }) {
     <section>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl">Vaccinations</h2>
-        <button onClick={() => setAdding(a => !a)} className="rounded-md bg-ink text-paper px-4 py-2 text-sm">{adding ? 'Close' : 'Add vaccination'}</button>
+        <button onClick={() => setAdding(a => !a)} className="btn btn-primary">{adding ? 'Close' : 'Add vaccination'}</button>
       </div>
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 surface p-5 mb-6" noValidate>
           <TextField label="Vaccine" error={errors.vaccine} {...register('vaccine')} placeholder="Rabies (3-yr)" />
           <TextField label="Lot number" error={errors.lot_no} {...register('lot_no')} />
           <TextField label="Administered on" type="date" error={errors.administered_on} {...register('administered_on')} />
           <TextField label="Next booster due" type="date" error={errors.next_due_on} {...register('next_due_on')} />
           <VetSelect label="Administered by" registration={register('veterinarian_id')} />
-          <button type="submit" className="rounded-md bg-moss text-paper px-5 py-2 w-fit">Save vaccination</button>
+          <button type="submit" className="btn btn-primary w-fit">Save vaccination</button>
         </form>
       )}
       <ul className="space-y-3">
         {vax?.map(v => {
           const status = dueStatus(v.next_due_on)
           return (
-            <li key={v.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex justify-between gap-3">
+            <li key={v.id} className="surface p-4 flex justify-between gap-3">
               <div>
                 <p className="font-medium">{v.vaccine}</p>
                 <p className="text-sm text-muted">
@@ -62,12 +63,13 @@ export default function VaccinationsPanel({ petId }: { petId: string }) {
                   )}
                 </p>
               </div>
-              <button onClick={() => remove.mutate(v.id)} className="text-sm text-alert self-start">Delete</button>
+              <button onClick={() => remove.mutate(v.id)} aria-label={`Delete ${v.vaccine}`}
+                className="btn btn-ghost text-alert hover:bg-alert/10 self-start -mr-2">Delete</button>
             </li>
           )
         })}
       </ul>
-      {vax?.length === 0 && <p className="text-sm text-muted">No vaccinations recorded.</p>}
+      {vax?.length === 0 && <EmptyState title="No vaccinations on file">Add each vaccine with its next due date and you will get a reminder a week before the booster is due.</EmptyState>}
     </section>
   )
 }

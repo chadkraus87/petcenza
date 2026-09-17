@@ -35,6 +35,11 @@ export default function CalendarPage() {
 
   const { data } = useQuery({
     queryKey: ['calendar', view, start.toISOString()],
+    // The query cache is persisted to localStorage as JSON, which turns Date objects into strings.
+    // Caching Dates here meant any reload after visiting the calendar threw on getTime() and
+    // white-screened the app. Cache ISO strings; `select` rebuilds Dates on every read.
+    select: (rows: (Omit<CalItem, 'date'> & { date: string })[]): CalItem[] =>
+      rows.map(r => ({ ...r, date: parseISO(r.date) })),
     queryFn: async () => {
       const from = start.toISOString(), to = end.toISOString()
       const [reminders, visits, pets] = await Promise.all([
@@ -42,11 +47,11 @@ export default function CalendarPage() {
         supabase.from('vet_visits').select('*').gte('visit_at', from).lte('visit_at', to),
         supabase.from('pets').select('id, name, birth_date').eq('archived', false)
       ])
-      const items: CalItem[] = []
+      const items: (Omit<CalItem, 'date'> & { date: string })[] = []
       // Only reminders can be dragged — a vet visit is an appointment with a clinic, and a
       // birthday is a fact. Moving either from a calendar cell would be a lie.
-      for (const r of (reminders.data ?? []) as Reminder[]) items.push({ id: r.id, date: parseISO(r.due_at), label: r.title, kind: r.kind, draggable: true })
-      for (const v of (visits.data ?? []) as VetVisit[]) items.push({ id: v.id, date: parseISO(v.visit_at), label: v.reason ?? 'Vet visit', kind: 'vet_appointment', draggable: false })
+      for (const r of (reminders.data ?? []) as Reminder[]) items.push({ id: r.id, date: r.due_at, label: r.title, kind: r.kind, draggable: true })
+      for (const v of (visits.data ?? []) as VetVisit[]) items.push({ id: v.id, date: v.visit_at, label: v.reason ?? 'Vet visit', kind: 'vet_appointment', draggable: false })
       // The visible span can straddle two calendar years, so place each birthday in every year it
       // touches; the per-day filter keeps only the ones actually in range.
       const years = new Set([start.getFullYear(), end.getFullYear()])
@@ -54,7 +59,7 @@ export default function CalendarPage() {
         if (!p.birth_date) continue
         const bd = parseISO(p.birth_date)
         for (const year of years) {
-          items.push({ id: `bday-${p.id}-${year}`, date: new Date(year, bd.getMonth(), bd.getDate()), label: `${p.name}'s birthday`, kind: 'birthday', draggable: false })
+          items.push({ id: `bday-${p.id}-${year}`, date: new Date(year, bd.getMonth(), bd.getDate()).toISOString(), label: `${p.name}'s birthday`, kind: 'birthday', draggable: false })
         }
       }
       return items
@@ -73,21 +78,21 @@ export default function CalendarPage() {
     : format(anchor, 'EEEE, MMMM d, yyyy')
 
   return (
-    <main className="p-6 max-w-5xl mx-auto">
+    <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-5xl mx-auto">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <h1 className="text-3xl">{heading}</h1>
+        <h1>{heading}</h1>
         <div className="flex items-center gap-2">
-          <div className="flex rounded-md border border-line overflow-hidden" role="group" aria-label="Calendar view">
+          <div className="flex rounded-lg border border-line overflow-hidden" role="group" aria-label="Calendar view">
             {(['month','week','day'] as View[]).map(v => (
               <button key={v} onClick={() => setView(v)} aria-pressed={view === v}
-                className={`px-3 py-1.5 text-sm capitalize ${view === v ? 'bg-ink text-paper' : 'bg-card hover:bg-wave'}`}>
+                className={`px-3 min-h-11 text-sm capitalize ${view === v ? 'bg-ink text-paper' : 'bg-card hover:bg-wave'}`}>
                 {v}
               </button>
             ))}
           </div>
-          <button aria-label={`Previous ${view}`} onClick={() => step(-1)} className="rounded-md border border-line px-3 py-1.5">←</button>
-          <button onClick={() => setAnchor(new Date())} className="rounded-md border border-line px-3 py-1.5 text-sm">Today</button>
-          <button aria-label={`Next ${view}`} onClick={() => step(1)} className="rounded-md border border-line px-3 py-1.5">→</button>
+          <button aria-label={`Previous ${view}`} onClick={() => step(-1)} className="btn btn-secondary">←</button>
+          <button onClick={() => setAnchor(new Date())} className="btn btn-secondary">Today</button>
+          <button aria-label={`Next ${view}`} onClick={() => step(1)} className="btn btn-secondary">→</button>
         </div>
       </div>
 
@@ -153,7 +158,7 @@ export default function CalendarPage() {
       {view !== 'day' && (
         <p className="text-xs text-muted mt-2">
           Drag a reminder to another day to reschedule it. Vet visits and birthdays stay put.
-          Prefer the keyboard? Use <strong>Snooze</strong> in the list below.
+          No mouse? Change the <strong>date</strong> on any reminder in the list below.
         </p>
       )}
 
@@ -165,13 +170,13 @@ export default function CalendarPage() {
 function DayView({ items }: { items: CalItem[] }) {
   if (items.length === 0) {
     return (
-      <div className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-8 text-center">
+      <div className="surface p-8 text-center">
         <p className="text-muted">Nothing scheduled. Enjoy the quiet.</p>
       </div>
     )
   }
   return (
-    <ul className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 divide-y divide-line overflow-hidden">
+    <ul className="surface divide-y divide-line overflow-hidden">
       {items.map(i => (
         <li key={i.id} className="flex items-center gap-3 p-4">
           <time className="text-sm text-muted w-16 shrink-0">{format(i.date, 'HH:mm')}</time>

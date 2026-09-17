@@ -32,7 +32,7 @@ export default function UpdatePrompt() {
       </p>
       {needRefresh && (
         <button onClick={() => void updateServiceWorker(true)}
-          className="inline-flex items-center gap-1.5 rounded-md bg-paper text-ink px-3 py-1.5 text-sm font-medium">
+          className="inline-flex items-center gap-1.5 rounded-lg bg-paper text-ink px-3 min-h-11 text-sm font-medium">
           <RefreshCw size={14} aria-hidden /> Update
         </button>
       )}

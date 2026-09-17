@@ -50,7 +50,7 @@ export default function NutritionPanel({ petId }: { petId: string }) {
   return (
     <section>
       <h2 className="text-xl mb-4">Nutrition plan</h2>
-      <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5" noValidate>
+      <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 surface p-5" noValidate>
         <TextField label="Food brand" error={errors.food_brand} {...register('food_brand')} />
         <TextField label="Formula" error={errors.formula} {...register('formula')} placeholder="Adult, grain-free…" />
         <TextField label="Portion" error={errors.portion} {...register('portion')} placeholder="1 cup, twice daily" />
@@ -59,7 +59,7 @@ export default function NutritionPanel({ petId }: { petId: string }) {
         <div className="sm:col-span-2"><TextArea label="Treats" error={errors.treats} {...register('treats')} /></div>
         <div className="sm:col-span-2"><TextArea label="Water notes" error={errors.water_notes} {...register('water_notes')} /></div>
         <div className="sm:col-span-2"><TextArea label="Foods to avoid" error={errors.foods_to_avoid} {...register('foods_to_avoid')} /></div>
-        <button type="submit" disabled={isSubmitting || !isDirty} className="rounded-md bg-moss text-paper px-5 py-2 w-fit disabled:opacity-50">
+        <button type="submit" disabled={isSubmitting || !isDirty} className="btn btn-primary w-fit">
           {isSubmitting ? 'Saving…' : 'Save plan'}
         </button>
       </form>

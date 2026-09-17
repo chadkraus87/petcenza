@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { demoFetch, demoAuthStorage } from '@/dev/demo'
 
 const url = import.meta.env.VITE_SUPABASE_URL
 const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -35,14 +36,21 @@ const authStorage = {
   }
 }
 
+/**
+ * Sample-data mode for designing and reviewing the signed-in UI (`npm run dev:demo`). DEV is false
+ * in every `vite build`, so this folds to false and src/dev/demo.ts is dropped from the bundle.
+ */
+export const DEMO = import.meta.env.DEV && import.meta.env.VITE_DEMO === '1'
+
 // PKCE flow + auto refresh-token rotation. Session persistence is governed by authStorage.
 export const supabase = createClient(url, anonKey, {
   auth: {
     flowType: 'pkce',
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true,
-    storage: authStorage
+    detectSessionInUrl: !DEMO,
+    storage: DEMO ? demoAuthStorage : authStorage
   },
+  global: DEMO ? { fetch: demoFetch } : undefined,
   realtime: { params: { eventsPerSecond: 5 } }
 })

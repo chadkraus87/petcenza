@@ -16,10 +16,12 @@ rolled into one daily "does anything need attention today?" view.
 - `src/schemas/` — Zod schemas shared by client and server. Validation changes
   start here so both sides move together.
 - `src/hooks/`, `src/lib/` — TanStack Query hooks and Supabase client wiring.
-- `supabase/migrations/` — 20 versioned migrations. **Never edit an applied
+- `supabase/migrations/` — 22 versioned migrations. **Never edit an applied
   migration; add a new one.**
 - `supabase/functions/` — 4 Deno edge functions (upload magic-byte verification,
-  unauthenticated read-only vet share, transactional email).
+  unauthenticated read-only vet share, transactional email, account deletion).
+- `DESIGN.md` — the design system: tokens, components, interaction rules, decisions.
+  Read it before UI work; update it when a design decision changes.
 
 ## Non-negotiable rules
 1. **RLS is the security boundary, not the client.** Every table has row-level
@@ -42,6 +44,7 @@ rolled into one daily "does anything need attention today?" view.
 ## Commands
 ```
 npm run dev          # local dev
+npm run dev:demo     # signed-in UI on sample data, no account (add ?empty for a new account)
 npm run typecheck    # TS strict — run before committing
 npm run test         # Vitest unit/component
 npm run test:e2e     # Playwright

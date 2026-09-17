@@ -8,6 +8,7 @@ import { usePetCollection, useSaveRow, useDeleteRow } from '@/hooks/usePetRecord
 import { SelectField, TextField, TextArea } from '@/components/ui/Field'
 import SeverityBadge from '@/components/ui/SeverityBadge'
 import type { Allergy } from '@/types/db'
+import { EmptyState } from '@/components/ui/primitives'
 
 type Form = z.infer<typeof allergySchema>
 
@@ -26,10 +27,10 @@ export default function AllergiesPanel({ petId }: { petId: string }) {
     <section>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl">Allergies</h2>
-        <button onClick={() => setAdding(a => !a)} className="rounded-md bg-ink text-paper px-4 py-2 text-sm">{adding ? 'Close' : 'Add allergy'}</button>
+        <button onClick={() => setAdding(a => !a)} className="btn btn-primary">{adding ? 'Close' : 'Add allergy'}</button>
       </div>
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 surface p-5 mb-6" noValidate>
           <SelectField label="Type" error={errors.allergy_type} {...register('allergy_type')}>
             <option value="food">Food</option><option value="medication">Medication</option>
             <option value="environmental">Environmental</option><option value="other">Other</option>
@@ -41,12 +42,12 @@ export default function AllergiesPanel({ petId }: { petId: string }) {
           </SelectField>
           <div className="sm:col-span-2"><TextArea label="Symptoms" error={errors.symptoms} {...register('symptoms')} /></div>
           <div className="sm:col-span-2"><TextArea label="Emergency treatment" error={errors.emergency_treatment} {...register('emergency_treatment')} /></div>
-          <button type="submit" className="rounded-md bg-moss text-paper px-5 py-2 w-fit">Save allergy</button>
+          <button type="submit" className="btn btn-primary w-fit">Save allergy</button>
         </form>
       )}
       <ul className="space-y-3">
         {sorted.map(a => (
-          <li key={a.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4">
+          <li key={a.id} className="surface p-4">
             <div className="flex justify-between gap-3">
               <div>
                 <p className="font-medium">{a.allergen} <SeverityBadge severity={a.severity} /></p>
@@ -54,12 +55,13 @@ export default function AllergiesPanel({ petId }: { petId: string }) {
                 {a.symptoms && <p className="text-sm mt-1">Symptoms: {a.symptoms}</p>}
                 {a.emergency_treatment && <p className="text-sm text-alert mt-1">Emergency: {a.emergency_treatment}</p>}
               </div>
-              <button onClick={() => remove.mutate(a.id)} className="text-sm text-alert self-start">Delete</button>
+              <button onClick={() => remove.mutate(a.id)} aria-label={`Delete ${a.allergen}`}
+                className="btn btn-ghost text-alert hover:bg-alert/10 self-start -mr-2">Delete</button>
             </div>
           </li>
         ))}
       </ul>
-      {allergies?.length === 0 && <p className="text-sm text-muted">No known allergies.</p>}
+      {allergies?.length === 0 && <EmptyState title="No known allergies">Record any reaction to a food or medication. Severe allergies are flagged on Today and included in vet links.</EmptyState>}
     </section>
   )
 }

@@ -9,14 +9,15 @@ import { toRow } from '@/schemas/pet'
 import { useUserCollection, useSaveUserRow, useDeleteUserRow } from '@/hooks/useUserRecords'
 import { TextField, TextArea } from '@/components/ui/Field'
 import type { Veterinarian, EmergencyContact } from '@/types/db'
+import { EmptyState } from '@/components/ui/primitives'
 
 type VetForm = z.infer<typeof vetSchema>
 type ContactForm = z.infer<typeof emergencyContactSchema>
 
 export default function CareTeamPage() {
   return (
-    <main className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-3xl mb-1">Care team</h1>
+    <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-3xl mx-auto">
+      <h1 className="mb-1">Care team</h1>
       <p className="text-muted mb-6">Your vets and emergency contacts power the Emergency screen — add them here.</p>
       <VetsSection />
       <div className="h-8" />
@@ -43,12 +44,12 @@ function VetsSection() {
     <section>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl">Veterinarians</h2>
-        <button onClick={() => setAdding(a => !a)} className="rounded-md bg-ink text-paper px-4 py-2 text-sm">
+        <button onClick={() => setAdding(a => !a)} className="btn btn-primary">
           {adding ? 'Close' : 'Add vet'}
         </button>
       </div>
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 surface p-5 mb-6" noValidate>
           <TextField label="Vet name" error={errors.name} {...register('name')} />
           <TextField label="Clinic" error={errors.clinic} {...register('clinic')} />
           <TextField label="Phone" type="tel" error={errors.phone} {...register('phone')} />
@@ -57,12 +58,12 @@ function VetsSection() {
           <label className="flex items-center gap-2 text-sm"><input type="checkbox" {...register('is_primary')} /> Primary vet</label>
           <label className="flex items-center gap-2 text-sm"><input type="checkbox" {...register('is_emergency_clinic')} /> Emergency clinic</label>
           <div className="sm:col-span-2"><TextArea label="Notes" error={errors.notes} {...register('notes')} /></div>
-          <button type="submit" disabled={isSubmitting} className="rounded-md bg-moss text-paper px-5 py-2 w-fit disabled:opacity-50">Save vet</button>
+          <button type="submit" disabled={isSubmitting} className="btn btn-primary w-fit">Save vet</button>
         </form>
       )}
       <ul className="space-y-3">
         {vets?.map(v => (
-          <li key={v.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex justify-between gap-3">
+          <li key={v.id} className="surface p-4 flex justify-between gap-3">
             <div>
               <p className="font-medium flex items-center gap-2">
                 {v.name}
@@ -73,11 +74,11 @@ function VetsSection() {
               {v.phone && <p className="text-sm text-muted">{v.phone}</p>}
               {v.address && <p className="text-sm text-muted">{v.address}</p>}
             </div>
-            <button aria-label={`Delete ${v.name}`} onClick={() => { remove.mutate(v.id); refreshEmergency() }} className="text-alert self-start"><Trash2 size={16} /></button>
+            <button aria-label={`Delete ${v.name}`} onClick={() => { remove.mutate(v.id); refreshEmergency() }} className="btn-icon text-alert hover:bg-alert/10 self-start"><Trash2 size={16} /></button>
           </li>
         ))}
       </ul>
-      {vets?.length === 0 && <p className="text-sm text-muted">No veterinarians added yet.</p>}
+      {vets?.length === 0 && <EmptyState title="No vets added yet">Add your regular clinic and the nearest 24-hour emergency vet, so both are one tap away in an emergency.</EmptyState>}
     </section>
   )
 }
@@ -100,32 +101,32 @@ function ContactsSection() {
     <section>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl">Emergency contacts</h2>
-        <button onClick={() => setAdding(a => !a)} className="rounded-md bg-ink text-paper px-4 py-2 text-sm">
+        <button onClick={() => setAdding(a => !a)} className="btn btn-primary">
           {adding ? 'Close' : 'Add contact'}
         </button>
       </div>
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 surface p-5 mb-6" noValidate>
           <TextField label="Label (e.g. Pet sitter)" error={errors.label} {...register('label')} />
           <TextField label="Name" error={errors.name} {...register('name')} />
           <TextField label="Phone" type="tel" error={errors.phone} {...register('phone')} />
           <div className="sm:col-span-2"><TextArea label="Notes" error={errors.notes} {...register('notes')} /></div>
-          <button type="submit" disabled={isSubmitting} className="rounded-md bg-moss text-paper px-5 py-2 w-fit disabled:opacity-50">Save contact</button>
+          <button type="submit" disabled={isSubmitting} className="btn btn-primary w-fit">Save contact</button>
         </form>
       )}
       <ul className="space-y-3">
         {contacts?.map(c => (
-          <li key={c.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex justify-between gap-3">
+          <li key={c.id} className="surface p-4 flex justify-between gap-3">
             <div>
               <p className="font-medium">{c.label} <span className="font-normal text-muted">— {c.name}</span></p>
               <p className="text-sm text-muted">{c.phone}</p>
               {c.notes && <p className="text-sm text-muted">{c.notes}</p>}
             </div>
-            <button aria-label={`Delete ${c.label}`} onClick={() => { remove.mutate(c.id); refreshEmergency() }} className="text-alert self-start"><Trash2 size={16} /></button>
+            <button aria-label={`Delete ${c.label}`} onClick={() => { remove.mutate(c.id); refreshEmergency() }} className="btn-icon text-alert hover:bg-alert/10 self-start"><Trash2 size={16} /></button>
           </li>
         ))}
       </ul>
-      {contacts?.length === 0 && <p className="text-sm text-muted">No emergency contacts yet.</p>}
+      {contacts?.length === 0 && <EmptyState title="No emergency contacts yet">Add someone who can step in for your pet if you cannot be reached.</EmptyState>}
     </section>
   )
 }

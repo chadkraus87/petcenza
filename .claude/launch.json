@@ -1,6 +1,26 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "petcenza-dev", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev", "--", "--port", "5178"], "port": 5178 }
+    {
+      "name": "petcenza-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5178"
+      ],
+      "port": 5178
+    },
+    {
+      "name": "petcenza-demo",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev:demo"
+      ],
+      "port": 5179
+    }
   ]
 }

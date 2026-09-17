@@ -40,12 +40,12 @@ export default function TagEditor({ petId, canEdit }: { petId: string; canEdit: 
         <TagIcon size={14} className="text-muted" aria-hidden />
         {petTags?.map(t => (
           <span key={t.id}
-            className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs text-paper"
+            className="inline-flex items-center gap-1 rounded-full px-3 min-h-8 text-xs text-paper"
             style={{ backgroundColor: t.color }}>
             {t.name}
             {canEdit && (
               <button onClick={() => unassign.mutate(t.id)} aria-label={`Remove tag ${t.name}`}
-                className="hover:opacity-70">
+                className="relative -mr-1 grid place-items-center size-6 rounded-full hover:bg-ink/15 after:absolute after:-inset-2.5 after:content-['']">
                 <X size={11} />
               </button>
             )}
@@ -55,7 +55,7 @@ export default function TagEditor({ petId, canEdit }: { petId: string; canEdit: 
 
         {canEdit && (
           <button onClick={() => setOpen(o => !o)}
-            className="inline-flex items-center gap-1 rounded-full border border-line px-2.5 py-0.5 text-xs text-muted hover:border-moss hover:text-moss">
+            className="inline-flex items-center gap-1 rounded-full border border-line px-3 min-h-8 text-xs text-muted hover:border-moss hover:text-moss">
             <Plus size={11} aria-hidden /> Tag
           </button>
         )}
@@ -71,7 +71,7 @@ export default function TagEditor({ petId, canEdit }: { petId: string; canEdit: 
               <div className="flex flex-wrap gap-1.5 mb-3">
                 {available.map(t => (
                   <button key={t.id} onClick={() => { assign.mutate(t.id); setOpen(false) }}
-                    className="rounded-full px-2.5 py-0.5 text-xs text-paper hover:opacity-80"
+                    className="rounded-full px-3 min-h-8 text-xs text-paper hover:opacity-80"
                     style={{ backgroundColor: t.color }}>
                     {t.name}
                   </button>
@@ -86,7 +86,7 @@ export default function TagEditor({ petId, canEdit }: { petId: string; canEdit: 
               onKeyDown={e => e.key === 'Enter' && addNew()}
               placeholder="Senior, Anxious, Indoor…" maxLength={40}
               aria-label="New tag name"
-              className="rounded-md border border-line px-2.5 py-1.5 text-sm flex-1 min-w-40" />
+              className="field flex-1 min-w-40 w-auto" />
             <div className="flex gap-1" role="group" aria-label="Tag colour">
               {TAG_COLORS.map(c => (
                 <button key={c} onClick={() => setColor(c)} aria-label={`Colour ${c}`}
@@ -96,7 +96,7 @@ export default function TagEditor({ petId, canEdit }: { petId: string; canEdit: 
               ))}
             </div>
             <button onClick={addNew} disabled={!name.trim() || create.isPending}
-              className="rounded-md bg-moss text-paper px-3 py-1.5 text-sm disabled:opacity-50">
+              className="btn btn-primary">
               Add
             </button>
           </div>

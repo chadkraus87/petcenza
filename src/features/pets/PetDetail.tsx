@@ -1,10 +1,11 @@
-import { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { AlertTriangle, Heart } from 'lucide-react'
+import { useRef } from 'react'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { AlertTriangle, Heart, SearchX } from 'lucide-react'
+import { EmptyState, PageSkeleton, ButtonLink } from '@/components/ui/primitives'
 import { usePet } from '@/hooks/usePets'
 import { usePetCollection } from '@/hooks/usePetRecords'
 import { petAge, fmtDate } from '@/lib/format'
-import type { Allergy } from '@/types/db'
+import { isMedicationActive, type Allergy, type Medication, type Vaccination, type WeightEntry } from '@/types/db'
 import MedicationsPanel from '@/features/medications/MedicationsPanel'
 import AllergiesPanel from '@/features/allergies/AllergiesPanel'
 import VaccinationsPanel from '@/features/vaccinations/VaccinationsPanel'
@@ -24,56 +25,86 @@ import PhotosPanel from './PhotosPanel'
 
 const TABS = ['Overview','Medications','Allergies','Vaccinations','Weight','Vet visits','Nutrition','Feeding','Grooming','Behavior','Notes','Documents','Photos','Sharing','Manage'] as const
 type Tab = typeof TABS[number]
+const slug = (t: Tab) => t.toLowerCase().replace(/\s+/g, '-')
+const fromSlug = (v: string | null): Tab => TABS.find(t => slug(t) === v) ?? 'Overview'
+const SEX_LABEL: Record<string, string> = {
+  male: 'Male', female: 'Female', male_neutered: 'Male, neutered', female_spayed: 'Female, spayed', unknown: 'Sex unknown'
+}
 
 export default function PetDetail() {
   const { id = '' } = useParams()
   const { data: pet, isLoading } = usePet(id)
   const { data: allergies } = usePetCollection<Allergy>('allergies', id, { column: 'severity' })
-  const [tab, setTab] = useState<Tab>('Overview')
+  // The tab lives in the URL, so Back, reload and shared links return to the same section.
+  const [params, setParams] = useSearchParams()
+  const tab = fromSlug(params.get('tab'))
+  const setTab = (t: Tab) => setParams(t === 'Overview' ? {} : { tab: slug(t) }, { replace: true })
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
   const { data: canEdit } = useCanEditPet(id)
 
-  if (isLoading) return <p className="p-6 text-muted">Loading…</p>
-  if (!pet) return <p className="p-6 text-alert">Pet not found.</p>
+  if (isLoading) return <PageSkeleton />
+  if (!pet) {
+    return (
+      <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-lg mx-auto">
+        <EmptyState icon={<SearchX size={20} />} title="We couldn't find that pet"
+          action={<ButtonLink to="/pets" variant="secondary">Back to your pets</ButtonLink>}>
+          It may have been deleted, or it was shared with you and access has ended.
+        </EmptyState>
+      </main>
+    )
+  }
 
   const severe = allergies?.filter(a => a.severity === 'severe' || a.severity === 'life_threatening') ?? []
 
   return (
-    <main className="p-6 max-w-4xl mx-auto">
+    <main className="px-4 py-6 sm:px-6 lg:px-8 max-w-5xl mx-auto">
       <header className="mb-4">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-3xl">{pet.name}</h1>
+            <h1>{pet.name}</h1>
             <p className="text-muted">
-              {pet.breed ?? pet.species}{pet.is_mixed_breed && ' mix'} · {petAge(pet.birth_date, pet.estimated_age_months)} · {pet.sex.replace('_', ', ')}
+              {pet.breed ?? pet.species}{pet.is_mixed_breed && !/\bmix/i.test(pet.breed ?? '') && ' mix'} · {petAge(pet.birth_date, pet.estimated_age_months)} · {SEX_LABEL[pet.sex] ?? pet.sex}
             </p>
           </div>
-          <Link to={`/pets/${id}/edit`} className="rounded-md border border-line px-4 py-2 text-sm shrink-0">Edit profile</Link>
+          <Link to={`/pets/${id}/edit`} className="btn btn-secondary shrink-0">Edit profile</Link>
         </div>
         <div className="mt-3"><TagEditor petId={id} canEdit={canEdit === true} /></div>
         {pet.deceased_on && (
-          <p className="mt-3 flex items-center gap-2 rounded-md bg-wave text-ink px-3 py-2 text-sm">
+          <p className="mt-3 flex items-center gap-2 rounded-lg bg-wave text-ink px-3 py-2 text-sm">
             <Heart size={16} className="text-coral shrink-0" aria-hidden />
             In memory of {pet.name} · {fmtDate(pet.deceased_on)}
           </p>
         )}
         {severe.length > 0 && (
-          <p role="alert" className="mt-3 flex items-center gap-2 rounded-md bg-alert text-paper px-3 py-2 text-sm">
+          <p role="alert" className="mt-3 flex items-center gap-2 rounded-lg bg-alert text-paper px-3 py-2 text-sm">
             <AlertTriangle size={16} aria-hidden />
             Severe allergy: {severe.map(a => a.allergen).join(', ')} — see Allergies tab for emergency treatment.
           </p>
         )}
       </header>
 
-      <nav className="flex gap-1 overflow-x-auto border-b border-line mb-6" aria-label="Pet sections">
-        {TABS.map(t => (
-          <button key={t} onClick={() => setTab(t)} aria-current={tab === t ? 'page' : undefined}
-            className={`px-3 py-2 text-sm whitespace-nowrap border-b-2 -mb-px ${tab === t ? 'border-moss text-moss font-medium' : 'border-transparent text-muted'}`}>
+      {/* WAI-ARIA tabs: arrow keys move between tabs, Home/End jump to the ends. */}
+      <div role="tablist" aria-label="Pet sections"
+        className="flex gap-1 overflow-x-auto md:overflow-visible md:flex-wrap snap-x border-b border-line mb-6 -mx-4 px-4 sm:mx-0 sm:px-0"
+        onKeyDown={e => {
+          const i = TABS.indexOf(tab)
+          const next = e.key === 'ArrowRight' ? (i + 1) % TABS.length : e.key === 'ArrowLeft' ? (i - 1 + TABS.length) % TABS.length
+            : e.key === 'Home' ? 0 : e.key === 'End' ? TABS.length - 1 : -1
+          if (next < 0) return
+          e.preventDefault(); setTab(TABS[next]); tabRefs.current[next]?.focus()
+        }}>
+        {TABS.map((t, i) => (
+          <button key={t} ref={el => { tabRefs.current[i] = el }} role="tab" id={`tab-${slug(t)}`}
+            aria-selected={tab === t} aria-controls="pet-panel" tabIndex={tab === t ? 0 : -1}
+            onClick={() => setTab(t)}
+            className={`snap-start px-3 min-h-11 text-sm whitespace-nowrap border-b-2 -mb-px ${tab === t ? 'border-moss text-moss font-medium' : 'border-transparent text-muted'}`}>
             {t}
           </button>
         ))}
-      </nav>
+      </div>
 
-      {tab === 'Overview' && <Overview pet={pet} />}
+      <div role="tabpanel" id="pet-panel" aria-labelledby={`tab-${slug(tab)}`}>
+      {tab === 'Overview' && <Overview pet={pet} onOpen={setTab} />}
       {tab === 'Medications' && <MedicationsPanel petId={id} />}
       {tab === 'Allergies' && <AllergiesPanel petId={id} />}
       {tab === 'Vaccinations' && <VaccinationsPanel petId={id} />}
@@ -88,18 +119,38 @@ export default function PetDetail() {
       {tab === 'Photos' && <PhotosPanel petId={id} />}
       {tab === 'Sharing' && <SharingPanel petId={id} petName={pet.name} />}
       {tab === 'Manage' && <PetDangerZone pet={pet} />}
+      </div>
     </main>
   )
 }
 
-function Overview({ pet }: { pet: NonNullable<ReturnType<typeof usePet>['data']> }) {
+function Overview({ pet, onOpen }: { pet: NonNullable<ReturnType<typeof usePet>['data']>; onOpen: (t: Tab) => void }) {
+  const { data: meds } = usePetCollection<Medication>('medications', pet.id, { column: 'starts_on' })
+  const { data: vax } = usePetCollection<Vaccination>('vaccinations', pet.id, { column: 'next_due_on', ascending: true })
+  const { data: weights } = usePetCollection<WeightEntry>('weight_entries', pet.id, { column: 'measured_on' })
+  const activeMeds = (meds ?? []).filter(isMedicationActive)
+  const nextVax = (vax ?? []).filter(v => v.next_due_on).sort((a, b) => a.next_due_on!.localeCompare(b.next_due_on!))[0]
+  const today = new Date().toISOString().slice(0, 10)
+  const lastWeight = weights?.[0]
+
+  // Health first: this is what a vet, a sitter or a worried owner opens the page for.
+  const summary: { label: string; value: string; tone?: string; tab: Tab }[] = [
+    { label: 'Current medications', tab: 'Medications',
+      value: activeMeds.length ? activeMeds.map(m => m.name).join(', ') : 'None' },
+    { label: 'Next vaccination', tab: 'Vaccinations',
+      value: nextVax ? `${nextVax.vaccine}, ${nextVax.next_due_on! < today ? 'overdue since' : 'due'} ${fmtDate(nextVax.next_due_on!)}` : 'Nothing scheduled',
+      tone: nextVax && nextVax.next_due_on! < today ? 'text-alert' : undefined },
+    { label: 'Last weight', tab: 'Weight',
+      value: lastWeight ? `${lastWeight.weight_kg} kg on ${fmtDate(lastWeight.measured_on)}` : 'Not recorded' }
+  ]
+
   const rows: [string, string | null | undefined][] = [
     ['Birth date', pet.birth_date ? fmtDate(pet.birth_date) : null],
     ['Adopted', pet.adoption_date ? fmtDate(pet.adoption_date) : null],
     ['Rescue org', pet.rescue_org],
     ['Color', pet.color],
     ['Microchip', pet.microchip_no],
-    ['Insurance', pet.insurance_provider && `${pet.insurance_provider} · ${pet.insurance_policy_no ?? ''}`],
+    ['Insurance', pet.insurance_provider && [pet.insurance_provider, pet.insurance_policy_no].filter(Boolean).join(' · ')],
     ['Registration', pet.registration_no],
     ['Activity level', pet.activity_level?.replace('_', ' ')],
     ['Favorite foods', pet.favorite_foods?.join(', ')],
@@ -107,11 +158,29 @@ function Overview({ pet }: { pet: NonNullable<ReturnType<typeof usePet>['data']>
     ['Favorite activities', pet.favorite_activities?.join(', ')]
   ]
   return (
-    <dl className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-6 grid gap-x-8 gap-y-3 sm:grid-cols-2">
+    <>
+    <section aria-label="Health summary" className="grid gap-3 sm:grid-cols-3 mb-4">
+      {summary.map(({ label, value, tone, tab }) => (
+        <button key={label} onClick={() => onOpen(tab)}
+          className="surface p-4 text-left hover:border-moss transition">
+          <span className="block text-sm text-muted">{label}</span>
+          <span className={`block font-medium mt-0.5 ${tone ?? ''}`}>{value}</span>
+        </button>
+      ))}
+    </section>
+    <dl className="surface p-6 grid gap-x-8 gap-y-3 sm:grid-cols-2">
       {rows.filter(([, v]) => v).map(([k, v]) => (
         <div key={k}><dt className="text-xs uppercase tracking-wide text-muted">{k}</dt><dd>{v}</dd></div>
       ))}
-      {rows.every(([, v]) => !v) && <p className="text-sm text-muted sm:col-span-2">Profile is mostly empty — use Edit profile to fill it in.</p>}
+      {rows.every(([, v]) => !v) && (
+        <div className="sm:col-span-2">
+          <EmptyState title="Nothing on file yet"
+            action={<ButtonLink to={`/pets/${pet.id}/edit`} variant="secondary">Fill in the profile</ButtonLink>}>
+            Birth date, microchip and insurance are the details a vet or sitter asks for first.
+          </EmptyState>
+        </div>
+      )}
     </dl>
+    </>
   )
 }

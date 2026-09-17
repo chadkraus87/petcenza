@@ -1,12 +1,12 @@
 import { useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { supabase } from '@/lib/supabase'
+import { supabase, DEMO } from '@/lib/supabase'
 import { useAuth } from '@/features/auth/AuthProvider'
 
 const SYNCED_TABLES = [
   'pets','medications','allergies','vaccinations','weight_entries','vet_visits','reminders',
   'feeding_schedules','nutrition_plans','grooming_logs','behavior_notes','notes','documents',
-  'veterinarians','emergency_contacts'
+  'veterinarians','emergency_contacts','dose_logs'
 ]
 
 /**
@@ -21,7 +21,7 @@ export function useRealtimeSync() {
   const qc = useQueryClient()
   const { user } = useAuth()
   useEffect(() => {
-    if (!user) return
+    if (!user || DEMO) return // demo data lives in memory; there is no server to sync with
     const channel = supabase.channel('user-sync')
     for (const table of SYNCED_TABLES) {
       channel.on('postgres_changes',

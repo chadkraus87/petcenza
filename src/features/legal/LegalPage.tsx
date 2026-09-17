@@ -48,19 +48,19 @@ export function LegalShell({ title, updated, children }: {
           <PawPrint size={20} aria-hidden /> PetCenza
         </Link>
 
-        <article className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-6 sm:p-8">
-          <h1 className="text-3xl mb-1">{title}</h1>
+        <article className="surface p-6 sm:p-8">
+          <h1 className="mb-1">{title}</h1>
           <p className="text-sm text-muted mb-6">Last updated {updated}</p>
           <div className="prose-legal space-y-4 text-ink/80">{children}</div>
         </article>
 
         <nav className="flex flex-wrap gap-4 justify-center mt-6 text-sm text-muted">
-          <Link to="/legal/privacy" className="hover:text-moss">Privacy</Link>
-          <Link to="/legal/terms" className="hover:text-moss">Terms</Link>
-          <Link to="/legal/delete-account" className="hover:text-moss">Delete your account</Link>
-          <Link to="/legal/accessibility" className="hover:text-moss">Accessibility</Link>
-          <a href="/third-party-licenses.txt" className="hover:text-moss">Licenses</a>
-          <a href={`mailto:${CONTACT.support}`} className="hover:text-moss">Support</a>
+          <Link to="/legal/privacy" className="inline-flex items-center min-h-11 hover:text-moss">Privacy</Link>
+          <Link to="/legal/terms" className="inline-flex items-center min-h-11 hover:text-moss">Terms</Link>
+          <Link to="/legal/delete-account" className="inline-flex items-center min-h-11 hover:text-moss">Delete your account</Link>
+          <Link to="/legal/accessibility" className="inline-flex items-center min-h-11 hover:text-moss">Accessibility</Link>
+          <a href="/third-party-licenses.txt" className="inline-flex items-center min-h-11 hover:text-moss">Licenses</a>
+          <a href={`mailto:${CONTACT.support}`} className="inline-flex items-center min-h-11 hover:text-moss">Support</a>
         </nav>
       </div>
     </main>

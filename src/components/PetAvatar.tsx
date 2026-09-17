@@ -12,6 +12,7 @@ export function PetAvatar({ name, url, size = 'md' }: {
   size?: 'sm' | 'md'
 }) {
   const dim = size === 'sm' ? 'w-10 h-10 text-base' : 'w-16 h-16 text-2xl'
+  const px = size === 'sm' ? 40 : 64
   // Signed URLs last an hour. If one expires while the page is still open, fall back to the
   // initial rather than leaving a broken-image icon on screen.
   const [failed, setFailed] = useState(false)
@@ -20,7 +21,7 @@ export function PetAvatar({ name, url, size = 'md' }: {
   // Decorative in both branches: the pet's name is always right beside it in the markup.
   if (url && !failed) {
     return (
-      <img src={url} alt="" aria-hidden loading="lazy" onError={() => setFailed(true)}
+      <img src={url} alt="" aria-hidden loading="lazy" width={px} height={px} onError={() => setFailed(true)}
         className={`${dim} rounded-full object-cover border border-line shrink-0 bg-wave`} />
     )
   }

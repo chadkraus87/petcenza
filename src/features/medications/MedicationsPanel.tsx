@@ -9,6 +9,7 @@ import { TextField, TextArea } from '@/components/ui/Field'
 import VetSelect from '@/components/ui/VetSelect'
 import { fmtDate } from '@/lib/format'
 import { isMedicationActive, type Medication } from '@/types/db'
+import { EmptyState } from '@/components/ui/primitives'
 
 type Form = z.infer<typeof medicationSchema>
 
@@ -28,13 +29,13 @@ export default function MedicationsPanel({ petId }: { petId: string }) {
     <section>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl">Medications</h2>
-        <button onClick={() => setAdding(a => !a)} className="rounded-md bg-ink text-paper px-4 py-2 text-sm">
+        <button onClick={() => setAdding(a => !a)} className="btn btn-primary">
           {adding ? 'Close' : 'Add medication'}
         </button>
       </div>
 
       {adding && (
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6" noValidate>
+        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2 surface p-5 mb-6" noValidate>
           <TextField label="Medication" error={errors.name} {...register('name')} />
           <TextField label="Dosage" error={errors.dosage} {...register('dosage')} placeholder="75 mg" />
           <TextField label="Frequency" error={errors.frequency} {...register('frequency')} placeholder="Twice daily with food" />
@@ -45,7 +46,7 @@ export default function MedicationsPanel({ petId }: { petId: string }) {
           <VetSelect label="Prescriber" registration={register('prescriber_id')} />
           <div className="sm:col-span-2"><TextArea label="Administration instructions" error={errors.instructions} {...register('instructions')} /></div>
           <div className="sm:col-span-2"><TextArea label="Side effects to watch for" error={errors.side_effects} {...register('side_effects')} /></div>
-          <button type="submit" disabled={isSubmitting} className="rounded-md bg-moss text-paper px-5 py-2 w-fit">Save medication</button>
+          <button type="submit" disabled={isSubmitting} className="btn btn-primary w-fit">Save medication</button>
         </form>
       )}
 
@@ -61,12 +62,13 @@ export default function MedicationsPanel({ petId }: { petId: string }) {
                 </p>
                 {m.instructions && <p className="text-sm mt-1">{m.instructions}</p>}
               </div>
-              <button onClick={() => remove.mutate(m.id)} className="text-sm text-alert self-start">Delete</button>
+              <button onClick={() => remove.mutate(m.id)} aria-label={`Delete ${m.name}`}
+                className="btn btn-ghost text-alert hover:bg-alert/10 self-start -mr-2">Delete</button>
             </div>
           </li>
         ))}
       </ul>
-      {meds?.length === 0 && <p className="text-sm text-muted">No medications recorded.</p>}
+      {meds?.length === 0 && <EmptyState title="No medications on file">Add a prescription and it appears in medication rounds, with a reminder before the refill is due.</EmptyState>}
     </section>
   )
 }

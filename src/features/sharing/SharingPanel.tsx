@@ -127,7 +127,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
         {members?.map(m => {
           const isMe = m.user_id === user?.id
           return (
-            <li key={m.user_id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-4 flex items-center justify-between gap-3">
+            <li key={m.user_id} className="surface p-4 flex items-center justify-between gap-3">
               <div className="min-w-0">
                 <p className="font-medium flex items-center gap-2 truncate">
                   {m.display_name || m.email || 'Member'}
@@ -151,8 +151,15 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                       <select
                         aria-label={`Role for ${m.display_name || m.email}`}
                         value={m.role}
-                        onChange={e => updateRole.mutate({ userId: m.user_id, role: e.target.value as 'viewer' | 'editor' | 'owner' })}
-                        className="rounded-md border border-line px-2 py-1 text-sm bg-card">
+                        onChange={e => {
+                          const role = e.target.value as 'viewer' | 'editor' | 'owner'
+                          // Co-owners can invite and remove people. Confirm, as transferring ownership does.
+                          if (role === 'owner' && !confirm(`Make ${m.display_name || m.email} a co-owner of ${petName}? Co-owners can invite and remove people.`)) {
+                            e.target.value = m.role; return
+                          }
+                          updateRole.mutate({ userId: m.user_id, role })
+                        }}
+                        className="field w-auto">
                         <option value="viewer">Viewer</option>
                         <option value="editor">Editor</option>
                         {/* Only the primary owner may grant co-ownership — enforced by a DB trigger. */}
@@ -163,11 +170,11 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                         <button onClick={() => setConfirmTransfer(m.user_id)}
                           title="Make this person the owner"
                           aria-label={`Transfer ownership to ${m.display_name || m.email}`}
-                          className="text-muted hover:text-moss">
+                          className="btn-icon text-muted hover:text-moss">
                           <Crown size={16} />
                         </button>
                       )}
-                      <button onClick={() => removeMember.mutate(m.user_id)} className="text-alert"
+                      <button onClick={() => removeMember.mutate(m.user_id)} className="btn-icon text-alert hover:bg-alert/10"
                         aria-label={`Remove ${m.display_name || m.email}`}>
                         <Trash2 size={16} />
                       </button>
@@ -202,11 +209,11 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
           </p>
           <div className="flex gap-2">
             <button onClick={() => doTransfer(confirmTransfer)} disabled={transfer.isPending}
-              className="rounded-md bg-ink text-paper px-4 py-2 text-sm disabled:opacity-50">
+              className="btn btn-primary">
               {transfer.isPending ? 'Transferring…' : 'Yes, transfer ownership'}
             </button>
             <button onClick={() => setConfirmTransfer(null)}
-              className="rounded-md border border-line px-4 py-2 text-sm">Cancel</button>
+              className="btn btn-secondary">Cancel</button>
           </div>
         </div>
       )}
@@ -214,14 +221,14 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
       {/* ------------------------------------------------ owner-only controls */}
       {isOwner && (
         <>
-          <div className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mb-6">
+          <div className="surface p-5 mb-6">
             <h3 className="font-medium mb-3">Invite someone</h3>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
                 <label htmlFor="invite-role" className="block text-sm mb-1">Access level</label>
                 <select id="invite-role" value={role}
                   onChange={e => setRole(e.target.value as 'viewer' | 'editor')}
-                  className="w-full rounded-md border border-line px-3 py-2 bg-card">
+                  className="field w-full">
                   <option value="viewer">Viewer</option>
                   <option value="editor">Editor</option>
                 </select>
@@ -233,14 +240,14 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                 </label>
                 <input id="invite-email" type="email" value={email} onChange={e => setEmail(e.target.value)}
                   placeholder="them@example.com"
-                  className="w-full rounded-md border border-line px-3 py-2" />
+                  className="field w-full" />
                 <p className="text-xs text-muted mt-1">
                   Only this address can redeem the link. Leave blank for anyone with the link.
                 </p>
               </div>
             </div>
             <button onClick={invite} disabled={createInvite.isPending}
-              className="mt-3 rounded-md bg-ink text-paper px-5 py-2 text-sm disabled:opacity-50">
+              className="btn btn-primary mt-3">
               {createInvite.isPending ? 'Creating…' : 'Create invite link'}
             </button>
           </div>
@@ -250,7 +257,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
               <h3 className="font-medium mb-2">Pending invites</h3>
               <ul className="space-y-2">
                 {invitations.map(inv => (
-                  <li key={inv.id} className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-3 flex items-center justify-between gap-3">
+                  <li key={inv.id} className="surface p-3 flex items-center justify-between gap-3">
                     <div className="min-w-0">
                       <p className="text-sm flex items-center gap-2">
                         <Link2 size={14} className="text-muted shrink-0" aria-hidden />
@@ -267,19 +274,19 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                           the recipient, and it's the owner who chose it. */}
                       {inv.invited_email && emailAvailable && (
                         <button onClick={() => sendEmail(inv.id)} disabled={sendInvite.isPending}
-                          className="inline-flex items-center gap-1 rounded-md border border-line px-3 py-1.5 text-sm disabled:opacity-50">
+                          className="btn btn-secondary">
                           {sent === inv.id
                             ? <><Check size={14} className="text-moss" aria-hidden /> Sent</>
                             : <><Mail size={14} aria-hidden /> {inv.email_sent_at ? 'Resend' : 'Email it'}</>}
                         </button>
                       )}
                       <button onClick={() => copy(inv.token, inviteUrl(inv.token))}
-                        className="inline-flex items-center gap-1 rounded-md border border-line px-3 py-1.5 text-sm">
+                        className="btn btn-secondary">
                         {copied === inv.token
                           ? <><Check size={14} className="text-moss" aria-hidden /> Copied</>
                           : <><Copy size={14} aria-hidden /> Copy link</>}
                       </button>
-                      <button onClick={() => revokeInvite.mutate(inv.id)} className="text-alert"
+                      <button onClick={() => revokeInvite.mutate(inv.id)} className="btn-icon text-alert hover:bg-alert/10"
                         aria-label="Revoke invitation">
                         <Trash2 size={16} />
                       </button>
@@ -290,7 +297,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
             </>
           )}
           {/* ------------------------------------------------- vet-share links */}
-          <div className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-5 mt-6">
+          <div className="surface p-5 mt-6">
             <h3 className="font-medium flex items-center gap-2 mb-1">
               <Stethoscope size={16} className="text-moss" aria-hidden /> Vet links
             </h3>
@@ -304,12 +311,12 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                 <label htmlFor="vet-label" className="block text-sm mb-1">Label (for your reference)</label>
                 <input id="vet-label" value={vetLabel} onChange={e => setVetLabel(e.target.value)}
                   placeholder="Dr. Vasquez — dental consult"
-                  className="w-full rounded-md border border-line px-3 py-2" />
+                  className="field w-full" />
               </div>
               <div>
                 <label htmlFor="vet-days" className="block text-sm mb-1">Expires in</label>
                 <select id="vet-days" value={vetDays} onChange={e => setVetDays(Number(e.target.value))}
-                  className="rounded-md border border-line px-3 py-2 bg-card">
+                  className="field w-auto">
                   <option value={1}>1 day</option>
                   <option value={7}>7 days</option>
                   <option value={30}>30 days</option>
@@ -318,7 +325,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
               <button
                 onClick={() => createVetLink.mutate({ label: vetLabel, days: vetDays }, { onSuccess: () => setVetLabel('') })}
                 disabled={createVetLink.isPending}
-                className="rounded-md bg-moss text-paper px-5 py-2 text-sm disabled:opacity-50">
+                className="btn btn-primary">
                 {createVetLink.isPending ? 'Creating…' : 'Create vet link'}
               </button>
             </div>
@@ -326,7 +333,7 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
             {vetLinks.data && vetLinks.data.length > 0 && (
               <ul className="space-y-2 mt-4">
                 {vetLinks.data.map(l => (
-                  <li key={l.id} className="rounded-md border border-line p-3 flex items-center justify-between gap-3">
+                  <li key={l.id} className="rounded-lg border border-line p-3 flex items-center justify-between gap-3">
                     <div className="min-w-0">
                       <p className="text-sm truncate">{l.label || 'Vet link'}</p>
                       <p className="text-xs text-muted flex items-center gap-2">
@@ -339,12 +346,12 @@ export default function SharingPanel({ petId, petName }: { petId: string; petNam
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       <button onClick={() => copy(l.token, vetUrl(l.token))}
-                        className="inline-flex items-center gap-1 rounded-md border border-line px-3 py-1.5 text-sm">
+                        className="btn btn-secondary">
                         {copied === l.token
                           ? <><Check size={14} className="text-moss" aria-hidden /> Copied</>
                           : <><Copy size={14} aria-hidden /> Copy link</>}
                       </button>
-                      <button onClick={() => revokeVetLink.mutate(l.id)} className="text-alert"
+                      <button onClick={() => revokeVetLink.mutate(l.id)} className="btn-icon text-alert hover:bg-alert/10"
                         aria-label="Revoke vet link">
                         <Trash2 size={16} />
                       </button>

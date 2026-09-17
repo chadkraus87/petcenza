@@ -20,7 +20,7 @@ export default function NotificationSettings() {
   const blocked = permission === 'denied'
 
   if (isLoading) return (
-    <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-6">
+    <section className="surface p-6">
       <p className="text-sm text-muted">Loading notification settings…</p>
     </section>
   )
@@ -28,7 +28,7 @@ export default function NotificationSettings() {
   const set = (patch: Partial<Settings>) => update.mutate(patch)
 
   return (
-    <section className="bg-card rounded-card border border-line shadow-sm shadow-ink/5 p-6">
+    <section className="surface p-6">
       <div className="flex items-center gap-2 mb-1">
         {settings?.browser_push ? <Bell className="text-moss" aria-hidden /> : <BellOff className="text-muted" aria-hidden />}
         <h2 className="text-xl">Notifications</h2>
@@ -85,17 +85,17 @@ export default function NotificationSettings() {
             <label htmlFor="qh-start" className="block text-sm mb-1">From</label>
             <input id="qh-start" type="time" value={settings?.quiet_hours_start?.slice(0, 5) ?? ''}
               onChange={e => set({ quiet_hours_start: e.target.value || null })}
-              className="rounded-md border border-line px-3 py-2 bg-card" />
+              className="field w-auto" />
           </div>
           <div>
             <label htmlFor="qh-end" className="block text-sm mb-1">Until</label>
             <input id="qh-end" type="time" value={settings?.quiet_hours_end?.slice(0, 5) ?? ''}
               onChange={e => set({ quiet_hours_end: e.target.value || null })}
-              className="rounded-md border border-line px-3 py-2 bg-card" />
+              className="field w-auto" />
           </div>
           {(settings?.quiet_hours_start || settings?.quiet_hours_end) && (
             <button onClick={() => set({ quiet_hours_start: null, quiet_hours_end: null })}
-              className="rounded-md border border-line px-4 py-2 text-sm">Clear</button>
+              className="btn btn-secondary">Clear</button>
           )}
         </div>
       </fieldset>

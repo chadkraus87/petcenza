@@ -19,16 +19,18 @@ export default {
         alert: '#C4462F',      // overdue, severe allergy
         calm: '#7FC4D4',       // info accent, the artwork's mid waves
         coral: '#FD9582',      // decorative accent (the hearts) — fills only, too light for text
-        wave: '#D9EFF3',
+        wave: '#D9EFF3',       // artwork mid-wave tone, for subtle fills
         // Secondary text. NOT ink at reduced opacity — that was the bug: text-ink/50 lands at
         // 2.6:1 on white and text-ink/70 at 4.27:1, both below the 4.5:1 WCAG AA floor for body
         // text, and the app used those 165 times. This tone clears AA on both card (5.26:1) and
         // paper (4.81:1) while still reading as clearly secondary.
-        muted: '#487280'        // artwork mid-wave tone, for subtle fills
+        muted: '#487280'
       },
       fontFamily: {
-        display: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
-        body: ['"Public Sans"', 'system-ui', 'sans-serif']
+        // Self-hosted via @fontsource-variable (imported in main.tsx). They were named here but
+        // never loaded, so until now the whole app rendered in the system font.
+        display: ['"Bricolage Grotesque Variable"', 'system-ui', 'sans-serif'],
+        body: ['"Public Sans Variable"', 'system-ui', 'sans-serif']
       },
       borderRadius: { card: '14px' }
     }

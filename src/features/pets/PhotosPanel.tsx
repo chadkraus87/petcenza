@@ -7,6 +7,7 @@ import { scanUpload } from '@/lib/uploads'
 import { useSetPrimaryPhoto, useDeletePhoto } from '@/hooks/usePetPhotos'
 import { useCanEditPet } from '@/hooks/useSharing'
 import type { PetPhoto } from '@/types/db'
+import { EmptyState } from '@/components/ui/primitives'
 
 export default function PhotosPanel({ petId }: { petId: string }) {
   const qc = useQueryClient()
@@ -60,7 +61,7 @@ export default function PhotosPanel({ petId }: { petId: string }) {
         onDrop={e => { e.preventDefault(); setDragOver(false); void upload(e.dataTransfer.files) }}
         className={`rounded-card border-2 border-dashed p-8 text-center mb-4 ${dragOver ? 'border-moss bg-moss/5' : 'border-line'}`}>
         <p className="text-sm text-muted mb-2">Drag photos here, or</p>
-        <label className="inline-block rounded-md bg-ink text-paper px-4 py-2 text-sm cursor-pointer">
+        <label className="btn btn-primary cursor-pointer">
           Choose photos
           <input type="file" accept="image/jpeg,image/png,image/webp" multiple className="sr-only"
             onChange={e => e.target.files && void upload(e.target.files)} />
@@ -85,7 +86,7 @@ export default function PhotosPanel({ petId }: { petId: string }) {
               {!p.is_primary && (
                 <button type="button" onClick={() => setPrimary.mutate(p.id)} disabled={setPrimary.isPending}
                   title="Use as profile photo" aria-label={`Use as profile photo`}
-                  className="rounded-md bg-card/90 text-ink p-1.5 hover:bg-card disabled:opacity-50">
+                  className="grid place-items-center size-11 rounded-lg bg-card/90 text-ink hover:bg-card disabled:opacity-50">
                   <Star size={14} aria-hidden />
                 </button>
               )}
@@ -96,7 +97,7 @@ export default function PhotosPanel({ petId }: { petId: string }) {
                   }
                 }}
                 title="Delete photo" aria-label="Delete photo"
-                className="rounded-md bg-card/90 text-alert p-1.5 hover:bg-card disabled:opacity-50">
+                className="grid place-items-center size-11 rounded-lg bg-card/90 text-alert hover:bg-card disabled:opacity-50">
                 <Trash2 size={14} aria-hidden />
               </button>
             </div>
@@ -109,7 +110,7 @@ export default function PhotosPanel({ petId }: { petId: string }) {
           {(setPrimary.error ?? del.error)?.message}
         </p>
       )}
-      {photos?.length === 0 && <p className="text-sm text-muted">No photos yet.</p>}
+      {photos?.length === 0 && <EmptyState title="No photos yet">Add a clear photo of their face. It becomes their picture everywhere in the app.</EmptyState>}
     </section>
   )
 }
